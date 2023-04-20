@@ -16,6 +16,8 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    protected $guard = 'web';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -28,7 +30,7 @@ class User extends Authenticatable
         'registration_date',
         'last_access',
         'email',
-        'password'
+        'password',
     ];
 
     /**

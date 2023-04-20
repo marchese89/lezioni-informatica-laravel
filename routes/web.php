@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrazioneController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,27 +16,39 @@ use App\Http\Controllers\LoginController;
 |
 */
 
+
+
 Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/registrati', function () {
-    return view('registrati');
+
+
+Route::get('registrati', function () {
+    return view('sicurezza.registrati');
 });
 
-Route::get('/login', function () {
-    return view('login');
+Route::post('registrati',[RegistrazioneController::class, 'carica_utente']);
+
+Route::get('login', function () {
+    return view('sicurezza.login');
+})->name('login');
+
+Route::post('login',[LoginController::class,'login']);
+
+Route::get('logout',[LogoutController::class,'logout']);
+
+
+Route::middleware(['auth', 'role:admin'] )->group(function(){
+    Route::get('dashboard-admin', function ()    {
+        return view('admin.dashboard-admin');
+    });
+
 });
 
-Route::post('/registrati_post',[RegistrazioneController::class, 'carica_utente']);
+Route::middleware(['auth', 'role:student'] )->group(function(){
+    Route::get('dashboard-studente', function ()    {
+        return view('studente.dashboard-studente');
+    });
 
-Route::post('/login_post',[LoginController::class, 'authenticate']);
-
-Route::get('/dashboard-admin', function () {
-    return view('dashboard-admin');
 });
-
-Route::get('/dashboard-studente', function () {
-    return view('dashboard-studente');
-});
-

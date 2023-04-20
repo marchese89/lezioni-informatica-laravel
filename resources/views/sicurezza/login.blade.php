@@ -21,7 +21,7 @@
 <div class="container" style="width: 15%; text-align: center">
 <br>
 <h2>Login</h2>
-<form class="row g-3" method="POST" action="/login_post" >
+<form class="row g-3" method="POST" action="login" >
     @csrf
     <div class="col-md-12">
         <label for="inputEmail4" class="form-label">Email</label>
@@ -42,6 +42,11 @@
             pass1_.add(Validate.Presence);
             pass1_.add(Validate.Pass);
         </script>
+    </div>
+    <div class="col-md-12">
+        @if($errors->any())
+            <label style="color: red">{{$errors->first()}}</label>
+        @endif
     </div>
     <div class="col-12" style="text-align:center">
         <button type="submit" class="btn btn-primary" >Accedi</button>

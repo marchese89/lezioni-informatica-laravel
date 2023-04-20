@@ -8,24 +8,53 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
         <script type="text/javascript" src="/custom_javascript/livevalidation_standalone.compressed.js?ts=<?=time()?>&quot"></script>
         <link href="/custom_css/validation.css" rel="stylesheet" type="text/css">
+        <style>
+        body {
+            overflow-y: scroll;
+        }
+        </style>
     </head>
     <body>
         <header>
-    <div class="text-bg-light p-3">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      </ul>
-        <a href="/login">Accedi</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="/registrati">registrati</a>&nbsp;&nbsp;
-    </div>
-  </div>
-</nav>
+            <nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-end">
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+                    @guest
+                    <ul class="navbar-nav text-right">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url("login") }}">Login</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ url("registrati") }}">Registrati</a>
+                        </li>
+                    </ul>
+                    @endguest
+                    @auth
+                    <ul class="navbar-nav text-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ auth()->user()->name}}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" >
+                          @if ( auth()->user()->role === 'admin')
+                          <li><a class="dropdown-item" href="{{ url("dashboard-admin") }}">Area Protetta</a></li>
+                          @else
+                          <li><a class="dropdown-item" href="{{ url("dashboard-studente") }}">Area Protetta</a></li>
+                          @endif
+                          <li><a class="dropdown-item" href="{{ url("logout") }}">Logout</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                    @endauth
+                </div>
+
+            </nav>
+
+    <div class="text-bg-light p-3">
 <div style="text-align:center;"><h1>Lezioni Informatica</h1></div>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
