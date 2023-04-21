@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string('email');//->primary();
-            $table->string('password');
-            $table->string('name')->nullable();;
-            $table->string('surname')->nullable();;
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('last_access')->nullable();
             $table->string('cf',16)->nullable();
             $table->string('photo')->nullable();

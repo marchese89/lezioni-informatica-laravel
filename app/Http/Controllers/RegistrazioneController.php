@@ -32,7 +32,7 @@ class RegistrazioneController extends Controller
         $user_ok = DB::table('users')->where('email', $email)->count();
 
         if($user_ok == 1){
-            return view('registrazione_no');
+            return redirect('registrazione_no');
         }
 
         $user = new User();
@@ -67,7 +67,7 @@ class RegistrazioneController extends Controller
 
         $student->save();
 
-        return view('registrazione_ok');
+        return redirect('registrazione_ok');
     }
 }
 

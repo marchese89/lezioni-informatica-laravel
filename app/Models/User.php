@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Student;
+use App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -16,7 +18,6 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
-    protected $guard = 'web';
 
     /**
      * The attributes that are mass assignable.
@@ -55,5 +56,10 @@ class User extends Authenticatable
     public function student(): HasOne
     {
         return $this->hasOne(Student::class,'user_id','id');
+    }
+
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class,'user_id','id');
     }
 }

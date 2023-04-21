@@ -25,8 +25,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Auth::viaRequest('admin', function (Request $request) {
-            return Admin::where('email', $request->email)->first();
-        });
+
     }
 }

@@ -6,8 +6,10 @@
 
         <title>Lezioni Informatica</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-        <script type="text/javascript" src="/custom_javascript/livevalidation_standalone.compressed.js?ts=<?=time()?>&quot"></script>
+        <script type="text/javascript" src="/custom_javascript/livevalidation_standalone.compressed.js"></script>
+        <script type="text/javascript" src="/custom_javascript/utility.js?ts=<?=time()?>&quot"></script>
         <link href="/custom_css/validation.css" rel="stylesheet" type="text/css">
+        <link href="/custom_css/admin.css" rel="stylesheet" type="text/css">
         <style>
         body {
             overflow-y: scroll;
@@ -108,6 +110,21 @@
 @yield('content')
 
 </div>
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; Lezioni Informatica 2023</div>
+            <div>
+                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: 75%"></div>
+                  </div>
+                <a href="#">Privacy Policy</a>
+                &middot;
+                <a href="#">Termini e Condizioni</a>
+            </div>
+        </div>
+    </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
     </body>

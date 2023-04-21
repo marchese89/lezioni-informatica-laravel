@@ -33,7 +33,7 @@
 
 <div class="container" style="width: 62%">
     <br>
-    <form class="row g-3" method="POST" action="/registrati_post" >
+    <form class="row g-3" method="POST" action="registrati" >
         @csrf
         <div class="col-md-6">
             <label  class="form-label">Nome</label>

@@ -2,7 +2,7 @@
 /node_modules
 
 /vendor
-
+/public/files
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
