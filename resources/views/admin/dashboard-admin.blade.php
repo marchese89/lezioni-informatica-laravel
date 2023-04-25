@@ -65,6 +65,7 @@
     </div>
     <div id="layoutSidenav_content">
         <main>
+
             @if(!Request::is('dashboard-admin'))
             @yield('inner')
             @else

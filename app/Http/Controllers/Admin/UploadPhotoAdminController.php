@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Files;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -24,9 +24,9 @@ class UploadPhotoAdminController extends Controller
         }
         $file = $request->file('file');
         $name = $file->hashName();
-        $file->move(base_path('\public\files'),$name);
+        $file->move(base_path('\public\files\photo_admin'),$name);
 
-        $path = '/files/' . $name;
+        $path = '/files/photo_admin/' . $name;
 
         $admin->photo = $path;
 

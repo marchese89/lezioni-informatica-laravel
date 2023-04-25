@@ -35,16 +35,13 @@ function ajaxUploadSupport() {
 }
 
 function completeHandler(event) {
-    //location.reload();
+    location.reload();
 }
 //upload file con ajax
 function progressHandler(event) {
-    //_("loaded_n_total").innerHTML = "Caricati " + event.loaded + " byte di " + event.total;
     var percent = (event.loaded / event.total) * 100;
     _("percent").setAttribute("style", "width: "+percent+"%");
     _("percent").innerText = percent+"%";
-    //_("progressBar").value = Math.round(percent);
-    //_("status").innerHTML = "caricato al " + Math.round(percent) + "% ... attendere";
 }
 function completeHandler(event) {
     location.reload();

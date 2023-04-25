@@ -115,9 +115,6 @@
         <div class="d-flex align-items-center justify-content-between small">
             <div class="text-muted">Copyright &copy; Lezioni Informatica 2023</div>
             <div>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar" style="width: 75%"></div>
-                  </div>
                 <a href="#">Privacy Policy</a>
                 &middot;
                 <a href="#">Termini e Condizioni</a>

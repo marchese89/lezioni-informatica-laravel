@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrazioneController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Files\UploadPhotoAdminController;
+use App\Http\Controllers\Admin\UploadPhotoAdminController;
+use App\Http\Controllers\Admin\ModIndAdminController;
+use App\Http\Controllers\Admin\ModChiaveStripeController;
+use App\Http\Controllers\Admin\ModCertAdminController;
+use App\Http\Controllers\Admin\ModNomeCertAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +68,27 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
         return view('admin.mod-foto');
     });
 
+    Route::get('mod-indirizzo-admin', function ()    {
+        return view('admin.mod-indirizzo');
+    });
+
+    Route::get('mod-chiave-priv-stripe',function(){
+        return view('admin.mod-chiave-priv-stripe');
+    });
+
+    Route::get('mod-certif',function(){
+        return view('admin.mod-certif');
+    });
+
+    Route::post('mod-indirizzo-admin', [ModIndAdminController::class,'mod_ind']);
+
     Route::post('upload-foto-admin',[UploadPhotoAdminController::class,'upload']);
+
+    Route::post('mod-chiave-stripe',[ModChiaveStripeController::class,'modifica']);
+
+    Route::post('mod-foto-cert-admin',[ModCertAdminController::class,'upload']);
+
+    Route::post('mod-nome-cert-admin',[ModNomeCertAdminController::class,'modifica']);
 
 });
 
