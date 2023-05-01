@@ -74,3 +74,44 @@ function upload(formID,fileID,postURL) {
 
     }
 }
+//modifica campi password
+function mostraPassword1() {
+    var x = document.getElementById("inputPassword");
+    if (x.type === "password") {
+      x.type = "text";
+    } else {
+      x.type = "password";
+    }
+  }
+function mostraPassword2() {
+  var x = document.getElementById("inputPassword2");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+
+function mostraPassword_old() {
+  var x = document.getElementById("inputPassword_old");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+
+function modifica_pass(){
+  var x = document.getElementById("inputPassword");
+  if (x.type === "text") {
+      x.type = "password";
+    }
+  var y = document.getElementById("inputPassword2");
+  if (y.type === "text") {
+        y.type = "password";
+      }
+  var z = document.getElementById("inputPassword_old");
+  if (z !== null && z.type === "text") {
+        z.type = "password";
+      }
+}

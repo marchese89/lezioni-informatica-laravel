@@ -4,11 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegistrazioneController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Admin\UploadPhotoAdminController;
-use App\Http\Controllers\Admin\ModIndAdminController;
-use App\Http\Controllers\Admin\ModChiaveStripeController;
-use App\Http\Controllers\Admin\ModCertAdminController;
-use App\Http\Controllers\Admin\ModNomeCertAdminController;
+use App\Http\Controllers\Admin\ModDatiAdminController;
+use App\Http\Controllers\Files\FileAccessController;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +62,10 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
         return view('admin.mod-dati-pers');
     });
 
+    Route::get('mod-cred', function ()    {
+        return view('admin.mod-cred');
+    });
+
     Route::get('mod-foto-admin', function ()    {
         return view('admin.mod-foto');
     });
@@ -80,17 +82,44 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
         return view('admin.mod-certif');
     });
 
-    Route::post('mod-indirizzo-admin', [ModIndAdminController::class,'mod_ind']);
+    Route::get('aggiungi-certif',function(){
+        return view('admin.add-certif');
+    });
 
-    Route::post('upload-foto-admin',[UploadPhotoAdminController::class,'upload']);
+    Route::post('mod-indirizzo-admin', [ModDatiAdminController::class,'mod_ind']);
 
-    Route::post('mod-chiave-stripe',[ModChiaveStripeController::class,'modifica']);
+    Route::post('upload-foto-admin',[ModDatiAdminController::class,'upload_foto']);
 
-    Route::post('mod-foto-cert-admin',[ModCertAdminController::class,'upload']);
+    Route::post('mod-chiave-stripe',[ModDatiAdminController::class,'modifica_chiave']);
 
-    Route::post('mod-nome-cert-admin',[ModNomeCertAdminController::class,'modifica']);
+    Route::post('mod-foto-cert-admin',[ModDatiAdminController::class,'upload_cert']);
+
+    Route::post('crea-foto-cert-admin',[ModDatiAdminController::class,'upload_cert_session']);
+
+    Route::post('mod-nome-cert-admin',[ModDatiAdminController::class,'modifica_nome_cert']);
+
+    Route::post('elimina_certificato',[ModDatiAdminController::class,'elimina_cert']);
+
+    Route::get('del_cert_admin',[ModDatiAdminController::class,'elimina_cert_session']);
+
+    Route::post('add-cert-admin',[ModDatiAdminController::class,'add_cert_admin']);
+
+    Route::post('mod-email-admin',[ModDatiAdminController::class,'mod_email_admin']);
+
+    Route::post('mod-pass-admin',[ModDatiAdminController::class,'mod_pass_admin']);
+
 
 });
+
+Route::get('/files/private/{path}',function($path){
+
+    $url = Storage::url('private/' . $path);
+    Storage::get($url);
+    //return "pinni".  //storage_path('app/private/'. $path);
+});
+
+Route::get('/protected_file/{path}', [FileAccessController::class,'__invoke']);
+
 
 Route::middleware(['auth', 'role:student'] )->group(function(){
     Route::get('dashboard-studente', function ()    {

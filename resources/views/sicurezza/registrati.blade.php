@@ -1,39 +1,9 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-<script>
-    function mostraPassword1() {
-    	  var x = document.getElementById("inputPassword");
-    	  if (x.type === "password") {
-    	    x.type = "text";
-    	  } else {
-    	    x.type = "password";
-    	  }
-    	}
-    function mostraPassword2() {
-  	  var x = document.getElementById("inputPassword2");
-  	  if (x.type === "password") {
-  	    x.type = "text";
-  	  } else {
-  	    x.type = "password";
-  	  }
-  	}
-
-    function modifica_pass(){
-    	var x = document.getElementById("inputPassword");
-    	if (x.type === "text") {
-    	    x.type = "password";
-    	  }
-    	var y = document.getElementById("inputPassword2");
-    	if (x.type === "text") {
-      	    x.type = "password";
-      	  }
-    }
-    </script>
-
 <div class="container" style="width: 62%">
     <br>
-    <form class="row g-3" method="POST" action="registrati" >
+    <form class="row g-3" method="POST" action="registrati" onsubmit="modifica_pass()">
         @csrf
         <div class="col-md-6">
             <label  class="form-label">Nome</label>
