@@ -4,11 +4,11 @@ function _(el) {
 
 function ajaxUploadSupport() {
 
-    var result = false;
+    let result = false;
 
     try {
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
 
         if ('onprogress' in xhr) {
 
@@ -34,17 +34,14 @@ function ajaxUploadSupport() {
 
 }
 
-function completeHandler(event) {
-    location.reload();
-}
 //upload file con ajax
 function progressHandler(event) {
-    var percent = (event.loaded / event.total) * 100;
+    let percent = (event.loaded / event.total) * 100;
     _("percent").setAttribute("style", "width: "+percent+"%");
     _("percent").innerText = percent+"%";
 }
 function completeHandler(event) {
-    location.reload();
+    //location.reload();
 }
 function errorHandler(event) {
     _("status").innerHTML = "Caricamento Fallito";
@@ -53,17 +50,21 @@ function abortHandler(event) {
     _("status").innerHTML = "Caricamento Annullato";
 }
 
-function upload(formID,fileID,postURL) {
+
+function upload(formID,fileID,postURL,prog) {
     if (ajaxUploadSupport()) {
-        _("progressbar").style.display = 'block';
+        if(prog === 1){
+            _("progressbar").style.display = 'block';
+        }else if(prog === 2){
+            _("progressbar2").style.display = 'block';
+        }
+        let file_ = _(fileID).files[0];
 
-        var file_ = _(fileID).files[0];
-
-        var formdata_ = new FormData();
+        let formdata_ = new FormData();
         formdata_.append(fileID, file_);
-        var ajax_ = new XMLHttpRequest();
+        let ajax_ = new XMLHttpRequest();
         ajax_.upload.addEventListener("progress", progressHandler, false);
-        ajax_.addEventListener("load", completeHandler, false);
+        //ajax_.addEventListener("load", completeHandler, false);
         ajax_.addEventListener("error", errorHandler, false);
         ajax_.addEventListener("abort", abortHandler, false);
         ajax_.open("POST", postURL);

@@ -81,11 +81,11 @@
 
             <div class="card" style="width: 30rem;">
                 <div class="card-body">
-                  <h5 class="card-title">Corsi</h5>
-                  <p class="card-text">Tutto quello che riguarada i corsi si trova in questa pagina, inserimento aree tematiche, materie,
+                  <h5 class="card-title">Insegnamento</h5>
+                  <p class="card-text">Tutto quello che riguarada l'Insegnamento si trova in questa pagina, inserimento aree tematiche, materie,
                     corsi, lezioni ed esercizi
                   </p>
-                  <a href="#" class="btn btn-primary">Accedi</a>
+                  <a href="insegnamento" class="btn btn-primary">Accedi</a>
                 </div>
             </div>
             <div class="card" style="width: 30rem;">

@@ -60,7 +60,7 @@
                     <div class="progress-bar" style="width: 25%" id="percent">25%</div>
                   </div>
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary" onclick="upload('upload','file_{{$item->id}}','mod-foto-cert-admin')">Upload</button>
+                    <button type="submit" class="btn btn-primary" onclick="upload('upload','file_{{$item->id}}','mod-foto-cert-admin',1)">Upload</button>
                 </div>
                 </form>
                 <br>

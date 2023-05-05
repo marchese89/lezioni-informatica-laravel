@@ -24,8 +24,8 @@ class RegistrazioneController extends Controller
     public function carica_utente(){
 
 
-        $nome = str_replace("'", "''",request('inputNome'));
-        $cognome = str_replace("'", "''",request('inputCognome'));
+        $nome = request('inputNome');
+        $cognome = request('inputCognome');
         $email = request('inputEmail');
         $password = password_hash(request('inputPassword'), PASSWORD_DEFAULT);
 
@@ -48,12 +48,12 @@ class RegistrazioneController extends Controller
 
         $user2 = DB::table('users')->where('email', $email)->first();
 
-        $indirizzo = str_replace("'", "''",request('inputIndirizzo'));
-        $numeroCivico = str_replace("'", "''",request('inputNumeroCivico'));
-        $citta = str_replace("'", "''",request('inputCitta'));
-        $provincia = str_replace("'", "''",request('inputProvincia'));
-        $cap = str_replace("'", "''",request('inputCAP'));
-        $cf = str_replace("'", "''",request('inputCF'));
+        $indirizzo = request('inputIndirizzo');
+        $numeroCivico = request('inputNumeroCivico');
+        $citta = request('inputCitta');
+        $provincia = request('inputProvincia');
+        $cap = request('inputCAP');
+        $cf = request('inputCF');
 
         $student = new Student();
         $student->user_id = $user2->id;

@@ -29,7 +29,7 @@ aria-valuemin="0" aria-valuemax="100" id="progressbar" style="display: none">
   </div>
 
 <div class="col-12">
-    <button type="submit" class="btn btn-primary" onclick="upload('upload','file','upload-foto-admin')">Upload</button>
+    <button type="submit" class="btn btn-primary" onclick="upload('upload','file','upload-foto-admin',1)">Upload</button>
 </div>
 
 

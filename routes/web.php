@@ -5,9 +5,12 @@ use App\Http\Controllers\RegistrazioneController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\ModDatiAdminController;
+use App\Http\Controllers\Admin\CorsiController;
 use App\Http\Controllers\Files\FileAccessController;
 use Illuminate\Support\Facades\Storage;
 
+
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -86,6 +89,27 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
         return view('admin.add-certif');
     });
 
+    Route::get('insegnamento',function(){
+        return view('admin.insegnamento');
+    });
+
+    Route::get('nuovo-corso',function(){
+        return view('admin.nuovo-corso');
+    });
+
+    Route::get('aree-tem',function(){
+        return view('admin.aree-tem');
+    });
+
+    Route::get('materie',function(){
+        return view('admin.materie');
+    });
+
+    Route::get('elenco-corsi',function(){
+        return view('admin.elenco-corsi');
+    });
+
+
     Route::post('mod-indirizzo-admin', [ModDatiAdminController::class,'mod_ind']);
 
     Route::post('upload-foto-admin',[ModDatiAdminController::class,'upload_foto']);
@@ -108,14 +132,43 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
 
     Route::post('mod-pass-admin',[ModDatiAdminController::class,'mod_pass_admin']);
 
+    Route::post('nuova-a-t',[CorsiController::class,'nuova_area_tematica']);
 
-});
+    Route::post('modifica-a-t', [CorsiController::class,'modifica_area_tematica']);
 
-Route::get('/files/private/{path}',function($path){
+    Route::post('elimina-a-t', [CorsiController::class,'elimina_area_tematica']);
 
-    $url = Storage::url('private/' . $path);
-    Storage::get($url);
-    //return "pinni".  //storage_path('app/private/'. $path);
+    Route::post('nuova-mat',[CorsiController::class,'nuova_materia']);
+
+    Route::post('modifica-mat',[CorsiController::class,'modifica_materia']);
+
+    Route::post('elimina-mat',[CorsiController::class,'elimina_materia']);
+
+    Route::post('nuovo-corso',[CorsiController::class,'nuovo_corso']);
+
+    Route::post('modifica-corso',[CorsiController::class,'modifica_corso']);
+
+    Route::post('elimina-corso',[CorsiController::class,'elimina_corso']);
+
+    Route::get('modifica-dettagli-corso-{id}',function(){
+        return view('admin.modifica-corso');
+    });
+
+    Route::get('nuova-lezione-{id}',function(){
+        return view('admin.nuova-lezione');
+    });
+
+
+    Route::post('upload-pres-lez',[CorsiController::class,'upload_pres_lez']);
+
+    Route::get('cancella-file-sessione-{id}',[CorsiController::class, 'cancella_file_sessione']);
+
+    Route::post('upload-lesson',[CorsiController::class,'upload_lesson']);
+
+    Route::get('cancella-file-lezione-sessione-{id}',[CorsiController::class, 'cancella_file_sessione_lezione']);
+
+    Route::post('carica-lezione',[CorsiController::class, 'carica_lezione']);
+
 });
 
 Route::get('/protected_file/{path}', [FileAccessController::class,'__invoke']);
