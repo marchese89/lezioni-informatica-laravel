@@ -154,11 +154,12 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
         return view('admin.modifica-corso');
     });
 
+    //Lezioni
     Route::get('nuova-lezione-{id}',function(){
         return view('admin.nuova-lezione');
     });
 
-
+    // Inserimento Lezione
     Route::post('upload-pres-lez',[CorsiController::class,'upload_pres_lez']);
 
     Route::get('cancella-file-sessione-{id}',[CorsiController::class, 'cancella_file_sessione']);
@@ -168,6 +169,55 @@ Route::middleware(['auth', 'role:admin'] )->group(function(){
     Route::get('cancella-file-lezione-sessione-{id}',[CorsiController::class, 'cancella_file_sessione_lezione']);
 
     Route::post('carica-lezione',[CorsiController::class, 'carica_lezione']);
+
+    //eliminazione lezione
+
+    Route::post('elimina-lezione',[CorsiController::class,'elimina_lezione']);
+
+    //modifica lezione
+
+    Route::get('modifica-lezione-{id_corso}-{id_lezione}',function(){
+        return view('admin.modifica-lezione');
+    });
+
+    Route::post('re-upload-pres-lez',[CorsiController::class,'re_upload_pres_lez']);
+
+    Route::post('re-upload-lesson',[CorsiController::class,'re_upload_lesson']);
+
+    Route::post('modifica-lezione',[CorsiController::class, 'modifica_lezione']);
+
+    //ESERCIZI
+    Route::get('nuovo-esercizio-{id}',function(){
+        return view('admin.nuovo-esercizio');
+    });
+
+    // Inserimento Esercizio
+    Route::post('upload-trace-ex',[CorsiController::class,'upload_trace_ex']);
+
+    Route::get('cancella-file-trace-sessione-{id}',[CorsiController::class, 'cancella_file_sessione_trace_ex']);
+
+    Route::post('upload-ex',[CorsiController::class,'upload_ex']);
+
+    Route::get('cancella-file-execution-sessione-ex-{id}',[CorsiController::class, 'cancella_file_sessione_ex']);
+
+    Route::post('carica-esercizio',[CorsiController::class, 'carica_esercizio']);
+
+    //eliminazione esercizio
+
+    Route::post('elimina-esercizio',[CorsiController::class,'elimina_esercizio']);
+
+    //modifica esercizio
+
+    Route::get('modifica-esercizio-{id_corso}-{id_esercizio}',function(){
+        return view('admin.modifica-esercizio');
+    });
+
+    Route::post('trace-ex-re-upload',[CorsiController::class,'re_upload_trace_ex']);
+
+    Route::post('ex-re-upload',[CorsiController::class,'re_upload_ex']);
+
+    Route::post('modifica-esercizio',[CorsiController::class, 'modifica_esercizio']);
+
 
 });
 

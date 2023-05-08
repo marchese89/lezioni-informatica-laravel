@@ -24,27 +24,27 @@
         $corso = Course::where('id','=',$id)->first();
 
     @endphp
-    <h2>Nuova Lezione  Corso di</h2>
+    <h2>Nuovo Esercizio Corso di</h2>
     <h2>"{{$corso->name}}"</h2>
     <br>
 
     <br>
-    <h4>Presentazione</h4>
+    <h4>Traccia</h4>
 
     <iframe
 				width="90%"
-                @if (Session::exists('uploaded_pres_lez'))
-                src="/protected_file/{{session()->get('uploaded_pres_lez')}}#view=FitH"
+                @if (Session::exists('uploaded_trace_ex'))
+                src="/protected_file/{{session()->get('uploaded_trace_ex')}}#view=FitH"
                 @else
                     src=""
                 @endif
                 height="400px">
             </iframe>
 
-    <form method="POST" action="upload-pres-lez" enctype="multipart/form-data" id="upload" >
+    <form method="POST" action="upload-trace-ex" enctype="multipart/form-data" id="upload" >
         @csrf
         <input type="hidden" name="id" value="{{$id}}"/>
-        <input type="file" class="form-control" id="file-pres-lez" name="file-pres-lez"/>
+        <input type="file" class="form-control" id="file-trace-ex" name="file-trace-ex"/>
         <p>
         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
         aria-valuemin="0" aria-valuemax="100" id="progressbar" style="display: none">
@@ -52,7 +52,7 @@
           </div>
 
         <div class="col-12">
-            <button type="submit" class="btn btn-primary" onclick="upload('upload','file-pres-lez','upload-pres-lez',1)">Upload</button>
+            <button type="submit" class="btn btn-primary" onclick="upload('upload','file-trace-ex','upload-trace-ex',1)">Upload</button>
         </div>
 
         <br>
@@ -60,28 +60,28 @@
         </form>
 
         <div class="col-12">
-            <button type="submit" class="btn btn-primary" onclick=location.href="cancella-file-sessione-{{$id}}">Cancella File</button>
+            <button class="btn btn-primary" onclick=location.href="cancella-file-trace-sessione-{{$id}}">Cancella File</button>
         </div>
         <br>
 
         <br>
-        @if(Session::exists('uploaded_pres_lez'))
+        @if(Session::exists('uploaded_trace_ex'))
         <h4>Svolgimento</h4>
 
         <iframe
                     width="90%"
-                    @if (Session::exists('uploaded_lesson'))
-                    src="/protected_file/{{session()->get('uploaded_lesson')}}#view=FitH"
+                    @if (Session::exists('uploaded_ex'))
+                    src="/protected_file/{{session()->get('uploaded_ex')}}#view=FitH"
                     @else
                         src=""
                     @endif
                     height="400px">
                 </iframe>
 
-        <form method="POST" action="upload-lesson" enctype="multipart/form-data" id="upload2" >
+        <form method="POST" action="upload-ex" enctype="multipart/form-data" id="upload2" >
             @csrf
             <input type="hidden" name="id" value="{{$id}}"/>
-            <input type="file" class="form-control" id="file-lesson" name="file-lesson"/>
+            <input type="file" class="form-control" id="file-ex" name="file-ex"/>
             <p>
             <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
             aria-valuemin="0" aria-valuemax="100" id="progressbar2" style="display: none">
@@ -89,7 +89,7 @@
               </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" onclick="upload('upload2','file-lesson','upload-lesson',2)">Upload</button>
+                <button type="submit" class="btn btn-primary" onclick="upload('upload2','file-ex','upload-ex',2)">Upload</button>
             </div>
 
             <br>
@@ -97,23 +97,14 @@
             </form>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" onclick=location.href="cancella-file-lezione-sessione-{{$id}}">Cancella File</button>
+                <button class="btn btn-primary" onclick=location.href="cancella-file-execution-sessione-ex-{{$id}}">Cancella File</button>
             </div>
             @endif
 
-            @if(Session::exists('uploaded_pres_lez') && Session::exists('uploaded_lesson'))
-            <form method="POST" action="carica-lezione" >
+            @if(Session::exists('uploaded_trace_ex') && Session::exists('uploaded_ex'))
+            <form method="POST" action="carica-esercizio" >
                 @csrf
                 <input type="hidden" name="id" value="{{$id}}"/>
-                <div class="col-md-12">
-                    <h5>Numero</h5>
-                    <input type="text" class="form-control" id="numero" name="numero" maxlength="5" >
-                    <script type="text/javascript">
-                        var numero_ = new LiveValidation('numero', {onlyOnSubmit: true});
-                        numero_.add(Validate.Presence);
-                        numero_.add(Validate.InteriPositivi);
-                    </script>
-                </div>
                 <div class="col-md-12">
                     <h5>Titolo</h5>
                     <input type="text" class="form-control" id="titolo" name="titolo" maxlength="255" >

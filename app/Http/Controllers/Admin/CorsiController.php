@@ -8,6 +8,7 @@ use App\Models\ThemeArea;
 use App\Models\Matter;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\Exercise;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
@@ -115,7 +116,7 @@ class CorsiController extends Controller
 
         return redirect('nuovo-corso');
     }
-
+    //LEZIONI
     public function upload_pres_lez(Request $request)
     {
 
@@ -193,6 +194,224 @@ class CorsiController extends Controller
         $request->session()->forget('uploaded_lesson');
 
         return redirect('modifica-dettagli-corso-'. $id_corso);
+
+    }
+
+    public function elimina_lezione(Request $request){
+        $lezione = Lesson::where('id','=',request('id'))->first();
+        File::delete(storage_path('/app/private/') . $lezione->presentation);
+        File::delete(storage_path('/app/private/') . $lezione->lesson);
+        $lezione->delete();
+        return redirect('modifica-dettagli-corso-'. request('id_corso'));
+    }
+
+    public function re_upload_pres_lez(Request $request)
+    {
+        $id_lezione = request('id');
+
+        $lezione = Lesson::where('id','=',$id_lezione)->first();
+
+        File::delete(storage_path('/app/private/') . $lezione->presentation);
+
+        $file = $request->file('file-pres-lez');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $lezione->presentation = $name;
+
+        $lezione->save();
+
+        return redirect('modifica-lezione-'. request('id_corso'). '-' . $id_lezione);
+
+    }
+
+    public function re_upload_lesson(Request $request)
+    {
+
+        $id_lezione = request('id');
+
+        $lezione = Lesson::where('id','=',$id_lezione)->first();
+
+        File::delete(storage_path('/app/private/') . $lezione->lesson);
+
+        $file = $request->file('file-lesson');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $lezione->lesson = $name;
+
+        $lezione->save();
+
+        return redirect('modifica-lezione-'. request('id_corso'). '-' . $id_lezione);
+
+    }
+
+    public function modifica_lezione(Request $request){
+
+        $id_lezione = request('id_lezione');
+        $numero = request('numero');
+        $titolo = request('titolo');
+        $prezzo = request('prezzo');
+
+        $lesson = Lesson::where('id','=',$id_lezione)->first();
+
+
+        $lesson->title = $titolo;
+        $lesson->number = $numero;
+        $lesson->price = $prezzo;
+
+        $lesson->save();
+
+        return redirect('modifica-lezione-'. request('id_corso'). '-' . $id_lezione);
+
+    }
+
+    //ESERCIZI
+
+    public function upload_trace_ex(Request $request)
+    {
+
+        if($request->session()->exists('uploaded_trace_ex')){
+            if(File::exists(storage_path('/app/private/') . $request->session()->get('uploaded_trace_ex'))){
+                File::delete(storage_path('/app/private/') . $request->session()->get('uploaded_trace_ex'));
+            }
+        }
+        $request->session()->forget('uploaded_trace_ex');
+        $file = $request->file('file-trace-ex');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $request->session()->put('uploaded_trace_ex',$name);
+
+        return redirect('nuovo-esercizio-'. request('id'));
+
+    }
+
+
+    public function cancella_file_sessione_trace_ex(Request $request){
+
+        if($request->session()->exists('uploaded_trace_ex')){
+            File::delete(storage_path('/app/private/') . $request->session()->get('uploaded_trace_ex'));
+        }
+        $request->session()->forget('uploaded_trace_ex');
+        return redirect('nuovo-esercizio-'. request('id'));
+
+    }
+
+    public function upload_ex(Request $request)
+    {
+
+        if($request->session()->exists('uploaded_ex')){
+            if(File::exists(storage_path('/app/private/') . $request->session()->get('uploaded_ex'))){
+                File::delete(storage_path('/app/private/') . $request->session()->get('uploaded_ex'));
+            }
+        }
+        $request->session()->forget('uploaded_ex');
+        $file = $request->file('file-ex');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $request->session()->put('uploaded_ex',$name);
+
+        return redirect('nuovo-esercizio-'. request('id'));
+
+    }
+
+
+    public function cancella_file_sessione_ex(Request $request){
+        if($request->session()->exists('uploaded_ex')){
+            File::delete(storage_path('/app/private/') . $request->session()->get('uploaded_ex'));
+        }
+        $request->session()->forget('uploaded_ex');
+        return redirect('nuovo-esercizio-'. request('id'));
+    }
+
+    public function carica_esercizio(Request $request){
+        $id_corso = request('id');
+
+        $titolo = request('titolo');
+        $prezzo = request('prezzo');
+
+        $esercizio = new Exercise();
+
+        $esercizio->title = $titolo;
+        $esercizio->course_id = $id_corso;
+        $esercizio->trace = $request->session()->get('uploaded_trace_ex');
+        $esercizio->execution = $request->session()->get('uploaded_ex');
+        $esercizio->price = $prezzo;
+
+        $esercizio->save();
+
+        $request->session()->forget('uploaded_trace_ex');
+        $request->session()->forget('uploaded_ex');
+
+        return redirect('modifica-dettagli-corso-'. $id_corso);
+
+    }
+
+    public function elimina_esercizio(Request $request){
+        $esercizio = Exercise::where('id','=',request('id'))->first();
+        File::delete(storage_path('/app/private/') . $esercizio->trace);
+        File::delete(storage_path('/app/private/') . $esercizio->execution);
+        $esercizio->delete();
+        return redirect('modifica-dettagli-corso-'. request('id_corso'));
+    }
+
+    public function re_upload_trace_ex(Request $request)
+    {
+        $id_esercizio = request('id');
+
+        $esercizio = Exercise::where('id','=',$id_esercizio)->first();
+
+        File::delete(storage_path('/app/private/') . $esercizio->trace);
+
+        $file = $request->file('file-trace-ex');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $esercizio->trace = $name;
+
+        $esercizio->save();
+
+        return redirect('modifica-esercizio-'. request('id_corso'). '-' . $id_esercizio);
+
+    }
+
+    public function re_upload_ex(Request $request)
+    {
+
+        $id_esercizio = request('id');
+
+        $esercizio = Exercise::where('id','=',$id_esercizio)->first();
+
+        File::delete(storage_path('/app/private/') . $esercizio->execution);
+
+        $file = $request->file('file-ex');
+        $name = $file->hashName();
+        $file->move(storage_path('/app/private/'),$name);
+
+        $esercizio->execution = $name;
+
+        $esercizio->save();
+
+        return redirect('modifica-esercizio-'. request('id_corso'). '-' . $id_esercizio);
+
+    }
+
+    public function modifica_esercizio(Request $request){
+
+        $id_esercizio = request('id_esercizio');
+        $titolo = request('titolo');
+        $prezzo = request('prezzo');
+
+        $esercizio = Exercise::where('id','=',$id_esercizio)->first();
+
+        $esercizio->title = $titolo;
+        $esercizio->price = $prezzo;
+
+        $esercizio->save();
+
+        return redirect('modifica-esercizio-'. request('id_corso'). '-' . $id_esercizio);
 
     }
 }

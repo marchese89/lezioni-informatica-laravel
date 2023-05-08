@@ -12,20 +12,24 @@
         <a class="nav-link active" aria-current="page" href="elenco-corsi">Elenco Corsi</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="modifica-dettagli-corso-{{request('id')}}">Corso</a>
+        <a class="nav-link active" aria-current="page" href="modifica-dettagli-corso-{{request('id_corso')}}">Corso</a>
       </li>
   </ul>
-<div class="container"  style="text-align: center;width:35%">
+<div class="container"  style="text-align: center;width:100%">
     @php
-            use App\Models\Course;
-            use App\Models\Lesson;
+        use App\Models\Course;
+        use App\Models\Lesson;
 
-        $id = request('id');
-        $corso = Course::where('id','=',$id)->first();
+        $id_corso = request('id_corso');
+        $id_lezione = request('id_lezione');
+        $corso = Course::where('id','=',$id_corso)->first();
+        $lezione = Lesson::where('id','=',$id_lezione)->first();
 
     @endphp
-    <h2>Nuova Lezione  Corso di</h2>
+    <h2>Modifica Lezione  Corso di</h2>
     <h2>"{{$corso->name}}"</h2>
+    <h3>Titolo Lezione</h3>
+    <h3>"{{$lezione->title}}"</h3>
     <br>
 
     <br>
@@ -33,17 +37,16 @@
 
     <iframe
 				width="90%"
-                @if (Session::exists('uploaded_pres_lez'))
-                src="/protected_file/{{session()->get('uploaded_pres_lez')}}#view=FitH"
-                @else
-                    src=""
-                @endif
-                height="400px">
+                src="/protected_file/{{$lezione->presentation}}#view=FitH"
+                height="800px">
             </iframe>
-
-    <form method="POST" action="upload-pres-lez" enctype="multipart/form-data" id="upload" >
+            <br>
+            <br>
+            <div class="container"  style="text-align: center;width:35%">
+    <form method="POST" action="re-upload-pres-lez" enctype="multipart/form-data" id="upload" >
         @csrf
-        <input type="hidden" name="id" value="{{$id}}"/>
+        <input type="hidden" name="id" value="{{$id_lezione}}"/>
+        <input type="hidden" name="id_corso" value="{{$id_corso}}"/>
         <input type="file" class="form-control" id="file-pres-lez" name="file-pres-lez"/>
         <p>
         <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
@@ -52,35 +55,30 @@
           </div>
 
         <div class="col-12">
-            <button type="submit" class="btn btn-primary" onclick="upload('upload','file-pres-lez','upload-pres-lez',1)">Upload</button>
+            <button type="submit" class="btn btn-primary" onclick="upload('upload','file-pres-lez','re-upload-pres-lez',1)">Upload</button>
         </div>
 
         <br>
         <br>
         </form>
-
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary" onclick=location.href="cancella-file-sessione-{{$id}}">Cancella File</button>
         </div>
         <br>
 
         <br>
-        @if(Session::exists('uploaded_pres_lez'))
         <h4>Svolgimento</h4>
 
         <iframe
                     width="90%"
-                    @if (Session::exists('uploaded_lesson'))
-                    src="/protected_file/{{session()->get('uploaded_lesson')}}#view=FitH"
-                    @else
-                        src=""
-                    @endif
-                    height="400px">
+                    src="/protected_file/{{$lezione->lesson}}#view=FitH"
+                    height="800px">
                 </iframe>
-
-        <form method="POST" action="upload-lesson" enctype="multipart/form-data" id="upload2" >
+                <br>
+                <br>
+                <div class="container"  style="text-align: center;width:35%">
+        <form method="POST" action="re-upload-lesson" enctype="multipart/form-data" id="upload2" >
             @csrf
-            <input type="hidden" name="id" value="{{$id}}"/>
+            <input type="hidden" name="id" value="{{$id_lezione}}"/>
+            <input type="hidden" name="id_corso" value="{{$id_corso}}"/>
             <input type="file" class="form-control" id="file-lesson" name="file-lesson"/>
             <p>
             <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
@@ -89,25 +87,21 @@
               </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" onclick="upload('upload2','file-lesson','upload-lesson',2)">Upload</button>
+                <button type="submit" class="btn btn-primary" onclick="upload('upload2','file-lesson','re-upload-lesson',2)">Upload</button>
             </div>
 
             <br>
             <br>
             </form>
-
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary" onclick=location.href="cancella-file-lezione-sessione-{{$id}}">Cancella File</button>
-            </div>
-            @endif
-
-            @if(Session::exists('uploaded_pres_lez') && Session::exists('uploaded_lesson'))
-            <form method="POST" action="carica-lezione" >
+                </div>
+            <div class="container"  style="text-align: center;width:35%">
+            <form method="POST" action="modifica-lezione" >
                 @csrf
-                <input type="hidden" name="id" value="{{$id}}"/>
+                <input type="hidden" name="id_lezione" value="{{$id_lezione}}"/>
+                <input type="hidden" name="id_corso" value="{{$id_corso}}"/>
                 <div class="col-md-12">
                     <h5>Numero</h5>
-                    <input type="text" class="form-control" id="numero" name="numero" maxlength="5" >
+                    <input type="text" class="form-control" id="numero" name="numero" value="{{$lezione->number}}"maxlength="5" >
                     <script type="text/javascript">
                         var numero_ = new LiveValidation('numero', {onlyOnSubmit: true});
                         numero_.add(Validate.Presence);
@@ -116,7 +110,7 @@
                 </div>
                 <div class="col-md-12">
                     <h5>Titolo</h5>
-                    <input type="text" class="form-control" id="titolo" name="titolo" maxlength="255" >
+                    <input type="text" class="form-control" id="titolo" name="titolo" value="{{$lezione->title}}" maxlength="255" >
                     <script type="text/javascript">
                         var titolo_ = new LiveValidation('titolo', {onlyOnSubmit: true});
                         titolo_.add(Validate.Presence);
@@ -125,7 +119,7 @@
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo" maxlength="5" style="display: inline">
+                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{$lezione->price}}" maxlength="5" style="display: inline">
                     <script type="text/javascript">
                         var prezzo_ = new LiveValidation('prezzo', {onlyOnSubmit: true});
                         prezzo_.add(Validate.Presence);
@@ -134,10 +128,10 @@
                 </div>
                 <br>
                 <div class="col-12" style="text-align:center">
-                    <button type="submit" class="btn btn-primary" >Carica</button>
+                    <button type="submit" class="btn btn-primary" >Modifica</button>
                 </div>
             </form>
-            @endif
+            </div>
             <br>
             <br>
 </div>
