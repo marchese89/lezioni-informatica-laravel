@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\ModDatiAdminController;
 use App\Http\Controllers\Admin\CorsiController;
 use App\Http\Controllers\Files\FileAccessController;
+use App\Http\Controllers\AcquistiController;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -52,6 +53,46 @@ Route::get('login', function () {
 Route::post('login',[LoginController::class,'login']);
 
 Route::get('logout',[LogoutController::class,'logout']);
+
+Route::get('aree-tematiche',function(){
+    return view('public.aree-tematiche');
+});
+
+Route::get('materie-{id_at}',function(){
+    return view('public.materie');
+});
+
+Route::get('corsi-{id_materia}',function(){
+    return view('public.corsi');
+});
+
+Route::get('corso-{id}',function(){
+    return view('public.corso');
+});
+
+Route::get('presentazione-lezione-{id_lezione}-{id_corso}',function(){
+    return view('public.presentazione-lezione');
+});
+
+Route::get('visualizza-lezione-{id_lezione}-{id_corso}',function(){
+    return view('public.contenuto-lezione');
+});
+
+Route::get('traccia-esercizio-{id_esercizio}-{id_corso}',function(){
+    return view('public.traccia-esercizio');
+});
+
+Route::get('aggiungi-al-carrello-{id}-{type}',[AcquistiController::class,'aggiungi_al_carrello']);
+
+Route::get('visualizza-carrello',function(){
+    return view('public.visualizza-carrello');
+});
+
+Route::get('rimuovi-dal-carrello-{id}-{type}',[AcquistiController::class,'rimuovi_dal_carrello']);
+
+Route::get('acquista',function(){
+    return view('public.acquista');
+});
 
 
 Route::middleware(['auth', 'role:admin'] )->group(function(){
