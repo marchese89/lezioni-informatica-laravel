@@ -36,7 +36,7 @@
                                 {{ $item->getNome() }}
                             </td>
                             <td>
-                                {{ $item->getPrezzo() }}
+                                {{ $item->getPrezzo() }} &nbsp;<strong>&euro;</strong>
                             </td>
                             <td>
                                 <button class="btn btn-primary"
@@ -47,6 +47,17 @@
                     @endforeach
                 </tbody>
             </table>
+            <div class="container">
+                <h3>Totale:
+                    @php
+                    echo
+                        session()
+                            ->get('carrello')
+                            ->getTotale();
+                    @endphp
+                    &nbsp;&euro;
+                </h3>
+            </div>
         @endif
         <br>
         <br>

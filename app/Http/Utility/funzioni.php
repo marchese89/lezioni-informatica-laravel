@@ -40,19 +40,21 @@ function punteggioInsegnante($conn): float
         return 0;
 }
 
-
-function stampa_data($data)
+class Data
 {
-    $anno = substr($data, 0, 4);
-    $mese = substr($data, 5, 2);
-    $giorno = substr($data, 8, 2);
-    $ora = substr($data, 11, 5);
-    $r = array();
-    $r['anno'] = $anno;
-    $r['mese'] = $mese;
-    $r['giorno'] = $giorno;
-    $r['ora'] = $ora;
 
-    return $r;
+    static function stampa_data($data)
+    {
+        $anno = substr($data, 0, 4);
+        $mese = substr($data, 5, 2);
+        $giorno = substr($data, 8, 2);
+        $ora = substr($data, 11, 5);
+        $r = array();
+        $r['anno'] = $anno;
+        $r['mese'] = $mese;
+        $r['giorno'] = $giorno;
+        $r['ora'] = $ora;
+
+        return $r;
+    }
 }
-?>
