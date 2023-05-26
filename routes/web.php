@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\ModDatiAdminController;
 use App\Http\Controllers\Admin\CorsiController;
 use App\Http\Controllers\Files\FileAccessController;
 use App\Http\Controllers\AcquistiController;
+use App\Http\Controllers\Public\LessonOnRequestController;
+use App\Http\Controllers\Student\StudenteController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -48,6 +50,10 @@ Route::get('login', function () {
     return view('sicurezza.login');
 })->name('login');
 
+Route::get('login-{back}', function () {
+    return view('sicurezza.login');
+})->name('login');
+
 Route::post('login', [LoginController::class, 'login']);
 
 Route::get('logout', [LogoutController::class, 'logout']);
@@ -80,6 +86,19 @@ Route::get('traccia-esercizio-{id_esercizio}-{id_corso}', function () {
     return view('public.traccia-esercizio');
 });
 
+Route::get('lezione-su-richiesta', function () {
+    return view('public.lezione-su-richiesta');
+});
+
+Route::post('add-file-su-richiesta',[LessonOnRequestController::class,'add_file_su_richiesta']);
+
+Route::get('elimina-lez-rich',[LessonOnRequestController::class,'elimina_lez_rich']);
+
+Route::post('carica-lez-rich',[LessonOnRequestController::class,'carica_lez_rich']);
+
+Route::get('esito-lez-rich',function(){
+    return view('public.esito-lez-rich');
+});
 
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -245,6 +264,26 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('ex-re-upload', [CorsiController::class, 're_upload_ex']);
 
     Route::post('modifica-esercizio', [CorsiController::class, 'modifica_esercizio']);
+
+    Route::get('studenti',function(){
+        return view('admin.studenti');
+    });
+
+    Route::get('richieste-studenti',function(){
+        return view('admin.richieste-studenti');
+    });
+
+    Route::get('visualizza-richiesta-{id}',function(){
+        return view('admin.visualizza-richiesta-lezione');
+    });
+
+    Route::post('sol-rich-upload',[LessonOnRequestController::class,'sol_rich_upload']);
+
+    Route::get('lez-rich-rem-exec-{id}',[LessonOnRequestController::class,'lez_rich_rem_exec']);
+
+    Route::post('carica-prezzo-lez-rich',[LessonOnRequestController::class,'carica_prezzo_lez_rich']);
+
+
 });
 
 Route::get('/protected_file/{path}', [FileAccessController::class, '__invoke']);
@@ -274,4 +313,51 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('acquisto-a-buon-fine', function () {
         return view('public.acquisto-effettuato');
     });
+
+    Route::get('imp-account-studente',function(){
+        return view('studente.impostazioni-account');
+    });
+
+    Route::get('mod-dati-pers-stud',function(){
+        return view('studente.mod-dati-pers');
+    });
+
+    Route::post('mod-indirizzo-stud',[StudenteController::class,'mod_indirizzo_stud']);
+
+    Route::get('mod-cred-stud',function(){
+        return view('studente.mod-cred');
+    });
+
+    Route::post('mod-email-stud',[StudenteController::class,'mod_email_stud']);
+
+    Route::post('mod-pass-stud',[StudenteController::class,'mod_pass_stud']);
+
+    Route::get('corsi',function(){
+        return view('studente.elenco-corsi');
+    });
+
+    Route::get('visualizza-corso-{id}',function(){
+        return view('studente.corso');
+    });
+
+    Route::get('lezione-{id_corso}-{id_lezione}', function () {
+        return view('studente.lezione');
+    });
+
+    Route::get('esercizio-{id_corso}-{id_esercizio}', function () {
+        return view('studente.esercizio');
+    });
+
+    Route::get('richieste-dirette',function(){
+        return view('studente.richieste-dirette');
+    });
+
+    Route::get('stud-visualizza-richiesta-{id}',function(){
+        return view('studente.visualizza-richiesta-lezione');
+    });
+
+    Route::get('richieste-dirette-acquistate',function(){
+        return view('studente.richieste-dirette-acquistate');
+    });
+
 });

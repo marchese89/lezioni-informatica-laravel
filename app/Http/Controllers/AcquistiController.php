@@ -7,19 +7,12 @@ include(app_path('Http/Utility/phpmailer/PHPMailer.php'));
 include(app_path('Http/Utility/phpmailer/SMTP.php'));
 include(app_path('Http/Utility/phpmailer/Exception.php'));
 include(app_path('Http/Utility/funzioni.php'));
-//require_once '../Utility/dompdf/autoload.inc.php';
-// Include required PHPMailer files
-//require '../Utility/phpmailer/PHPMailer.php';
-//require '../Utility/phpmailer/SMTP.php';
-//require '../Utility/phpmailer/Exception.php';
-//require '../Utility/funzioni.php';
+
 
 use Illuminate\Http\Request;
-use App\Http\Utility\Carrello;
 use App\Http\Utility\ElementoC;
 use App\Models\Exercise;
 use App\Models\Lesson;
-use Laravel\Cashier\Cashier;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Student;
@@ -74,6 +67,9 @@ class AcquistiController extends Controller
         }
         if ($type == 1 || $type == 4) {
             return  redirect('corso-' . $id);
+        }
+        if($type == 5){
+            return  redirect('stud-visualizza-richiesta-' . $id);
         }
     }
 

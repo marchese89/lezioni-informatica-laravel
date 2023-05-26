@@ -91,8 +91,8 @@
             <div class="card" style="width: 30rem;">
                 <div class="card-body">
                   <h5 class="card-title">Studenti</h5>
-                  <p class="card-text">In questa sezione ci sono le richieste degli studenti la pagina di chat</p>
-                  <a href="#" class="btn btn-primary">Accedi</a>
+                  <p class="card-text">In questa sezione ci sono le richieste degli studenti e le pagine di chat</p>
+                  <a href="studenti" class="btn btn-primary">Accedi</a>
                 </div>
             </div>
             <div class="card" style="width: 30rem;">

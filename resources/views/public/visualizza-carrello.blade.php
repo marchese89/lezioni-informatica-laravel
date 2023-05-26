@@ -50,8 +50,7 @@
             <div class="container">
                 <h3>Totale:
                     @php
-                    echo
-                        session()
+                        echo session()
                             ->get('carrello')
                             ->getTotale();
                     @endphp
@@ -59,12 +58,14 @@
                 </h3>
             </div>
         @endif
-        <br>
-        <br>
-        <div>
-            <button class="btn btn-primary" onclick=location.href="acquista">Acquista</button>
-        </div>
-        <br>
-        <br>
+        @if (count($items) != 0)
+            <br>
+            <br>
+            <div>
+                <button class="btn btn-primary" onclick=location.href="acquista">Acquista</button>
+            </div>
+            <br>
+            <br>
+        @endif
     </div>
 @endsection

@@ -27,20 +27,20 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            if($request->user()->role === 'admin'){
+            if ($request->user()->role === 'admin') {
                 return redirect('dashboard-admin');
-            }elseif($request->user()->role === 'student'){
-                Session::put('carrello',new Carrello());
-                return redirect('dashboard-studente');
+            } elseif ($request->user()->role === 'student') {
+                Session::put('carrello', new Carrello());
+                if (request('return') === '1') {
+                    return redirect('lezione-su-richiesta');
+                } else {
+                    return redirect('/');
+                }
             }
-
-
         }
 
         return back()->withErrors([
             'email' => 'Credenziali non corrette',
         ])->onlyInput('email');
-
-
     }
 }

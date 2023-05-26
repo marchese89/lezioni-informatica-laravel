@@ -2,25 +2,8 @@
 
 namespace App\Http\Utility;
 
-function prodotto_acquistato($cliente, $id, $tipo, $conn): bool
-{
-    $conn->query("LOCK TABLES ordine READ, prodotti_ordine READ");
-    $result = $conn->query("SELECT * FROM ordine WHERE cliente='$cliente'");
-    while ($ordine = $result->fetch_assoc()) {
-        $id_ordine = $ordine['id'];
-        $result2 = $conn->query("SELECT * FROM prodotti_ordine WHERE id_ordine='$id_ordine'");
-        while ($prod = $result2->fetch_assoc()) {
-            if ($prod['prodotto'] == $id && $prod['tipo'] == $tipo) {
-                $conn->query("UNLOCK TABLES");
-                return TRUE;
-            }
-        }
-    }
-    $conn->query("UNLOCK TABLES");
-    return FALSE;
-}
-
-
+use App\Models\Order;
+use App\Models\OrderProduct;
 
 function punteggioInsegnante($conn): float
 {
@@ -56,5 +39,23 @@ class Data
         $r['ora'] = $ora;
 
         return $r;
+    }
+}
+
+class Acquisti
+{
+    public static function prodotto_acquistato($id_studente, $id, $tipo): bool
+    {
+        $ordini = Order::where('student_id', '=', $id_studente)->get();
+        foreach ($ordini as $ordine) {
+            $prodotti_ordine = OrderProduct::where('id_ordine', '=', $ordine->id)->get();
+            foreach ($prodotti_ordine as $prodotto) {
+                if ($prodotto->id_prodotto == $id && $prodotto->tipo_prodotto == $tipo) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

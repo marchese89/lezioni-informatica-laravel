@@ -47,7 +47,7 @@
           </tr>
         </thead>
         @php
-           $lezioni = Lesson::all();
+           $lezioni = Lesson::where('course_id','=',request('id'))->get();
         @endphp
         <tbody>
             @foreach ($lezioni as $item)
@@ -94,7 +94,7 @@
           </tr>
         </thead>
         @php
-           $esercizi = Exercise::all();
+           $esercizi = Exercise::where('course_id','=',request('id'))->get();
         @endphp
         <tbody>
             @foreach ($esercizi as $item)

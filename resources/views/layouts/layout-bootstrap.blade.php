@@ -17,6 +17,10 @@
         body {
             overflow-y: scroll;
         }
+        #navbarSupportedContent ul li  a {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -40,19 +44,26 @@
                     </ul>
                 @endguest
                 @auth
-                    @if (auth()->user()->role !== 'admin')
+                    @if (auth()->user()->role === 'student')
                         <i class="fa fa-shopping-cart" aria-hidden="true"
                             style="display: inline;font-size:24px;cursor: pointer"
                             onclick=location.href="visualizza-carrello" style="">
-                            &nbsp;({{ session()->get('carrello')->nElementi() }})
+
                         </i>
+                        <label style="font-size:24px"> &nbsp;({{ session()->get('carrello')->nElementi() }})</label>
                     @endif
                     <ul class="navbar-nav text-right">
                         <li class="nav-item dropdown">
 
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                {{ auth()->user()->name }}
+                                {{ auth()->user()->name }} (@php
+                                    if(auth()->user()->role ==  'student'){
+                                        echo 'studente';
+                                    }else{
+                                        echo 'admin';
+                                    }
+                                    @endphp)
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @if (auth()->user()->role === 'admin')
@@ -95,7 +106,7 @@
                         </ul>
                         <ul class="navbar-nav mb-2 mb-lg-0">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Materiale su richiesta</a>
+                                <a class="nav-link active" aria-current="page" href="lezione-su-richiesta">Materiale su richiesta</a>
                             </li>
                         </ul>
                         <ul class="navbar-nav mb-2 mb-lg-0">
