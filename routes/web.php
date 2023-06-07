@@ -6,12 +6,11 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\ModDatiAdminController;
 use App\Http\Controllers\Admin\CorsiController;
+use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Files\FileAccessController;
 use App\Http\Controllers\AcquistiController;
 use App\Http\Controllers\Public\LessonOnRequestController;
 use App\Http\Controllers\Student\StudenteController;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +42,13 @@ Route::get('registrazione_no', function () {
     return view('sicurezza.registrazione_no');
 });
 
+Route::get('privacy',function(){
+    return view('public.privacy-policy');
+});
+
+Route::get('coockie',function(){
+    return view('public.coockie-policy');
+});
 
 Route::post('registrati', [RegistrazioneController::class, 'carica_utente']);
 
@@ -100,6 +106,15 @@ Route::get('esito-lez-rich',function(){
     return view('public.esito-lez-rich');
 });
 
+Route::get('informazioni',function(){
+    return view('public.informazioni');
+});
+
+Route::get('recupera-password',function(){
+    return view('public.recupera-password');
+});
+
+Route::post('recupera-password',[LoginController::class,'recupera_password']);
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('dashboard-admin', function () {
@@ -124,9 +139,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.mod-indirizzo');
     });
 
-    Route::get('mod-chiave-priv-stripe', function () {
-        return view('admin.mod-chiave-priv-stripe');
-    });
 
     Route::get('mod-certif', function () {
         return view('admin.mod-certif');
@@ -160,8 +172,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('mod-indirizzo-admin', [ModDatiAdminController::class, 'mod_ind']);
 
     Route::post('upload-foto-admin', [ModDatiAdminController::class, 'upload_foto']);
-
-    Route::post('mod-chiave-stripe', [ModDatiAdminController::class, 'modifica_chiave']);
 
     Route::post('mod-foto-cert-admin', [ModDatiAdminController::class, 'upload_cert']);
 
@@ -283,6 +293,55 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::post('carica-prezzo-lez-rich',[LessonOnRequestController::class,'carica_prezzo_lez_rich']);
 
+    Route::get('vendite',function(){
+        return view('admin.vendite');
+    });
+
+    Route::get('admin-ordine-{id}',function(){
+        return view('admin.ordine');
+    });
+
+    Route::get('admin-fattura-{id}',function(){
+        return view('admin.fattura');
+    });
+
+    Route::get('cambia_tabella_ordini',[AjaxController::class,'cambia_tabella_ordini']);
+
+    Route::get('chat-studenti',function(){
+        return view('admin.chat-studenti');
+    });
+
+    Route::get('visualizza-chat-{id}',function(){
+        return view('admin.visualizza-chat');
+    });
+
+    Route::get('admin-invia-messaggio-{id_chat}-{aut}-{testo}',[AjaxController::class,'invia_messaggio']);
+
+    Route::get('leggi-messaggi-insegnante-{id_chat}',[AjaxController::class,'leggi_messaggi']);
+
+    Route::get('fattura-extra',function(){
+        return view('admin.fattura-extra');
+    });
+
+    Route::post('crea_fattura_extra',[AcquistiController::class,'crea_fattura']);
+
+    Route::get('fattura-creata',function(){
+        return view('admin.fattura-creata');
+    });
+
+    Route::get('fatture',function(){
+        return view('admin.fatture');
+    });
+
+    Route::get('visualizza-fattura-{id}',function(){
+        return view('admin.visualizza-fattura');
+    });
+
+    Route::get('mod-part-iva',function(){
+        return view('admin.mod-part-iva');
+    });
+
+    Route::post('mod-piva',[ModDatiAdminController::class,'mod_piva']);
 
 });
 
@@ -358,6 +417,58 @@ Route::middleware(['auth', 'role:student'])->group(function () {
 
     Route::get('richieste-dirette-acquistate',function(){
         return view('studente.richieste-dirette-acquistate');
+    });
+
+    Route::get('ordini',function(){
+        return view('studente.ordini');
+    });
+
+    Route::get('ordine-{id}',function(){
+        return view('studente.ordine');
+    });
+
+    Route::get('fattura-{id}',function(){
+        return view('studente.fattura');
+    });
+
+    Route::get('cambia_tabella_ordini_studente',[AjaxController::class,'cambia_tabella_ordini_studente']);
+
+    Route::get('leggi-messaggi-studente-{id_chat}',[AjaxController::class,'leggi_messaggi_stud']);
+
+    Route::get('studente-invia-messaggio-{id_chat}-{aut}-{testo}',[AjaxController::class,'invia_messaggio']);
+
+    Route::get('recensione',function(){
+        return view('studente.recensione');
+    });
+
+    Route::get('invia-feedback-{punteggio}',[AjaxController::class,'invia_feedback']);
+
+    Route::get('invia-recensione-{testo}',[AjaxController::class,'invia_recensione']);
+
+    Route::get('pagamento-extra',function(){
+        return view('studente.pagamento-extra');
+    });
+
+    Route::post('prepara-pagamento',[AcquistiController::class,'prepara_pagamento']);
+
+    Route::get('processa_pagamento',[AcquistiController::class,'processa_pagamento']);
+
+    Route::get('paga',function(){
+        return view('studente.paga');
+    });
+
+    Route::get('pagamento-effettuato', [AcquistiController::class, 'acquisto']);
+
+    Route::get('pagamento-ok',function(){
+        return view('studente.pagamento-ok');
+    });
+
+    Route::get('fatture-studente',function(){
+        return view('studente.fatture-studente');
+    });
+
+    Route::get('fattura0-studente-{id}',function(){
+        return view('studente.fattura-studente');
     });
 
 });

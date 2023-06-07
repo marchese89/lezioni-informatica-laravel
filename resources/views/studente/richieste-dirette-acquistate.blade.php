@@ -1,4 +1,4 @@
-@extends('admin.dashboard-admin')
+@extends('studente.dashboard-studente')
 
 @section('inner')
     <style>
@@ -10,7 +10,11 @@
         }
     </style>
     @php
+        include app_path('Http/Utility/funzioni.php');
+        use App\Http\Utility\Data;
         use App\Models\LessonOnRequest;
+        use App\Models\ChatMessage;
+        use App\Models\Chat;
     @endphp
     <ul class="nav">
         <li class="nav-item">
@@ -29,9 +33,10 @@
                 </tr>
             </thead>
             @php
-                $lezioni_su_richiesta = LessonOnRequest::where('student_id','=', auth()->user()->student->id)
-                ->where('paid','=',1)
-                ->get();
+                $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
+                    ->where('paid', '=', 1)
+                    ->orderBy('date', 'desc')
+                    ->get();
             @endphp
             <tbody>
                 @foreach ($lezioni_su_richiesta as $item)
@@ -42,12 +47,19 @@
                             {{ $item->title }}
                         </td>
                         <td>
-                            {{ $item->date }}
+                            {{ Data::stampa_stringa_data($item->date) }}
                         </td>
                         <td>
                             @php
-                                $r = $item->escaped;
-                                if ($r == 0) {
+                                $chat = Chat::where('id_prodotto', '=', $item->id)
+                                    ->where('tipo_prodotto', '=', 5)
+                                    ->where('id_studente', '=', auth()->user()->student->id)
+                                    ->first();
+
+                                $chat_ = ChatMessage::where('chat_id', '=', $chat->id)
+                                    ->orderBy('date', 'desc')
+                                    ->first();
+                                if ($chat_ != null && $chat_->author == 1) {
                                     echo '<div class="cerchio" style="background-color: red;"></div>';
                                 } else {
                                     echo '<div class="cerchio" style="background-color: green;"></div>';

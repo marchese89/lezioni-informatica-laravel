@@ -24,7 +24,11 @@
         <h2>Login</h2>
         <form class="row g-3" method="POST" action="login">
             @csrf
-            <input type="hidden" name="return" value="<?php if(request('back') != null){echo '1';}else{echo '0';} ?>">
+            <input type="hidden" name="return" value="<?php if (request('back') != null) {
+                echo '1';
+            } else {
+                echo '0';
+            } ?>">
             <div class="col-md-12">
                 <label for="inputEmail4" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" maxlength="255">
@@ -48,6 +52,9 @@
                     pass1_.add(Validate.Presence);
                     pass1_.add(Validate.Pass);
                 </script>
+            </div>
+            <div class="col-md-12">
+                <a href="recupera-password">Recupera Password</a>
             </div>
             <div class="col-md-12">
                 @if ($errors->any())

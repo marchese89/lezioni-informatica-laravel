@@ -24,6 +24,7 @@ use App\Models\Admin;
 use App\Models\Chat;
 use App\Models\Invoice;
 use App\Models\InvoiceSheet;
+use App\Models\StudentInvoice;
 use App\Models\LessonOnRequest;
 // Define name spaces
 use PHPMailer\PHPMailer\PHPMailer;
@@ -68,7 +69,7 @@ class AcquistiController extends Controller
         if ($type == 1 || $type == 4) {
             return  redirect('corso-' . $id);
         }
-        if($type == 5){
+        if ($type == 5) {
             return  redirect('stud-visualizza-richiesta-' . $id);
         }
     }
@@ -498,6 +499,7 @@ class AcquistiController extends Controller
             <td align="center">
             <font size=4 ><b>' . $prezzo . '&euro;</b></font></td>
             </tr>';
+                    $prezzo_totale = $prezzo_totale + $richiesta->price;
                     $prodottoOrdine = new OrderProduct();
                     $prodottoOrdine->id_ordine = $id_ordine;
                     $prodottoOrdine->id_prodotto = $id;
@@ -612,6 +614,11 @@ class AcquistiController extends Controller
         $fattura->file = $percorso_fattura;
         $fattura->save();
 
+        $fattura_studente = new StudentInvoice();
+        $fattura_studente->student_id = $studente->id;
+        $fattura_studente->invoice_id = $fattura->id;
+        $fattura_studente->save();
+
         //invio email
         // Create instance of PHPMailer
         $mail = new PHPMailer();
@@ -650,5 +657,551 @@ class AcquistiController extends Controller
         DB::commit();
 
         return redirect('acquisto-a-buon-fine');
+    }
+
+    public function crea_fattura()
+    {
+        $nome = request('inputNome');
+        $cognome = request('inputCognome');
+        $indirizzo = request('inputIndirizzo');
+        $numero_civico =  request('inputNumeroCivico');
+        $citta =  request('inputCitta');
+        $provincia = request('inputProvincia');
+        $cap = request('inputCAP');
+        $cf = request('inputCF');
+        $descrizione = request('descrizione');
+        $prezzo =  request('prezzo');
+        $qta = request('qta');
+        $note = request('note');
+        $carbonDate = Carbon::now()->toDateString(); //Carbon::parse($data);
+        // Trasforma l'oggetto Carbon in una stringa formattata
+        $data_ = Data::stampa_data($carbonDate);
+        $dataFattura = $data_['giorno'] . '/' . $data_['mese'] . '/' . $data_['anno'];
+        $ultimaFattura = Invoice::first();
+        $ultimo = $ultimaFattura->number;
+
+        $data_ultima_f = $ultimaFattura->date;
+        $data2 = Data::stampa_data($data_ultima_f);
+        $numeroFattura  = 1;
+        if ($data_['anno'] == $data2['anno']) {
+            $numeroFattura = $ultimo + 1;
+        }
+        $admin = User::where('role', '=', 'admin')->first();
+        $adminData = Admin::where('user_id', '=', $admin->id)->first();
+        $html = '
+<table width="100%" cellspacing="0" cellpadding="0"
+		align="center"
+		style="border-collapse: collapse;"
+		RULES=none FRAME=none border="0">
+<tr style="height:100px">
+<td align="center" colspan="3">
+<h1>Fattura</h1>
+</td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $admin->name . ' ' . $admin->surname . '</font>
+</td>
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $adminData->street . ', ' . $adminData->house_number . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $adminData->postal_code . ' - ' . $adminData->city . ' (' . $adminData->province . ')</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >PARTITA IVA:&nbsp;' . $adminData->piva . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >COD. FISC: ' . $adminData->cf . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<h2>Cliente</h2>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $nome . '&nbsp;' . $cognome . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $indirizzo . ',' . $numero_civico . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $cap . ' - ' . $citta . '&nbsp;(' . $provincia . ')</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >CF:&nbsp;' .  $cf . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 ><b>DATA: </b></font>' .
+            $dataFattura
+            . '</td>
+
+<td></td>
+</tr>
+<tr style="height:100px">
+<td align="left" style="vertical-align:top">
+<font size=4 ><b>FATTURA: </b></font>' .
+            $numeroFattura . '</td>
+
+<td></td>
+</tr>
+<tr>
+
+
+<td align="left" colspan="2">
+<table  rules="all" border="1" align="right" style="width:100%" >
+<tr style="height:50px">
+
+<td align="center">
+<font size=4 ><b>&nbsp;DESCRIZIONE&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;PREZZO&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;QTA&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;IMPORTO&nbsp;</b></font>
+</td>
+</tr>';
+
+        $importo = $prezzo * $qta;
+
+
+        $html = $html . '<tr><td align="center">
+            <font size=4 >' . $descrizione . '</font>
+            </td>
+            <td align="center">
+            <font size=4 >' . $prezzo . '&euro;</font>
+            </td>
+            <td align="center">
+            <font size=4 >' . $qta . '</font>
+            </td>
+            <td align="center">
+            <font size=4 ><b>' . $importo . '&euro;</b></font></td>
+            </tr>';
+
+
+        $html = $html . '
+            </table>
+            </td>
+            </tr>
+            <tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 >IMPONIBILE:&nbsp; </font>
+<font size=3 >' . number_format($importo / 1.04, 2, '.', '') . '&nbsp;&euro;</font>
+</td>
+</tr>
+<tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 >Rivalsa Inps 4%:&nbsp;</font>
+<font size=3 >' . number_format(($importo / 1.04) * 4 / 100, 2, '.', '') . '&nbsp;&euro;</font>
+</td>
+</tr>
+<tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 ><b>TOTALE</b>&nbsp;</font>
+<font size=3 ><b>' . $importo . '&nbsp;&euro;</b></font>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >Imposta di bollo &euro; 2,00 su originale</font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >su Importi superiori ad &euro; 77,47</font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 ><b>NOTE</b></font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >' . $note . '</font>
+</td>
+<td>
+</td>
+</tr>
+<tr align="center" style="height:200px" >
+<td colspan="2">
+<font size=3 >&nbsp;</font>
+</td>
+</tr>
+<tr align="center">
+<td colspan="2">
+<font size=3 ><b>Operazione in franchigia da Iva art. 1 cc. 54-89 L. 190/2014 –</b></font>
+</td>
+</tr>
+<tr align="center">
+<td colspan="2">
+<font size=3 ><b>Non soggetta a ritenuta d’acconto ai sensi del c. 67 L. 190/2014</b></font>
+</td>
+</tr>
+</table>
+';
+        $number = 1;
+        while (file_exists(storage_path('/app/private/') . $number . '.pdf')) {
+            $number++;
+        }
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portait');
+        $dompdf->render();
+
+        $pdf = $dompdf->output();
+        file_put_contents(storage_path('/app/private/') . $number . '.pdf', $pdf);
+        $percorso_fattura = $number . '.pdf';
+        $fattura = new InvoiceSheet();
+        $fattura->file = $percorso_fattura;
+        $fattura->save();
+        return redirect('fattura-creata');
+    }
+
+    public function prepara_pagamento()
+    {
+        session()->put('descrizione', request('descrizione'));
+        session()->put('prezzo', request('prezzo'));
+        session()->put('qta', request('qta'));
+        if ((request('prezzo') * request('qta')) > 77.47) {
+            return back()->withError(
+                'Importo superiore a 77.47 € (max consentito)'
+            );
+        } else {
+            return redirect('paga');
+        }
+    }
+
+    public function processa_pagamento(Request $request)
+    {
+        $user = $request->user();
+        $user->createOrGetStripeCustomer();
+        $tot = session()->get('prezzo') * session()->get('qta') * 100;
+        $payment = $user->pay(
+            $tot
+        );
+
+        $output = [
+            'clientSecret' => $payment->client_secret,
+        ];
+
+        return json_encode($output);
+    }
+
+    public function acquisto(Request $request)
+    {
+        $user = $request->user();
+        $studente = Student::where('user_id', '=', $user->id)->first();
+        $nome = $user->name;
+        $cognome = $user->surname;
+        $indirizzo = $studente->street;
+        $numero_civico = $studente->house_number;
+        $citta = $studente->city;
+        $provincia = $studente->province;
+        $cap = $studente->postal_code;
+        $cf = $studente->cf;
+        $descrizione = session()->get('descrizione');
+        $prezzo =  session()->get('prezzo');
+        $qta = session()->get('qta');
+
+        $carbonDate = Carbon::now()->toDateString(); //Carbon::parse($data);
+        // Trasforma l'oggetto Carbon in una stringa formattata
+        $data_ = Data::stampa_data($carbonDate);
+        $dataFattura = $data_['giorno'] . '/' . $data_['mese'] . '/' . $data_['anno'];
+        $ultimaFattura = Invoice::first();
+        $ultimo = $ultimaFattura->number;
+
+        $data_ultima_f = $ultimaFattura->date;
+        $data2 = Data::stampa_data($data_ultima_f);
+        $numeroFattura  = 1;
+        if ($data_['anno'] == $data2['anno']) {
+            $numeroFattura = $ultimo + 1;
+        }
+        $admin = User::where('role', '=', 'admin')->first();
+        $adminData = Admin::where('user_id', '=', $admin->id)->first();
+        $html = '
+<table width="100%" cellspacing="0" cellpadding="0"
+		align="center"
+		style="border-collapse: collapse;"
+		RULES=none FRAME=none border="0">
+<tr style="height:100px">
+<td align="center" colspan="3">
+<h1>Fattura</h1>
+</td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $admin->name . ' ' . $admin->surname . '</font>
+</td>
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $adminData->street . ', ' . $adminData->house_number . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >' . $adminData->postal_code . ' - ' . $adminData->city . ' (' . $adminData->province . ')</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >PARTITA IVA:&nbsp;' . $adminData->piva . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 >COD. FISC: ' . $adminData->cf . '</font>
+</td>
+
+<td></td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<h2>Cliente</h2>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $nome . '&nbsp;' . $cognome . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $indirizzo . ',' . $numero_civico . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >' . $cap . ' - ' . $citta . '&nbsp;(' . $provincia . ')</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td></td>
+
+<td align="right">
+<font size=4 >CF:&nbsp;' .  $cf . '</font>
+</td>
+</tr>
+<tr style="height:30px">
+<td align="left">
+<font size=4 ><b>DATA: </b></font>' .
+            $dataFattura
+            . '</td>
+
+<td></td>
+</tr>
+<tr style="height:100px">
+<td align="left" style="vertical-align:top">
+<font size=4 ><b>FATTURA: </b></font>' .
+            $numeroFattura . '</td>
+
+<td></td>
+</tr>
+<tr>
+
+
+<td align="left" colspan="2">
+<table  rules="all" border="1" align="right" style="width:100%" >
+<tr style="height:50px">
+
+<td align="center">
+<font size=4 ><b>&nbsp;DESCRIZIONE&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;PREZZO&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;QTA&nbsp;</b></font>
+</td>
+<td align="center">
+<font size=4 ><b>&nbsp;IMPORTO&nbsp;</b></font>
+</td>
+</tr>';
+
+        $importo = $prezzo * $qta;
+
+
+        $html = $html . '<tr><td align="center">
+            <font size=4 >' . $descrizione . '</font>
+            </td>
+            <td align="center">
+            <font size=4 >' . $prezzo . '&euro;</font>
+            </td>
+            <td align="center">
+            <font size=4 >' . $qta . '</font>
+            </td>
+            <td align="center">
+            <font size=4 ><b>' . $importo . '&euro;</b></font></td>
+            </tr>';
+
+
+        $html = $html . '
+            </table>
+            </td>
+            </tr>
+            <tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 >IMPONIBILE:&nbsp; </font>
+<font size=3 >' . number_format($importo / 1.04, 2, '.', '') . '&nbsp;&euro;</font>
+</td>
+</tr>
+<tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 >Rivalsa Inps 4%:&nbsp;</font>
+<font size=3 >' . number_format(($importo / 1.04) * 4 / 100, 2, '.', '') . '&nbsp;&euro;</font>
+</td>
+</tr>
+<tr style="height:50px">
+<td></td>
+
+<td align="right">
+<font size=3 ><b>TOTALE</b>&nbsp;</font>
+<font size=3 ><b>' . $importo . '&nbsp;&euro;</b></font>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >Imposta di bollo &euro; 2,00 su originale</font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >su Importi superiori ad &euro; 77,47</font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 ><b>NOTE</b></font>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<font size=3 >Pagamento online tramite Carta di Credito</font>
+</td>
+<td>
+</td>
+</tr>
+<tr align="center" style="height:200px" >
+<td colspan="2">
+<font size=3 >&nbsp;</font>
+</td>
+</tr>
+<tr align="center">
+<td colspan="2">
+<font size=3 ><b>Operazione in franchigia da Iva art. 1 cc. 54-89 L. 190/2014 –</b></font>
+</td>
+</tr>
+<tr align="center">
+<td colspan="2">
+<font size=3 ><b>Non soggetta a ritenuta d’acconto ai sensi del c. 67 L. 190/2014</b></font>
+</td>
+</tr>
+</table>
+';
+        $number = 1;
+        while (file_exists(storage_path('/app/private/') . $number . '.pdf')) {
+            $number++;
+        }
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portait');
+        $dompdf->render();
+
+        $pdf = $dompdf->output();
+        file_put_contents(storage_path('/app/private/') . $number . '.pdf', $pdf);
+        $percorso_fattura = $number . '.pdf';
+        $fattura = new InvoiceSheet();
+        $fattura->file = $percorso_fattura;
+        $fattura->save();
+
+        $fattura_studente = new StudentInvoice();
+        $fattura_studente->student_id = $studente->id;
+        $fattura_studente->invoice_sheet_id = $fattura->id;
+        $fattura_studente->save();
+
+        session()->forget('descrizione');
+        session()->forget('prezzo');
+        session()->forget('qta');
+
+        return redirect('pagamento-ok');
     }
 }

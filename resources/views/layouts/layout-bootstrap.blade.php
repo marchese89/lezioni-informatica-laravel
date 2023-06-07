@@ -9,19 +9,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script type="text/javascript" src="/custom_javascript/livevalidation_standalone.compressed.js"></script>
-    <script type="text/javascript" src="/custom_javascript/utility.js?ts=<?= time() ?>&quot"></script>
-    <link href="/custom_css/validation.css" rel="stylesheet" type="text/css">
-    <link href="/custom_css/admin.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="custom_javascript/livevalidation_standalone.compressed.js"></script>
+    <script type="text/javascript" src="custom_javascript/utility.js?ts=<?= time() ?>&quot"></script>
+    <link href="custom_css/validation.css" rel="stylesheet" type="text/css">
+    <link href="custom_css/admin.css" rel="stylesheet" type="text/css">
+    <link href="custom_css/index.css" rel="stylesheet" type="text/css">
+    <link href="custom_css/chat.css" rel="stylesheet" type="text/css">
     <style>
         body {
             overflow-y: scroll;
         }
-        #navbarSupportedContent ul li  a {
+
+        #navbarSupportedContent ul li a {
             font-size: 1.2em;
             font-weight: 600;
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monomaniac+One&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -58,12 +64,12 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 {{ auth()->user()->name }} (@php
-                                    if(auth()->user()->role ==  'student'){
+                                    if (auth()->user()->role == 'student') {
                                         echo 'studente';
-                                    }else{
+                                    } else {
                                         echo 'admin';
                                     }
-                                    @endphp)
+                                @endphp)
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @if (auth()->user()->role === 'admin')
@@ -83,8 +89,9 @@
 
         <div class="text-bg-light p-3">
             <div style="text-align:center;">
-                <h1>Lezioni Informatica</h1>
+                <h1 style="font-family: 'Monomaniac One', sans-serif;font-size:56px">Lezioni Informatica</h1>
             </div>
+
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
 
@@ -94,59 +101,38 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="/">Home</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="aree-tematiche">Aree Tematiche</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="lezione-su-richiesta">Materiale su richiesta</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Pagamenti</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Informazioni</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Contatti</a>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Cookie Policy</a>
-                            </li>
-                        </ul>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-primary" onclick=location.href="/">Home</button>
+
+                            <button class="btn btn-primary" onclick=location.href="aree-tematiche">Aree
+                                Tematiche</button>
+
+                            <button class="btn btn-primary" onclick=location.href="lezione-su-richiesta">Materiale
+                                su
+                                richiesta</button>
+
+                            <button class="btn btn-primary" onclick=location.href="informazioni">Informazioni</button>
+
+
+                        </div>
                     </div>
                 </div>
             </nav>
 
     </header>
 
-
+    </div>
     @yield('content')
 
-    </div>
+
     <footer class="py-4 bg-light mt-auto">
         <div class="container-fluid px-4">
             <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; Lezioni Informatica 2023</div>
+                <div class="text-muted">Lezioni Informatica 2023</div>
                 <div>
-                    <a href="#">Privacy Policy</a>
+                    <a href="privacy">Privacy Policy</a>
                     &middot;
-                    <a href="#">Termini e Condizioni</a>
+                    <a href="coockie">Coockie Policy</a>
                 </div>
             </div>
         </div>

@@ -7,9 +7,14 @@
             height: 40px;
             background-color: red;
             border-radius: 50%;
+            display: inline-block;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
     @php
+        include app_path('Http/Utility/funzioni.php');
+        use App\Http\Utility\Data;
         use App\Models\LessonOnRequest;
     @endphp
     <ul class="nav">
@@ -20,7 +25,9 @@
             <a class="nav-link active" aria-current="page" href="studenti">Studenti</a>
         </li>
     </ul>
-    <div class="row g-0 container-fluid">
+    <div class="row g-0 container-fluid" style="text-align: center">
+        <h2>Richieste Studenti</h2>
+        <br>
         <table class="table">
             <thead>
                 <tr>
@@ -32,7 +39,7 @@
                 </tr>
             </thead>
             @php
-                $lezioni_su_richiesta = LessonOnRequest::all();
+                $lezioni_su_richiesta = LessonOnRequest::orderBy('date', 'asc')->get();
             @endphp
             <tbody>
                 @foreach ($lezioni_su_richiesta as $item)
@@ -43,7 +50,7 @@
                             {{ $item->title }}
                         </td>
                         <td>
-                            {{ $item->date }}
+                            {{ Data::stampa_stringa_data($item->date) }}
                         </td>
                         <td>
                             @php

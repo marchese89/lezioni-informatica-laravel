@@ -16,7 +16,7 @@
     <div class="card col-md-6" style="width: 30rem;">
         <div class="card-body">
           <h5 class="card-title">Chat Studenti</h5>
-          <a href="#" class="btn btn-primary">Accedi</a>
+          <a href="chat-studenti" class="btn btn-primary">Accedi</a>
         </div>
     </div>
 </div>

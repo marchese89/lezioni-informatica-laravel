@@ -53,7 +53,7 @@
             @endphp
             <tbody>
                 @foreach ($lezioni as $item)
-                    @if (!Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 0))
+                    @if (auth()->user() != null && !Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 0))
                         <tr>
 
                             <th scope="row">{{ $item->id }}</th>
@@ -83,6 +83,38 @@
                                 @endif
                             </td>
                         </tr>
+                    @else
+                        @if (auth()->user() == null)
+                            <tr>
+
+                                <th scope="row">{{ $item->id }}</th>
+                                <td>
+                                    {{ $item->number }}
+                                </td>
+                                <td>
+                                    {{ $item->title }}
+                                </td>
+                                <td>
+                                    @if ($item->price !== 0)
+                                        {{ $item->price }} <strong>&euro;</strong>
+                                    @else
+                                        <strong style="color: green">Gratis</strong>
+                                    @endif
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                        onclick=location.href="presentazione-lezione-{{ $item->id }}-{{ $item->course_id }}">Anteprima</button>
+                                    @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
+                                        <button type="submit" class="btn btn-primary"
+                                            onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-0">Acquista</button>
+                                    @endif
+                                    @if ($item->price === 0)
+                                        <button type="submit" class="btn btn-primary"
+                                            onclick=location.href="visualizza-lezione-{{ $item->id }}-{{ $item->course_id }}">Contenuto</button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     @endif
                 @endforeach
             </tbody>
@@ -107,7 +139,7 @@
             @endphp
             <tbody>
                 @foreach ($esercizi as $item)
-                    @if (!Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 2))
+                    @if (auth()->user() != null && !Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 2))
                         <tr>
                             <th scope="row">{{ $item->id }}</th>
                             <td>
@@ -135,6 +167,36 @@
                                 @endif
                             </td>
                         </tr>
+                    @else
+                        @if (auth()->user() == null)
+                            <tr>
+                                <th scope="row">{{ $item->id }}</th>
+                                <td>
+
+                                </td>
+                                <td>
+                                    {{ $item->title }}
+                                </td>
+                                <td>
+                                    @if ($item->price !== 0)
+                                        {{ $item->price }} <strong>&euro;</strong>
+                                    @else
+                                        <strong style="color: green">Gratis</strong>
+                                    @endif
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary"
+                                        onclick=location.href="traccia-esercizio-{{ $item->id }}-{{ request('id') }}">Anteprima</button>
+                                    @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
+                                        <button type="submit" class="btn btn-primary"
+                                            onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-2">Acquista</button>
+                                    @endif
+                                    @if ($item->price === 0)
+                                        <button type="submit" class="btn btn-primary">Contenuto</button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     @endif
                 @endforeach
             </tbody>

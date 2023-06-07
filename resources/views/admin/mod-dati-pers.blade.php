@@ -24,14 +24,14 @@
     </div>
     <div class="card col-md-6" style="width: 30rem;">
         <div class="card-body">
-          <h5 class="card-title">Modifica Chiave Privata Stripe</h5>
-          <a href="mod-chiave-priv-stripe" class="btn btn-primary">Accedi</a>
+          <h5 class="card-title">Modifica Certificati</h5>
+          <a href="mod-certif" class="btn btn-primary">Accedi</a>
         </div>
     </div>
     <div class="card col-md-6" style="width: 30rem;">
         <div class="card-body">
-          <h5 class="card-title">Modifica Certificati</h5>
-          <a href="mod-certif" class="btn btn-primary">Accedi</a>
+          <h5 class="card-title">Modifica Partita IVA</h5>
+          <a href="mod-part-iva" class="btn btn-primary">Accedi</a>
         </div>
     </div>
 </div>

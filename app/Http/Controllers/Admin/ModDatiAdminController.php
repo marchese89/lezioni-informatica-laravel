@@ -27,6 +27,9 @@ class ModDatiAdminController extends Controller
             File::delete(base_path('\public'). $admin->photo);
         }
         $file = $request->file('file');
+        if($file == null){
+            return redirect('mod-foto-admin');
+        }
         $name = $file->hashName();
         $file->move(base_path('\public\files\photo_admin'),$name);
 
@@ -79,16 +82,6 @@ class ModDatiAdminController extends Controller
         return redirect('aggiungi-certif');
     }
 
-    function modifica_chiave(Request $request){
-        $chiave = $request->input('chiave');
-        $admin = auth()->user()->admin;
-
-        $admin->stripe_private_key = $chiave;
-
-        $admin->save();
-
-        return redirect('mod-chiave-priv-stripe');
-    }
 
     function modifica_nome_cert(Request $request){
         $id = $request->input('id');
@@ -99,6 +92,16 @@ class ModDatiAdminController extends Controller
 
         return redirect('mod-certif');
 
+    }
+
+    public function mod_piva()
+    {
+        $piva = request('piva');
+        $admin = auth()->user()->admin;
+        $admin->piva = $piva;
+        $admin->save();
+
+        return redirect('mod-part-iva');
     }
 
     function mod_ind(Request $request){
@@ -171,7 +174,7 @@ class ModDatiAdminController extends Controller
         $pass_old = password_hash($request->input('inputPassword_old'), PASSWORD_DEFAULT);
         if(Hash::check($pass_old, auth()->user()->password) ){
             return back()->withErrors([
-                'pass0' => 'La password non corrisponde  a quella già inserita'
+                'pass0' => 'La password non corrisponde  a quella gi&agrave; inserita'
             ]);
         }
 

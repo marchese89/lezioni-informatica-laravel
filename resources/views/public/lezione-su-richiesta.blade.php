@@ -6,7 +6,7 @@
             font-size: 1.4em;
         }
     </style>
-    <div class="container" style="text-align: center;height:700px">
+    <div class="container" style="text-align: center;">
         <br>
         <h3>Richista Svolgimento lezione su Commissione</h3>
 
@@ -68,7 +68,7 @@
                             <br>
                             <br>
                             <div class="col-12">
-                                <button type="submit" class="btn btn-primary" >Invia Richiesta</button>
+                                <button type="submit" class="btn btn-primary">Invia Richiesta</button>
                             </div>
                         </form>
                         <br>

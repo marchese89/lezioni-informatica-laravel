@@ -1,39 +1,99 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" style="height:250px;">
-  <div class="carousel-inner" style="height:250px">
-    <div class="carousel-item active">
-      <img src="/files/peakpx.jpg" class="d-block w-100" alt="..." style="height:250px;">
-    </div>
-    <div class="carousel-item">
-      <img src="/files/peakpx.jpg" class="d-block w-100" alt="..." style="height:250px;">
-    </div>
-    <div class="carousel-item">
-      <img src="/files/peakpx.jpg" class="d-block w-100" alt="..." style="height:250px;">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-    <table style="width: 100%; font-size: 28pt;font-family: cursive;text-align:center;" id="pannello_controllo">
-        <tr style="height: 100px;"><th><b>Sei uno <font color="green">studente</font>?</b></th></tr>
-        <tr style="height: 100px"><th><b>Hai bisogno di aiuto con lo studio</b></th></tr>
-        <tr style="height: 100px"><th><b>dell'<font color="green">informatica</font>?</b></th></tr>
-        <tr style="height: 100px"><th><b>Acquista i <font color="green">corsi</font> o le <font color="green">lezioni singole</font>,</b></th></tr>
-        <tr style="height: 100px"><th><b>acquista gli <font color="green">esercizi svolti,</font></b></th></tr>
-        <tr style="height: 100px"><th><b>manda i tuoi <font color="green">esercizi svolti</font> da correggere,</b></th></tr>
-        <tr style="height: 100px"><th><b>manda le <font color="green">tracce</font> degli esercizi da svolgere.</b></th></tr>
-        <tr style="height: 100px"><th><b>Oppure se preferisci si possono fare</b></th></tr>
-        <tr style="height: 100px"><th><b>le classiche <font color="green">lezioni private</font></b></th></tr>
-        <tr style="height: 100px"><th><b>Sono sono a tua disposizione,</b></th></tr>
-        <tr style="height: 100px"><th><b><font color="green">sempre</font> vicino alle tue esigenze!</b></th></tr>
-    </table>
-@endsection
+    <style>
+        p {
+            font-size: 1.4em;
+        }
 
+        p a {
+            font-size: 1.4em;
+        }
+
+        .stars2 a{
+            opacity: 20%;
+            cursor:  default;
+        }
+    </style>
+    @php
+        use App\Models\User;
+        use App\Models\Student;
+        use App\Models\Admin;
+        use App\Models\Feedback;
+
+        $feedbacks = Feedback::all();
+
+        $user = User::where('role', '=', 'admin')->first();
+        $admin = $user->admin;
+    @endphp
+    <div class="container" style="text-align: center">
+        <br>
+        <br>
+        <img alt="Foto" src=".{{ $admin->photo }}" height="400" style="border-radius: 10px 10px 10px 10px" />
+        <p>Laureato Magistrale in Ingegeria Informatica (110/110)</p>
+        <p>Offre supporto allo studio:</p>
+        <p>soluzione esercizi</p>
+        <p>lezioni private online</p>
+        <p>Tariffe:</p>
+        <p>15&euro; l'ora per le scuole superiori</p>
+        <p>20&euro; l'ora per l'univesit&agrave;</p>
+        <p><strong>Contatti:</strong></p>
+        <p>
+            Email: <a href="mailto:marchese89@hotmail.com">marchese89@hotmail.com</a>
+        </p>
+        <p>
+            Telefono: <a href="tel:+393272991334">+393272991334</a>
+        </p>
+        <p>
+            <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360" width="30px"
+                style="border-radius: 5px 5px 5px 5px;">
+            <a href="https://api.whatsapp.com/send?phone=3272991334" target="_blank">Invia
+                messaggio su WhatsApp</a>
+        </p>
+
+        @if ($feedbacks != null && $feedbacks->count() > 0)
+            <h2>Punteggio Feedback</h2>
+            @php
+                $count = $feedbacks->count();
+                $somma = 0.0;
+                foreach ($feedbacks as $feed) {
+                    $somma += $feed->punteggio;
+                }
+                $f = number_format($somma / $count, 2, ',', '.');
+            @endphp
+            <strong style="font-size: 20pt">{{ $f }}/5</strong>
+            <div class="stars2" id="stars">
+                <a <?php if($somma / $count > 0.5){?> style="opacity: 100%;" <?php }?>
+                    >⭐</a>
+                <a <?php if($somma / $count > 1.5){?> style="opacity: 100%;" <?php }?>
+                    >⭐</a>
+                <a <?php if($somma / $count > 2.5){?> style="opacity: 100%;" <?php }?>
+                    >⭐</a>
+                <a <?php if($somma / $count > 3.5){?> style="opacity: 100%;" <?php }?>
+                    >⭐</a>
+                <a <?php if($somma / $count > 4.5){?> style="opacity: 100%;" <?php }?>
+                    >⭐</a>
+            </div>
+            <br>
+            <br>
+            <h2>Recensioni</h2>
+            <br>
+            <br>
+            @foreach ($feedbacks as $feed)
+                @if ($feed->recensione != null && $feed->recensione != '')
+                    @php
+
+                        $id_studente = $feed->student_id;
+                        $studente = Student::where('id', '=', $id_studente)->first();
+                    @endphp
+                    <h4>{{ $studente->user->name . ' ' . $studente->user->surname }}</h4>
+                    <p>{{ $feed->recensione }}</p>
+                    <br>
+                    <br>
+                @else
+                    <h4>Al momento non ci sono recensioni</h4>
+                @endif
+            @endforeach
+        @endif
+    </div>
+@endsection
