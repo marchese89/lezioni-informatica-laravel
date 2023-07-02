@@ -121,7 +121,6 @@
 
     </header>
 
-    </div>
     @yield('content')
 
 
