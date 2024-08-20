@@ -616,7 +616,7 @@ class AcquistiController extends Controller
 
         $fattura_studente = new StudentInvoice();
         $fattura_studente->student_id = $studente->id;
-        $fattura_studente->invoice_id = $fattura->id;
+        $fattura_studente->invoice_sheet_id = $fattura->id;
         $fattura_studente->save();
 
         //invio email

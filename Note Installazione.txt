@@ -1,0 +1,1 @@
+Aggiungere (decommentando) al file php.ini extension=mbstring
