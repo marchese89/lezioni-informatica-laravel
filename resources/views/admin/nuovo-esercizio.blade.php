@@ -12,7 +12,7 @@
             <a class="nav-link active" aria-current="page" href="elenco-corsi">Elenco Corsi</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="modifica-dettagli-corso-{{ request('id') }}">Corso</a>
+            <a class="nav-link active" aria-current="page" href="/modifica-dettagli-corso-{{ request('course') }}">Corso</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:35%">
@@ -111,6 +111,7 @@
         @if (Session::exists('uploaded_trace_ex') && Session::exists('uploaded_ex'))
             <form method="POST" action="/exercises">
                 @csrf
+                @method('POST')
                 <input type="hidden" name="id" value="{{ $id }}" />
                 <div class="col-md-12">
                     <h5>Titolo</h5>

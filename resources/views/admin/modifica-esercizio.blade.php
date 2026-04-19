@@ -12,8 +12,7 @@
             <a class="nav-link active" aria-current="page" href="elenco-corsi">Elenco Corsi</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page"
-                href="modifica-dettagli-corso-{{ request('id_corso') }}">Corso</a>
+            <a class="nav-link active" aria-current="page" href="/modifica-dettagli-corso-{{ request('course') }}">Corso</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:100%">
@@ -21,8 +20,8 @@
             use App\Models\Course;
             use App\Models\Exercise;
 
-            $id_corso = request('id_corso');
-            $id_esercizio = request('id_esercizio');
+            $id_corso = request('course');
+            $id_esercizio = request('exercise');
             $corso = Course::where('id', '=', $id_corso)->first();
             $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
 
@@ -92,10 +91,9 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="modifica-esercizio">
+            <form method="POST" action="/exercises/{{ $id_esercizio }}" enctype="multipart/form-data" id="delete">
                 @csrf
-                <input type="hidden" name="id_esercizio" value="{{ $id_esercizio }}" />
-                <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
+                @method('PUT')
                 <div class="col-md-12">
                     <h5>Titolo</h5>
                     <input type="text" class="form-control" id="titolo" name="titolo"

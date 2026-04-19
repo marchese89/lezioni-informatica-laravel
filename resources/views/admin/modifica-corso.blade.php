@@ -113,7 +113,7 @@
                         <td>{{ $item->price }} <strong>&euro;</strong></td>
                         <td>
                             <button class="btn btn-primary"
-                                onclick=location.href="modifica-esercizio-{{ request('id') }}-{{ $item->id }}">Modifica</button>
+                                onclick=location.href="/exercises/{{ request('id') }}/edit/{{ $item->id }}">Modifica</button>
                             <form method="POST" action="/exercises/{{ $item->id }}" style="display: inline">
                                 @csrf
                                 @method('DELETE')

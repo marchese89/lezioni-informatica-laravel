@@ -32,20 +32,17 @@
     <div class="row g-0 container-fluid" style="text-align: center">
         <h2>Vendite</h2>
         @php
-            include app_path('Http/Utility/funzioni.php');
             use App\Models\Order;
             use App\Models\OrderProduct;
-            use App\Http\Utility\Acquisti;
-            use App\Http\Utility\Data;
+            use App\Services\AcquistiService;
+            use App\Helpers\DateHelper;
             use App\Models\User;
             use App\Models\Student;
             use Illuminate\Support\Facades\DB;
 
-            $primo_ordine = DB::table('orders')
-                ->orderBy(DB::raw('date'), 'desc')
-                ->first();
+            $primo_ordine = DB::table('orders')->orderBy(DB::raw('date'), 'desc')->first();
             if ($primo_ordine != null) {
-                $data_primo = Data::stampa_data($primo_ordine->date);
+                $data_primo = DateHelper::parse($primo_ordine->date);
 
                 $ordine = DB::table('orders')
                     ->whereMonth('date', $data_primo['mese'])
@@ -81,10 +78,11 @@
                 <select class="form-select" id="floatingSelect2" aria-label="Floating label select example"
                     onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
                     <option selected value="{{ $data_primo['mese'] }}">
-                        {{ Acquisti::stringa_mese(intval($data_primo['mese'])) }}
+                        {{ AcquistiService::stringa_mese(intval($data_primo['mese'])) }}
                     </option>
                     @foreach ($months as $item)
-                        <option value="{{ $item->month }}">{{ Acquisti::stringa_mese(intval($item->month)) }}</option>
+                        <option value="{{ $item->month }}">{{ AcquistiService::stringa_mese(intval($item->month)) }}
+                        </option>
                     @endforeach
                 </select>
                 <label for="floatingSelect">Mese</label>
@@ -115,12 +113,12 @@
                                 @endphp
                             </td>
                             <td>
-                                {{ Data::stampa_stringa_data($item->date) }}
+                                {{ DateHelper::format($item->date) }}
                             </td>
                             <td>
-                                {{ Acquisti::get_totale_ordine($item->id) }}<strong>&euro;</strong>
+                                {{ AcquistiService::get_totale_ordine($item->id) }}<strong>&euro;</strong>
                                 @php
-                                    $totale += Acquisti::get_totale_ordine($item->id);
+                                    $totale += AcquistiService::get_totale_ordine($item->id);
                                 @endphp
                             </td>
                             <td><button class="btn btn-primary"

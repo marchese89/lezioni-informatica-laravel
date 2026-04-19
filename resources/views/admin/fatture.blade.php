@@ -9,9 +9,8 @@
     <div class="container" style="text-align: center">
 
         @php
-            include app_path('Http/Utility/funzioni.php');
             use App\Models\InvoiceSheet;
-            use App\Http\Utility\Data;
+            use App\Helpers\DateHelper;
             $fatture = InvoiceSheet::orderBy('date', 'desc')->get();
         @endphp
         @if (InvoiceSheet::count() > 0)
@@ -25,11 +24,12 @@
                 </thead>
                 <tbody>
                     @foreach ($fatture as $item)
-                    <tr>
-                        <td>{{$item->id}}</td>
-                        <td>{{Data::stampa_stringa_data($item->date)}}</td>
-                        <td><button class="btn btn-primary" onclick=location.href="visualizza-fattura-{{$item->id}}">Visualizza</button></td>
-                    </tr>
+                        <tr>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ DateHelper::format($item->date) }}</td>
+                            <td><button class="btn btn-primary"
+                                    onclick=location.href="visualizza-fattura-{{ $item->id }}">Visualizza</button></td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-include app_path('Http/Utility/funzioni.php');
-
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Utility\Acquisti;
-use App\Http\Utility\Data;
-use App\Models\User;
+use App\Services\AcquistiService;
+use App\Helpers\DateHelper;
 use App\Models\Student;
 use App\Models\ChatMessage;
 use App\Models\Chat;
@@ -54,13 +50,13 @@ class AjaxController extends Controller
             $html = $html .
                 '</td>
                         <td>';
-            $html = $html .  Data::stampa_stringa_data($item->date);
+            $html = $html .  DateHelper::format($item->date);
             $html = $html .
                 '</td>
                         <td>';
-            $html = $html .   Acquisti::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
+            $html = $html .   AcquistiService::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
 
-            $totale = $totale + Acquisti::get_totale_ordine($item->id);
+            $totale = $totale + AcquistiService::get_totale_ordine($item->id);
             $html = $html .
                 '</td>
                         <td><button class="btn btn-primary"
@@ -113,13 +109,13 @@ class AjaxController extends Controller
             $html = $html .
                 '</td>
                         <td>';
-            $html = $html .  Data::stampa_stringa_data($item->date);
+            $html = $html .  DateHelper::format($item->date);
             $html = $html .
                 '</td>
                         <td>';
-            $html = $html .   Acquisti::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
+            $html = $html .   AcquistiService::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
 
-            $totale = $totale + Acquisti::get_totale_ordine($item->id);
+            $totale = $totale + AcquistiService::get_totale_ordine($item->id);
             $html = $html .
                 '</td>
                         <td><button class="btn btn-primary"
@@ -164,7 +160,7 @@ class AjaxController extends Controller
                         <div class="message-content">
                             <p class="sender-name">' . $utente->name . ' ' . $utente->surname . '</p>
                             <p class="message-text">' . $item->message . '</p>
-                            <span class="timestamp">' . Data::stampa_stringa_data($item->date) . '</span>
+                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
                         </div>
                     </div>';
             } else {
@@ -173,7 +169,7 @@ class AjaxController extends Controller
                         <div class="message-content" style="background-color: #5755c559;">
                             <p class="sender-name">Tu</p>
                             <p class="message-text">' . $item->message . '</p>
-                            <span class="timestamp">' . Data::stampa_stringa_data($item->date) . '</span>
+                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
                         </div>
                     </div>';
             }
@@ -198,7 +194,7 @@ class AjaxController extends Controller
                         <div class="message-content">
                             <p class="sender-name">Insegnante</p>
                             <p class="message-text">' . $item->message . '</p>
-                            <span class="timestamp">' . Data::stampa_stringa_data($item->date) . '</span>
+                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
                         </div>
                     </div>';
             } else {
@@ -207,7 +203,7 @@ class AjaxController extends Controller
                         <div class="message-content" style="background-color: #5755c559;">
                             <p class="sender-name">Tu</p>
                             <p class="message-text">' . $item->message . '</p>
-                            <span class="timestamp">' . Data::stampa_stringa_data($item->date) . '</span>
+                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
                         </div>
                     </div>';
             }

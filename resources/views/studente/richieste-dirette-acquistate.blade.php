@@ -10,8 +10,7 @@
         }
     </style>
     @php
-        include app_path('Http/Utility/funzioni.php');
-        use App\Http\Utility\Data;
+        use App\Helpers\DateHelper;
         use App\Models\LessonOnRequest;
         use App\Models\ChatMessage;
         use App\Models\Chat;
@@ -47,7 +46,7 @@
                             {{ $item->title }}
                         </td>
                         <td>
-                            {{ Data::stampa_stringa_data($item->date) }}
+                            {{ DateHelper::format($item->date) }}
                         </td>
                         <td>
                             @php

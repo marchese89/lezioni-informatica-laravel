@@ -19,7 +19,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Http\Utility\Data;
+use App\Helpers\DateHelper;
 use App\Models\Admin;
 use App\Models\Chat;
 use App\Models\Invoice;
@@ -115,26 +115,26 @@ class AcquistiController extends Controller
         $ordine->save();
 
         $dompdf = new Dompdf();
-        $data = $ordine->date;
-        $carbonDate = Carbon::parse($data);
-        // Trasforma l'oggetto Carbon in una stringa formattata
-        $dateString = $carbonDate->format('Y-m-d H:i:s');
-        $data_ = Data::stampa_data($dateString);
-        $dataFattura = $data_['giorno'] . '/' . $data_['mese'] . '/' . $data_['anno'];
-        $ultimaFattura = Invoice::first();
-        $ultimo = $ultimaFattura->number;
+        $data = Carbon::parse($ordine->date);
 
-        $data_ultima_f = $ultimaFattura->date;
-        $data2 = Data::stampa_data($data_ultima_f);
-        $numeroFattura  = 1;
-        if ($data_['anno'] == $data2['anno']) {
-            $numeroFattura = $ultimo + 1;
+        $ultimaFattura = Invoice::first();
+
+        $numeroFattura = 1;
+
+        if ($ultimaFattura) {
+            $dataUltima = Carbon::parse($ultimaFattura->date);
+
+            if ($data->year === $dataUltima->year) {
+                $numeroFattura = $ultimaFattura->number + 1;
+            }
         }
 
-        $ultimaFattura->delete();
+        $dataFattura = $data->format('d/m/Y');
+
+        // ⚠️ meglio NON cancellare, ma aggiornare o creare nuova
         $nuovaFattura = new Invoice();
         $nuovaFattura->number = $numeroFattura;
-        $nuovaFattura->date = $dateString;
+        $nuovaFattura->date = $data->toDateTimeString();
         $nuovaFattura->save();
 
 
@@ -673,19 +673,24 @@ class AcquistiController extends Controller
         $prezzo =  request('prezzo');
         $qta = request('qta');
         $note = request('note');
-        $carbonDate = Carbon::now()->toDateString(); //Carbon::parse($data);
-        // Trasforma l'oggetto Carbon in una stringa formattata
-        $data_ = Data::stampa_data($carbonDate);
-        $dataFattura = $data_['giorno'] . '/' . $data_['mese'] . '/' . $data_['anno'];
-        $ultimaFattura = Invoice::first();
-        $ultimo = $ultimaFattura->number;
 
-        $data_ultima_f = $ultimaFattura->date;
-        $data2 = Data::stampa_data($data_ultima_f);
-        $numeroFattura  = 1;
-        if ($data_['anno'] == $data2['anno']) {
-            $numeroFattura = $ultimo + 1;
+        $data = Carbon::now();
+
+        $ultimaFattura = Invoice::first();
+
+        $numeroFattura = 1;
+
+        if ($ultimaFattura) {
+            $dataUltimaFattura = Carbon::parse($ultimaFattura->date);
+
+            if ($data->year === $dataUltimaFattura->year) {
+                $numeroFattura = $ultimaFattura->number + 1;
+            }
         }
+
+        // data formattata per stampa fattura
+        $dataFattura = $data->format('d/m/Y');
+
         $admin = User::where('role', '=', 'admin')->first();
         $adminData = Admin::where('user_id', '=', $admin->id)->first();
         $html = '
@@ -957,19 +962,23 @@ class AcquistiController extends Controller
         $prezzo =  session()->get('prezzo');
         $qta = session()->get('qta');
 
-        $carbonDate = Carbon::now()->toDateString(); //Carbon::parse($data);
-        // Trasforma l'oggetto Carbon in una stringa formattata
-        $data_ = Data::stampa_data($carbonDate);
-        $dataFattura = $data_['giorno'] . '/' . $data_['mese'] . '/' . $data_['anno'];
-        $ultimaFattura = Invoice::first();
-        $ultimo = $ultimaFattura->number;
+        $data = Carbon::now();
 
-        $data_ultima_f = $ultimaFattura->date;
-        $data2 = Data::stampa_data($data_ultima_f);
-        $numeroFattura  = 1;
-        if ($data_['anno'] == $data2['anno']) {
-            $numeroFattura = $ultimo + 1;
+        $ultimaFattura = Invoice::first();
+
+        $numeroFattura = 1;
+
+        if ($ultimaFattura) {
+            $dataUltimaFattura = Carbon::parse($ultimaFattura->date);
+
+            if ($data->year === $dataUltimaFattura->year) {
+                $numeroFattura = $ultimaFattura->number + 1;
+            }
         }
+
+        // formato per stampa fattura
+        $dataFattura = $data->format('d/m/Y');
+
         $admin = User::where('role', '=', 'admin')->first();
         $adminData = Admin::where('user_id', '=', $admin->id)->first();
         $html = '

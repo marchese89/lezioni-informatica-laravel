@@ -2,7 +2,6 @@
 
 @section('inner')
     @php
-        include app_path('Http/Utility/funzioni.php');
         use App\Models\Course;
         use App\Models\Lesson;
         use App\Models\ChatMessage;
@@ -11,7 +10,7 @@
         use App\Models\Student;
         use App\Models\LessonOnRequest;
         use App\Models\Exercise;
-        use App\Http\Utility\Data;
+        use App\Helpers\DateHelper;
 
         $chat = Chat::where('id_prodotto', '=', request('id_esercizio'))
             ->where('tipo_prodotto', '=', 2)
@@ -95,9 +94,7 @@
             <br>
             @php
 
-                $messaggi = ChatMessage::where('chat_id', '=', $chat->id)
-                    ->orderBy('date', 'asc')
-                    ->get();
+                $messaggi = ChatMessage::where('chat_id', '=', $chat->id)->orderBy('date', 'asc')->get();
                 $studente = Student::where('id', '=', $chat->id_studente)->first();
                 $utente = $studente->user;
             @endphp
@@ -108,7 +105,7 @@
                             <div class="message-content">
                                 <p class="sender-name">Insegnante</p>
                                 <p class="message-text">{{ $item->message }}</p>
-                                <span class="timestamp">{{ Data::stampa_stringa_data($item->date) }}</span>
+                                <span class="timestamp">{{ DateHelper::format($item->date) }}</span>
                             </div>
                         </div>
                     @else
@@ -116,7 +113,7 @@
                             <div class="message-content" style="background-color: #5755c559;">
                                 <p class="sender-name">Tu</p>
                                 <p class="message-text">{{ $item->message }}</p>
-                                <span class="timestamp">{{ Data::stampa_stringa_data($item->date) }}</span>
+                                <span class="timestamp">{{ DateHelper::format($item->date) }}</span>
                             </div>
                         </div>
                     @endif

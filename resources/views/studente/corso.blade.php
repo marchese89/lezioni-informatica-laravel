@@ -11,11 +11,10 @@
     </ul>
     <div class="container" style="text-align: center;width:35%">
         @php
-            include app_path('Http/Utility/funzioni.php');
             use App\Models\Course;
             use App\Models\Lesson;
             use App\Models\Exercise;
-            use App\Http\Utility\Acquisti;
+            use App\Services\AcquistiService;
 
             $corso = Course::where('id', '=', request('id'))->first();
 
@@ -43,7 +42,7 @@
                     $lezioni = Lesson::all();
                 @endphp
                 @foreach ($lezioni as $item)
-                    @if (Acquisti::prodotto_acquistato(request()->user()->student->id, $item->id, 0))
+                    @if (AcquistiService::prodotto_acquistato(request()->user()->student->id, $item->id, 0))
                         <tr>
                             <th scope="row">{{ $item->id }}</th>
                             <td>
@@ -80,7 +79,7 @@
                     $esercizi = Exercise::all();
                 @endphp
                 @foreach ($esercizi as $item)
-                    @if (Acquisti::prodotto_acquistato(request()->user()->student->id, $item->id, 2))
+                    @if (AcquistiService::prodotto_acquistato(request()->user()->student->id, $item->id, 2))
                         <tr>
                             <th scope="row">{{ $item->id }}</th>
                             <td>

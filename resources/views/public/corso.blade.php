@@ -16,13 +16,12 @@
 
     <div class="container" style="text-align: center;width:35%">
         @php
-            include app_path('Http/Utility/funzioni.php');
             use App\Models\ThemeArea;
             use App\Models\Matter;
             use App\Models\Course;
             use App\Models\Lesson;
             use App\Models\Exercise;
-            use App\Http\Utility\Acquisti;
+            use App\Services\AcquistiService;
 
             $corso = Course::where('id', '=', request('id'))->first();
 
@@ -53,7 +52,7 @@
             @endphp
             <tbody>
                 @foreach ($lezioni as $item)
-                    @if (auth()->user() != null && !Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 0))
+                    @if (auth()->user() != null && !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 0))
                         <tr>
 
                             <th scope="row">{{ $item->id }}</th>
@@ -139,7 +138,7 @@
             @endphp
             <tbody>
                 @foreach ($esercizi as $item)
-                    @if (auth()->user() != null && !Acquisti::prodotto_acquistato(auth()->user()->student->id, $item->id, 2))
+                    @if (auth()->user() != null && !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 2))
                         <tr>
                             <th scope="row">{{ $item->id }}</th>
                             <td>

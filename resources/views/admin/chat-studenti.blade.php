@@ -13,7 +13,6 @@
         }
     </style>
     @php
-        include app_path('Http/Utility/funzioni.php');
         use App\Models\Chat;
         use App\Models\ChatMessage;
         use App\Models\Exercise;
@@ -21,7 +20,7 @@
         use App\Models\LessonOnRequest;
         use App\Models\User;
         use App\Models\Student;
-        use App\Http\Utility\Data;
+        use App\Helpers\DateHelper;
         use Illuminate\Support\Facades\DB;
     @endphp
     <ul class="nav">
@@ -47,10 +46,8 @@
                 </tr>
             </thead>
             @php
-                $prima_chat = DB::table('chats')
-                    ->orderBy(DB::raw('created_at'), 'desc')
-                    ->first();
-                $data_primo = Data::stampa_data($prima_chat->created_at);
+                $prima_chat = DB::table('chats')->orderBy(DB::raw('created_at'), 'desc')->first();
+                $data_primo = DateHelper::parse($prima_chat->created_at);
                 $chat = DB::table('chats')
                     ->whereMonth('created_at', $data_primo['mese'])
                     ->whereYear('created_at', $data_primo['anno'])
@@ -95,7 +92,11 @@
                                         $nome = $esercizio->title;
                                         break;
                                     case 5:
-                                        $lezione_su_rich = LessonOnRequest::where('id', '=', $item->id_prodotto)->first();
+                                        $lezione_su_rich = LessonOnRequest::where(
+                                            'id',
+                                            '=',
+                                            $item->id_prodotto,
+                                        )->first();
                                         $nome = $lezione_su_rich->title;
                                         break;
                                     default:

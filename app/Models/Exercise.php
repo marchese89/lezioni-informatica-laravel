@@ -13,10 +13,10 @@ class Exercise extends Model
 
     protected $fillable = [
         'title',
-        'description',
         'course_id',
-        'trace_path',
-        'execution_path',
+        'trace',
+        'execution',
+        'price',
     ];
 
     public function course(): BelongsTo

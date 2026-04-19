@@ -33,16 +33,15 @@
         <h3>Ordini Effettuati</h3>
 
         @php
-            include app_path('Http/Utility/funzioni.php');
-            use App\Http\Utility\Data;
+            use App\Helpers\DateHelper;
             use App\Models\Order;
-            use App\Http\Utility\Acquisti;
+            use App\Services\AcquistiService;
 
             $primo_ordine = Order::where('student_id', '=', auth()->user()->student->id)
                 ->orderBy('date', 'desc')
                 ->first();
             if ($primo_ordine != null) {
-                $data_primo = Data::stampa_data($primo_ordine->date);
+                $data_primo = DateHelper::parse($primo_ordine->date);
 
                 $ordini = DB::table('orders')
                     ->where('student_id', '=', auth()->user()->student->id)
@@ -81,10 +80,11 @@
                 <select class="form-select" id="floatingSelect2" aria-label="Floating label select example"
                     onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
                     <option selected value="{{ $data_primo['mese'] }}">
-                        {{ Acquisti::stringa_mese(intval($data_primo['mese'])) }}
+                        {{ AcquistiService::stringa_mese(intval($data_primo['mese'])) }}
                     </option>
                     @foreach ($months as $item)
-                        <option value="{{ $item->month }}">{{ Acquisti::stringa_mese(intval($item->month)) }}</option>
+                        <option value="{{ $item->month }}">{{ AcquistiService::stringa_mese(intval($item->month)) }}
+                        </option>
                     @endforeach
                 </select>
                 <label for="floatingSelect">Mese</label>
@@ -106,7 +106,7 @@
 
                             <th scope="row">{{ $item->id }}</th>
                             <td>
-                                {{ Data::stampa_stringa_data($item->date) }}
+                                {{ DateHelper::format($item->date) }}
                             </td>
                             <td>
                                 <button class="btn btn-primary"
@@ -117,6 +117,6 @@
                 </tbody>
             </table>
         @else
-        <h3>Non ci sono ordini!</h3>
+            <h3>Non ci sono ordini!</h3>
         @endif
     @endsection
