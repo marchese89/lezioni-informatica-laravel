@@ -13,9 +13,11 @@ class Matter extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'theme_area_id'];
+
     public function theme_area(): BelongsTo
     {                                      // foreign_key     owner_key
-        return $this->belongsTo(ThemeArea::class,'theme_area_id', 'id');
+        return $this->belongsTo(ThemeArea::class, 'theme_area_id', 'id');
     }
     public function courses(): HasMany
     {

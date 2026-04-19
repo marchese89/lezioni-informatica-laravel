@@ -11,8 +11,16 @@ class Exercise extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'course_id',
+        'trace_path',
+        'execution_path',
+    ];
+
     public function course(): BelongsTo
     {                                      // foreign_key     owner_key
-        return $this->belongsTo(Course::class,'course_id', 'id');
+        return $this->belongsTo(Course::class, 'course_id', 'id');
     }
 }

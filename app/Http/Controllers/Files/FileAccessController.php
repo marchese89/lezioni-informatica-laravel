@@ -7,12 +7,9 @@ include app_path('Http/Utility/funzioni.php');
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\Student;
 use App\Http\Utility\Acquisti;
 use App\Models\LessonOnRequest;
 use App\Models\Order;
@@ -86,20 +83,18 @@ class FileAccessController extends Controller
                 }
                 $ordine = Order::where('student_id', '=', $studente->id)
                     ->where('invoice', '=', $path)->first();
-                if($ordine != null){
+                if ($ordine != null) {
                     return Storage::response($path2);
                 }
-                $fattura = InvoiceSheet::where('file','=',$path)->first();
-                $count = StudentInvoice::where('student_id','=', $studente->id)
-                ->where('invoice_sheet_id','=',$fattura->id)->count();
-                if($count > 0){
+                $fattura = InvoiceSheet::where('file', '=', $path)->first();
+                $count = StudentInvoice::where('student_id', '=', $studente->id)
+                    ->where('invoice_sheet_id', '=', $fattura->id)->count();
+                if ($count > 0) {
                     return Storage::response($path2);
                 }
-
             } else {
                 abort(404);
             }
-
         }
 
         abort(404);

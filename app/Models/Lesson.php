@@ -11,8 +11,14 @@ class Lesson extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'content',
+        'course_id',
+    ];
+
     public function course(): BelongsTo
     {                                      // foreign_key     owner_key
-        return $this->belongsTo(Course::class,'course_id', 'id');
+        return $this->belongsTo(Course::class, 'course_id', 'id');
     }
 }

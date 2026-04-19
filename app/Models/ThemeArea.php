@@ -13,6 +13,8 @@ class ThemeArea extends Model
 
     protected $table = 'theme_areas';
 
+    protected $fillable = ['name'];
+
     public function matter(): HasMany
     {
         return $this->hasMany(Matter::class);
