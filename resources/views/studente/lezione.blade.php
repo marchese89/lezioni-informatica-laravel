@@ -17,6 +17,7 @@
             ->where('id_studente', '=', auth()->user()->student->id)
             ->first();
     @endphp
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
         setInterval(leggi_messaggi, 1000);
 
@@ -28,26 +29,38 @@
                 }
             };
             //aut=1 -> insegnante
-            xmlhttp.open("GET", "leggi-messaggi-studente-" + <?php echo $chat->id; ?>, true);
+            xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
             xmlhttp.send();
         }
 
         function invia_messaggio(testo) {
-            _("messaggio").value = "";
-            if (testo == "") {
+            document.getElementById("messaggio").value = "";
+
+            if (!testo || testo.trim() === "") {
                 return;
-            } else {
-                let xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    }
-                };
-                //aut=1 -> insegnante
-                xmlhttp.open("GET", "studente-invia-messaggio-" + <?php echo $chat->id; ?> + "-0-" + testo, true);
-                xmlhttp.send();
             }
 
+            let xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    console.log(this.responseText);
+                }
+            };
+
+            xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
+
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // CSRF Laravel (OBBLIGATORIO)
+            xmlhttp.setRequestHeader(
+                "X-CSRF-TOKEN",
+                document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            );
+
+            xmlhttp.send(
+                "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
+            );
         }
     </script>
     <ul class="nav">
@@ -58,18 +71,10 @@
             <a class="nav-link active" aria-current="page" href="corsi">Corsi</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="visualizza-corso-{{ request('id_corso') }}">Corso</a>
+            <a class="nav-link active" aria-current="page" href="/course/{{ request('id_corso') }}">Corso</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:100%">
-        @php
-
-            $id_corso = request('id_corso');
-            $id_lezione = request('id_lezione');
-            $corso = Course::where('id', '=', $id_corso)->first();
-            $lezione = Lesson::where('id', '=', $id_lezione)->first();
-
-        @endphp
         <h2>Lezione Corso di</h2>
         <h2>"{{ $corso->name }}"</h2>
         <h3>Titolo Lezione</h3>

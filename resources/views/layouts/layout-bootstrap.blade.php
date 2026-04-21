@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lezioni Informatica</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
@@ -52,8 +52,8 @@
                 @auth
                     @if (auth()->user()->role === 'student')
                         <i class="fa fa-shopping-cart" aria-hidden="true"
-                            style="display: inline;font-size:24px;cursor: pointer"
-                            onclick=location.href="visualizza-carrello" style="">
+                            style="display: inline;font-size:24px;cursor: pointer" onclick=location.href="/carrello"
+                            style="">
 
                         </i>
                         <label style="font-size:24px"> &nbsp;({{ session()->get('carrello')->nElementi() }})</label>
@@ -104,10 +104,10 @@
                         <div class="btn-group" role="group">
                             <button class="btn btn-primary" onclick=location.href="/">Home</button>
 
-                            <button class="btn btn-primary" onclick=location.href="aree-tematiche">Aree
+                            <button class="btn btn-primary" onclick=location.href="/aree-tematiche">Aree
                                 Tematiche</button>
 
-                            <button class="btn btn-primary" onclick=location.href="lezione-su-richiesta">Materiale
+                            <button class="btn btn-primary" onclick=location.href="/lezione-su-richiesta">Materiale
                                 su
                                 richiesta</button>
 

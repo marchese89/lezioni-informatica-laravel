@@ -8,9 +8,7 @@
     <div class="container" style="text-align: center;width:80%; height:800px">
 
         @php
-            $items = session()
-                ->get('carrello')
-                ->contenuto();
+            $items = session()->get('carrello')->contenuto();
         @endphp
         @if (count($items) == 0)
             <br>
@@ -39,8 +37,14 @@
                                 {{ $item->getPrezzo() }} &nbsp;<strong>&euro;</strong>
                             </td>
                             <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="rimuovi-dal-carrello-{{ $item->getId() }}-{{ $item->getTipoElemento() }}">Rimuovi</button>
+                                <form id="form-remove-{{ $item->getId() }}-{{ $item->getTipoElemento() }}" method="POST"
+                                    style="display: inline"
+                                    action="/carrello/remove/{{ $item->getId() }}/{{ $item->getTipoElemento() }}"
+                                    style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-primary">Rimuovi</button>
+                                </form>
                             </td>
 
                         </tr>
@@ -50,9 +54,7 @@
             <div class="container">
                 <h3>Totale:
                     @php
-                        echo session()
-                            ->get('carrello')
-                            ->getTotale();
+                        echo session()->get('carrello')->getTotale();
                     @endphp
                     &nbsp;&euro;
                 </h3>
@@ -62,7 +64,7 @@
             <br>
             <br>
             <div>
-                <button class="btn btn-primary" onclick=location.href="acquista">Acquista</button>
+                <button class="btn btn-primary" onclick=location.href="/checkout">Acquista</button>
             </div>
             <br>
             <br>

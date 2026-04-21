@@ -20,6 +20,7 @@
             ->where('id_studente', '=', auth()->user()->student->id)
             ->first();
     @endphp
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
         setInterval(leggi_messaggi, 1000);
 
@@ -31,26 +32,38 @@
                 }
             };
             //aut=1 -> insegnante
-            xmlhttp.open("GET", "leggi-messaggi-studente-" + <?php echo $chat->id; ?>, true);
+            xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
             xmlhttp.send();
         }
 
         function invia_messaggio(testo) {
-            _("messaggio").value = "";
-            if (testo == "") {
+            document.getElementById("messaggio").value = "";
+
+            if (!testo || testo.trim() === "") {
                 return;
-            } else {
-                let xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    }
-                };
-                //aut=1 -> insegnante
-                xmlhttp.open("GET", "studente-invia-messaggio-" + <?php echo $chat->id; ?> + "-0-" + testo, true);
-                xmlhttp.send();
             }
 
+            let xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    console.log(this.responseText);
+                }
+            };
+
+            xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
+
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // CSRF Laravel (OBBLIGATORIO)
+            xmlhttp.setRequestHeader(
+                "X-CSRF-TOKEN",
+                document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            );
+
+            xmlhttp.send(
+                "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
+            );
         }
     </script>
     <ul class="nav">
@@ -84,7 +97,7 @@
             <br>
             <div class="col-12" style="text-align:center">
                 <button type="submit" class="btn btn-primary"
-                    onclick=location.href="aggiungi-al-carrello-{{ $richiesta->id }}-5">Acquista</button>
+                    onclick=location.href="/carrello/add/{{ $richiesta->id }}/5">Acquista</button>
             </div>
         @endif
         @if ($richiesta->paid == 1)

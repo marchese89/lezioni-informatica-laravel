@@ -60,7 +60,7 @@
             <tbody>
                 @foreach ($corsi as $key => $value)
                     @php
-                        $item = Course::where('id','=',$key)->first();
+                        $item = Course::where('id', '=', $key)->first();
                     @endphp
                     <tr>
 
@@ -75,7 +75,7 @@
                         <td>
                             <div>
                                 <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="visualizza-corso-{{ $item->id }}">Visualizza</button>
+                                    onclick=location.href="/course/{{ $item->id }}">Visualizza</button>
                             </div>
                         </td>
 

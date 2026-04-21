@@ -6,7 +6,7 @@
             <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="corsi">Corsi</a>
+            <a class="nav-link active" aria-current="page" href="/corsi">Corsi</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:35%">
@@ -53,7 +53,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary"
-                                    onclick=location.href="lezione-{{ request('id') }}-{{ $item->id }}">Visualizza</button>
+                                    onclick=location.href="/lezione/{{ request('id') }}/{{ $item->id }}">Visualizza</button>
                             </td>
 
                         </tr>
@@ -90,7 +90,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary"
-                                    onclick=location.href="esercizio-{{ request('id') }}-{{ $item->id }}">Visualizza</button>
+                                    onclick=location.href="/esercizio/{{ request('id') }}/{{ $item->id }}">Visualizza</button>
                             </td>
 
                         </tr>

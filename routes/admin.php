@@ -150,6 +150,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('visualizza-chat-{id}', fn() => view('admin.visualizza-chat'));
 
     Route::get('cambia_tabella_ordini', [AjaxController::class, 'cambia_tabella_ordini']);
-    Route::get('admin-invia-messaggio-{id_chat}-{aut}-{testo}', [AjaxController::class, 'invia_messaggio']);
+    Route::post('chat/admin/invia-messaggio', [AjaxController::class, 'invia_messaggio']);
     Route::get('leggi-messaggi-insegnante-{id_chat}', [AjaxController::class, 'leggi_messaggi']);
 });

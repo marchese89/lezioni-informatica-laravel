@@ -3,13 +3,13 @@
 @section('content')
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="aree-tematiche">Aree Tematiche</a>
+            <a class="nav-link active" aria-current="page" href="/aree-tematiche">Aree Tematiche</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="materie-{{ request('id_materia') }}">Materie</a>
+            <a class="nav-link active" aria-current="page" href="/materie/{{ request('id_materia') }}">Materie</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="corsi-{{ request('id') }}">Corsi</a>
+            <a class="nav-link active" aria-current="page" href="/corsi/{{ request('id') }}">Corsi</a>
         </li>
 
     </ul>
@@ -74,7 +74,7 @@
                                     onclick=location.href="presentazione-lezione-{{ $item->id }}-{{ $item->course_id }}">Anteprima</button>
                                 @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
                                     <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-0">Acquista</button>
+                                        onclick=location.href="/carrello/add/{{ $item->id }}/0">Acquista</button>
                                 @endif
                                 @if ($item->price === 0)
                                     <button type="submit" class="btn btn-primary"
@@ -105,7 +105,7 @@
                                         onclick=location.href="presentazione-lezione-{{ $item->id }}-{{ $item->course_id }}">Anteprima</button>
                                     @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
                                         <button type="submit" class="btn btn-primary"
-                                            onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-0">Acquista</button>
+                                            onclick=location.href="/carrello/add/{{ $item->id }}/0">Acquista</button>
                                     @endif
                                     @if ($item->price === 0)
                                         <button type="submit" class="btn btn-primary"
@@ -156,10 +156,10 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary"
-                                    onclick=location.href="traccia-esercizio-{{ $item->id }}-{{ request('id') }}">Anteprima</button>
+                                    onclick=location.href="/traccia-esercizio/{{ $item->id }}/{{ request('id') }}">Anteprima</button>
                                 @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
                                     <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-2">Acquista</button>
+                                        onclick=location.href="/carrello/add/{{ $item->id }}/2">Acquista</button>
                                 @endif
                                 @if ($item->price === 0)
                                     <button type="submit" class="btn btn-primary">Contenuto</button>
@@ -185,10 +185,10 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-primary"
-                                        onclick=location.href="traccia-esercizio-{{ $item->id }}-{{ request('id') }}">Anteprima</button>
+                                        onclick=location.href="/traccia-esercizio/{{ $item->id }}/{{ request('id') }}">Anteprima</button>
                                     @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
                                         <button type="submit" class="btn btn-primary"
-                                            onclick=location.href="aggiungi-al-carrello-{{ $item->id }}-2">Acquista</button>
+                                            onclick=location.href="/carrello/add/{{ $item->id }}/2">Acquista</button>
                                     @endif
                                     @if ($item->price === 0)
                                         <button type="submit" class="btn btn-primary">Contenuto</button>

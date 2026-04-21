@@ -48,11 +48,7 @@
             @php
                 $prima_chat = DB::table('chats')->orderBy(DB::raw('created_at'), 'desc')->first();
                 $data_primo = DateHelper::parse($prima_chat->created_at);
-                $chat = DB::table('chats')
-                    ->whereMonth('created_at', $data_primo['mese'])
-                    ->whereYear('created_at', $data_primo['anno'])
-                    ->orderBy(DB::raw('created_at'), 'desc')
-                    ->get();
+                $chat = DB::table('chats')->get();
             @endphp
             <tbody>
                 @foreach ($chat as $item)

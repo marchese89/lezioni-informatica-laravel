@@ -10,6 +10,7 @@ use App\Models\Student;
 use App\Models\ChatMessage;
 use App\Models\Chat;
 use App\Models\Feedback;
+use Illuminate\Http\Request;
 
 class AjaxController extends Controller
 {
@@ -131,16 +132,26 @@ class AjaxController extends Controller
         return $html;
     }
 
-    public function invia_messaggio()
+    public function invia_messaggio(Request $request)
     {
-        $id_chat = request('id_chat');
-        $autore = request('aut');
-        $testo = request('testo');
-        $messaggio_chat = new ChatMessage();
-        $messaggio_chat->chat_id = $id_chat;
-        $messaggio_chat->message = $testo;
-        $messaggio_chat->author = $autore;
-        $messaggio_chat->save();
+        $request->validate([
+            'id_chat' => 'required|integer|exists:chats,id',
+            'testo' => 'required|string'
+        ]);
+
+        $messaggio = new ChatMessage();
+        $messaggio->chat_id = $request->id_chat;
+        $messaggio->message = $request->testo;
+
+        // NON fidarti del client per "aut"
+        $messaggio->author = auth()->user()->role === 'admin' ? 1 : 0;
+
+        $messaggio->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $messaggio
+        ]);
     }
 
     public function leggi_messaggi()

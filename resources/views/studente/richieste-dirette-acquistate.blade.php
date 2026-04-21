@@ -21,6 +21,9 @@
         </li>
     </ul>
     <div class="row g-0 container-fluid">
+        <div>
+            <h3 style="text-align: center">Lezioni su Richiesta Acquistate</h3>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -38,42 +41,46 @@
                     ->get();
             @endphp
             <tbody>
-                @foreach ($lezioni_su_richiesta as $item)
-                    <tr>
 
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-                            {{ $item->title }}
-                        </td>
-                        <td>
-                            {{ DateHelper::format($item->date) }}
-                        </td>
-                        <td>
-                            @php
-                                $chat = Chat::where('id_prodotto', '=', $item->id)
-                                    ->where('tipo_prodotto', '=', 5)
-                                    ->where('id_studente', '=', auth()->user()->student->id)
-                                    ->first();
+                @if (!$lezioni_su_richiesta->isEmpty())
+                    @foreach ($lezioni_su_richiesta as $item)
+                        <tr>
 
-                                $chat_ = ChatMessage::where('chat_id', '=', $chat->id)
-                                    ->orderBy('date', 'desc')
-                                    ->first();
-                                if ($chat_ != null && $chat_->author == 1) {
-                                    echo '<div class="cerchio" style="background-color: red;"></div>';
-                                } else {
-                                    echo '<div class="cerchio" style="background-color: green;"></div>';
-                                }
-                            @endphp
-                        </td>
-                        <td>
-                            <div>
-                                <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="stud-visualizza-richiesta-{{ $item->id }}">Visualizza</button>
-                            </div>
-                        </td>
+                            <th scope="row">{{ $item->id }}</th>
+                            <td>
+                                {{ $item->title }}
+                            </td>
+                            <td>
+                                {{ DateHelper::format($item->date) }}
+                            </td>
+                            <td>
+                                @php
+                                    $chat = Chat::where('id_prodotto', '=', $item->id)
+                                        ->where('tipo_prodotto', '=', 5)
+                                        ->where('id_studente', '=', auth()->user()->student->id)
+                                        ->first();
+                                    if ($chat) {
+                                        $chat_ = ChatMessage::where('chat_id', '=', $chat->id)
+                                            ->orderBy('date', 'desc')
+                                            ->first();
+                                        if ($chat_ != null && $chat_->author == 1) {
+                                            echo '<div class="cerchio" style="background-color: red;"></div>';
+                                        } else {
+                                            echo '<div class="cerchio" style="background-color: green;"></div>';
+                                        }
+                                    }
+                                @endphp
+                            </td>
+                            <td>
+                                <div>
+                                    <button type="submit" class="btn btn-primary"
+                                        onclick=location.href="stud-visualizza-richiesta-{{ $item->id }}">Visualizza</button>
+                                </div>
+                            </td>
 
-                    </tr>
-                @endforeach
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>

@@ -12,8 +12,7 @@
             <a class="nav-link active" aria-current="page" href="elenco-corsi">Corsi</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page"
-                href="corso-{{ request('id_corso') }}">Corso</a>
+            <a class="nav-link active" aria-current="page" href="/corso/{{ request('id_corso') }}">Corso</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:100%">

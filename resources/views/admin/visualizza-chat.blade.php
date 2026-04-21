@@ -1,6 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('inner')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
         setInterval(leggi_messaggi, 1000);
 
@@ -17,21 +18,33 @@
         }
 
         function invia_messaggio(testo) {
-            _("messaggio").value = "";
-            if (testo == "") {
+            document.getElementById("messaggio").value = "";
+
+            if (!testo || testo.trim() === "") {
                 return;
-            } else {
-                let xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.responseText);
-                    }
-                };
-                //aut=1 -> insegnante
-                xmlhttp.open("GET", "admin-invia-messaggio-" + <?php echo request('id'); ?> + "-1-" + testo, true);
-                xmlhttp.send();
             }
 
+            let xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    console.log(this.responseText);
+                }
+            };
+
+            xmlhttp.open("POST", "/chat/admin/invia-messaggio", true);
+
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // CSRF Laravel (OBBLIGATORIO se middleware attivo)
+            xmlhttp.setRequestHeader(
+                "X-CSRF-TOKEN",
+                document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            );
+
+            xmlhttp.send(
+                "id_chat=<?php echo request('id'); ?>&aut=1&testo=" + encodeURIComponent(testo)
+            );
         }
     </script>
     <ul class="nav">

@@ -4,190 +4,260 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Certificate;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 
 class ModDatiAdminController extends Controller
 {
-
+    // =========================
+    // FOTO PROFILO
+    // =========================
     public function upload_foto(Request $request)
     {
+        $request->validate([
+            'file' => 'required|image'
+        ]);
 
-        $user = User::where('email', auth()->user()->email)->first();
+        $admin = auth()->user()->admin;
 
-        $id = $user->id;
-
-        $admin = Admin::where('user_id',$id)->first();
-        if($admin->photo !== null){
-            File::delete(base_path('\public'). $admin->photo);
+        // elimina vecchia foto
+        if ($admin->photo) {
+            $oldPath = public_path($admin->photo);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
         }
+
         $file = $request->file('file');
-        if($file == null){
-            return redirect('mod-foto-admin');
-        }
-        $name = $file->hashName();
-        $file->move(base_path('\public\files\photo_admin'),$name);
+        $name = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $file->move(public_path('files/photo_admin'), $name);
 
         $path = '/files/photo_admin/' . $name;
 
         $admin->photo = $path;
-
         $admin->save();
 
         return redirect('mod-foto-admin');
     }
 
+    // =========================
+    // UPLOAD CERTIFICATO
+    // =========================
     public function upload_cert(Request $request)
     {
+        $request->validate([
+            'id' => 'required|exists:certificates,id',
+            'file' => 'required|file'
+        ]);
 
-        $id =  $request->input('id');
-        $certificate = Certificate::where('id', $id)->first();
+        $certificate = Certificate::findOrFail($request->id);
 
-        if($certificate->percorso_file !== null){
-            File::delete(base_path('\public'). $certificate->percorso_file);
+        if ($certificate->percorso_file) {
+            $oldPath = public_path($certificate->percorso_file);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
         }
-        $file = $request->file('file_'. $id);
-        $name = $file->hashName();
-        $file->move(base_path('\public\files\cert_admin'),$name);
+
+        $file = $request->file('file');
+        $name = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $file->move(public_path('files/cert_admin'), $name);
 
         $path = '/files/cert_admin/' . $name;
 
         $certificate->percorso_file = $path;
-
         $certificate->save();
 
         return redirect('mod-certif');
     }
 
+    // =========================
+    // UPLOAD CERTIFICATO (SESSIONE)
+    // =========================
     public function upload_cert_session(Request $request)
     {
+        $request->validate([
+            'file' => 'required|file'
+        ]);
 
-
-        if($request->session()->exists('uploaded_cert')){
-            File::delete(base_path('\public'). $request->session()->get('uploaded_cert'));
+        if ($request->session()->has('uploaded_cert')) {
+            $oldPath = public_path($request->session()->get('uploaded_cert'));
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
         }
+
         $file = $request->file('file');
-        $name = $file->hashName();
-        $file->move(base_path('\public\files\cert_admin'),$name);
+        $name = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $file->move(public_path('files/cert_admin'), $name);
 
         $path = '/files/cert_admin/' . $name;
 
-        $request->session()->put('uploaded_cert',$path);
+        $request->session()->put('uploaded_cert', $path);
 
         return redirect('aggiungi-certif');
     }
 
+    // =========================
+    // MODIFICA NOME CERTIFICATO
+    // =========================
+    public function modifica_nome_cert(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:certificates,id',
+            'nome' => 'required|string|max:255'
+        ]);
 
-    function modifica_nome_cert(Request $request){
-        $id = $request->input('id');
-        $nome = $request->input('nome_'. $id);
-        $certificate = Certificate::where('id', $id)->first();
-        $certificate->nome = $nome;
+        $certificate = Certificate::findOrFail($request->id);
+        $certificate->nome = $request->nome;
         $certificate->save();
 
         return redirect('mod-certif');
-
     }
 
-    public function mod_piva()
+    // =========================
+    // PARTITA IVA
+    // =========================
+    public function mod_piva(Request $request)
     {
-        $piva = request('piva');
+        $request->validate([
+            'piva' => 'required|string|max:20'
+        ]);
+
         $admin = auth()->user()->admin;
-        $admin->piva = $piva;
+        $admin->piva = $request->piva;
         $admin->save();
 
         return redirect('mod-part-iva');
     }
 
-    function mod_ind(Request $request){
-        $indirizzo = $request->input('inputIndirizzo');
-        $numeroCivico =  $request->input('inputNumeroCivico');
-        $citta =  $request->input('inputCitta');
-        $provincia =  $request->input('inputProvincia');
-        $cap =    $request->input('inputCAP');
+    // =========================
+    // INDIRIZZO
+    // =========================
+    public function mod_ind(Request $request)
+    {
+        $request->validate([
+            'inputIndirizzo' => 'required|string|max:255',
+            'inputNumeroCivico' => 'required|string|max:10',
+            'inputCitta' => 'required|string|max:100',
+            'inputProvincia' => 'required|string|max:100',
+            'inputCAP' => 'required|string|max:10'
+        ]);
 
         $admin = auth()->user()->admin;
 
-        $admin->street = $indirizzo;
-        $admin->house_number = $numeroCivico;
-        $admin->city = $citta;
-        $admin->province = $provincia;
-        $admin->postal_code = $cap;
+        $admin->street = $request->inputIndirizzo;
+        $admin->house_number = $request->inputNumeroCivico;
+        $admin->city = $request->inputCitta;
+        $admin->province = $request->inputProvincia;
+        $admin->postal_code = $request->inputCAP;
 
         $admin->save();
 
         return redirect('mod-indirizzo-admin');
     }
 
-    function elimina_cert(Request $request){
+    // =========================
+    // ELIMINA CERTIFICATO
+    // =========================
+    public function elimina_cert(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:certificates,id'
+        ]);
 
-        $id_cert = $request->input('id');
-        $certificate = Certificate::where('id', $id_cert)->first();
-        File::delete(base_path('\public'. $certificate->percorso_file));
-        DB::table('certificates')->where('id','=',$id_cert)->delete();
+        $certificate = Certificate::findOrFail($request->id);
+
+        if ($certificate->percorso_file) {
+            $oldPath = public_path($certificate->percorso_file);
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
+        }
+
+        $certificate->delete();
+
         return redirect('mod-certif');
     }
 
-    function elimina_cert_session(Request $request){
-        if($request->session()->exists('uploaded_cert')){
-            File::delete(base_path('\public'). $request->session()->get('uploaded_cert'));
+    // =========================
+    // ELIMINA CERTIFICATO SESSIONE
+    // =========================
+    public function elimina_cert_session(Request $request)
+    {
+        if ($request->session()->has('uploaded_cert')) {
+            $oldPath = public_path($request->session()->get('uploaded_cert'));
+            if (file_exists($oldPath)) {
+                unlink($oldPath);
+            }
             $request->session()->forget('uploaded_cert');
         }
 
         return redirect('aggiungi-certif');
     }
 
-    function add_cert_admin(Request $request){
-        $nome = $request->input('nome');
+    // =========================
+    // AGGIUNGI CERTIFICATO
+    // =========================
+    public function add_cert_admin(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255'
+        ]);
 
-        $cert =  new Certificate();
-        $cert->nome = $nome;
-        $cert->percorso_file =  $request->session()->get('uploaded_cert');
+        $cert = new Certificate();
+        $cert->nome = $request->nome;
+        $cert->percorso_file = $request->session()->get('uploaded_cert');
+
         $request->session()->forget('uploaded_cert');
+
         $cert->save();
 
         return redirect('mod-certif');
     }
 
-    function mod_email_admin(Request $request){
-        $email = $request->input('inputEmail');
-        $user = DB::table('users')->where('email','=',$email)->first();
-        if($user != null){
-            return back()->withErrors([
-                'email' => 'Email già presente',
-            ])->onlyInput('email');
-        }else{
-            $usr = User::where('email','=',auth()->user()->email)->first();
-            $usr->email = $email;
-            $usr->save();
-            return redirect('mod-cred');
-        }
+    // =========================
+    // EMAIL
+    // =========================
+    public function mod_email_admin(Request $request)
+    {
+        $request->validate([
+            'inputEmail' => 'required|email|unique:users,email'
+        ]);
+
+        $user = auth()->user();
+        $user->email = $request->input('inputEmail');
+        $user->save();
+
+        return redirect('mod-cred');
     }
 
-    function mod_pass_admin(Request $request){
+    // =========================
+    // PASSWORD
+    // =========================
+    public function mod_pass_admin(Request $request)
+    {
+        $request->validate([
+            'inputPassword_old' => 'required',
+            'inputPassword' => 'required|min:6|confirmed'
+        ]);
 
-        $pass_old = password_hash($request->input('inputPassword_old'), PASSWORD_DEFAULT);
-        if(Hash::check($pass_old, auth()->user()->password) ){
+        $user = auth()->user();
+
+        if (!Hash::check($request->input('inputPassword_old'), $user->password)) {
             return back()->withErrors([
-                'pass0' => 'La password non corrisponde  a quella gi&agrave; inserita'
+                'pass0' => 'Password attuale errata'
             ]);
         }
 
-        $new_pass = $request->input('inputPassword');
-        $confirm_pass = $request->input('inputPassword2');
+        $user->password = Hash::make($request->input('inputPassword'));
+        $user->save();
 
-        $usr = User::where('email','=',auth()->user()->email)->first();
-
-        $usr->password = password_hash($new_pass, PASSWORD_DEFAULT);
-
-        $usr->save();
-
-        return redirect('mod-cred')->withSuccess('Password Modificata con successo');
-
+        return redirect('mod-cred')->withSuccess('Password modificata con successo');
     }
 }

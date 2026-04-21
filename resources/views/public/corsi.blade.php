@@ -3,10 +3,10 @@
 @section('content')
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="aree-tematiche">Aree Tematiche</a>
+            <a class="nav-link active" aria-current="page" href="/aree-tematiche">Aree Tematiche</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="materie-{{ request('id_materia') }}">Materie</a>
+            <a class="nav-link active" aria-current="page" href="/materie/{{ request('id_materia') }}">Materie</a>
         </li>
     </ul>
 
@@ -30,7 +30,7 @@
                                 <div class="card" style="width: 16rem;">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $item->name }} </h5>
-                                        <a href="corso-{{ $item->id }}" class="btn btn-primary">Vai</a>
+                                        <a href="/corso/{{ $item->id }}" class="btn btn-primary">Vai</a>
                                     </div>
                                 </div>
                             @endforeach

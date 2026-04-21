@@ -10,7 +10,8 @@
     <br>
     <div class="container" style="text-align: center;width:80%; height:500px">
 
-        <h3>Paga <strong>{{session()->get('prezzo') * session()->get('qta')}}&euro;</strong> in modo Sicuro tramite Stripe</h3>
+        <h3>Paga <strong>{{ session()->get('prezzo') * session()->get('qta') }}&euro;</strong> in modo Sicuro tramite Stripe
+        </h3>
         <br>
         @if (session('success'))
             <div class="alert alert-success">
@@ -41,7 +42,7 @@
     <br>
     <br>
     <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick=location.href="pagamento-extra">Indietro</button>
+        <button class="btn btn-primary" onclick=location.href="/payment/extra">Indietro</button>
     </div>
     <br>
     <br>
@@ -50,7 +51,7 @@
         // This is your test publishable API key.
 
         const stripe = Stripe(
-            "{{ env('STRIPE_KEY'); }}"
+            "{{ env('STRIPE_KEY') }}"
         );
 
         let elements;
@@ -67,7 +68,7 @@
 
             const {
                 clientSecret
-            } = await fetch("processa_pagamento", {
+            } = await fetch("/payment/process", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -92,7 +93,7 @@
                 elements,
                 confirmParams: {
                     // Make sure to change this to your payment completion page
-                    return_url: "{{ env('APP_URL'); }}/pagamento-effettuato",
+                    return_url: "{{ env('APP_URL') }}/payment/success",
                 },
             });
 

@@ -45,16 +45,16 @@
     <br>
     <br>
     <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick=location.href="visualizza-carrello">Indietro</button>
+        <button class="btn btn-primary" onclick=location.href="/carrello">Indietro</button>
     </div>
     <br>
     <br>
     </div>
     <script>
         // This is your test publishable API key.
-
+        console.log("SCRIPT LOADED");
         const stripe = Stripe(
-            "{{ env('STRIPE_KEY'); }}"
+            "{{ env('STRIPE_KEY') }}"
         );
 
         let elements;
@@ -68,22 +68,48 @@
 
         // Fetches a payment intent and captures the client secret
         async function initialize() {
+            try {
+                const response = await fetch("/payment/process", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({})
+                });
 
-            const {
-                clientSecret
-            } = await fetch("process-payment", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            }).then((r) => r.json());
+                const contentType = response.headers.get("content-type");
 
-            elements = stripe.elements({
-                clientSecret
-            });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    return;
+                }
 
-            const paymentElement = elements.create("payment");
-            paymentElement.mount("#payment-element");
+                const data = await response.json();
+
+                const {
+                    clientSecret
+                } = data;
+
+                if (!clientSecret) {
+                    console.error("clientSecret mancante nella risposta");
+                    return;
+                }
+
+                elements = stripe.elements({
+                    clientSecret
+                });
+
+                const paymentElement = elements.create("payment");
+                paymentElement.mount("#payment-element");
+
+                console.log("Stripe Elements mounted");
+
+            } catch (error) {
+                console.error("FETCH FAILED:", error);
+            }
         }
 
         async function handleSubmit(e) {
@@ -96,7 +122,7 @@
                 elements,
                 confirmParams: {
                     // Make sure to change this to your payment completion page
-                    return_url: "{{ env('APP_URL'); }}/acquisto-effettuato",
+                    return_url: "{{ env('APP_URL') }}/payment/success",
                 },
             });
 

@@ -6,7 +6,6 @@ include(app_path('Http/Utility/dompdf/autoload.inc.php'));
 include(app_path('Http/Utility/phpmailer/PHPMailer.php'));
 include(app_path('Http/Utility/phpmailer/SMTP.php'));
 include(app_path('Http/Utility/phpmailer/Exception.php'));
-include(app_path('Http/Utility/funzioni.php'));
 
 
 use Illuminate\Http\Request;
@@ -60,11 +59,11 @@ class AcquistiController extends Controller
         $carrello->aggiungi($elemento);
         if ($type == 0) { //lezione
             $lezione = Lesson::where('id', '=', $id)->first();
-            return redirect('corso-' . $lezione->course_id);
+            return redirect('/corso/' . $lezione->course_id);
         }
         if ($type == 2) { //esercizio
             $esercizio = Exercise::where('id', '=', $id)->first();
-            return redirect('corso-' . $esercizio->course_id);
+            return redirect('/corso/' . $esercizio->course_id);
         }
         if ($type == 1 || $type == 4) {
             return  redirect('corso-' . $id);
@@ -80,7 +79,7 @@ class AcquistiController extends Controller
         $type = request('type');
         $carrello = $request->session()->get('carrello');
         $carrello->rimuovi($id, $type);
-        return redirect('visualizza-carrello');
+        return redirect('carrello');
     }
 
     public function process_payment(Request $request)
@@ -1211,6 +1210,6 @@ class AcquistiController extends Controller
         session()->forget('prezzo');
         session()->forget('qta');
 
-        return redirect('pagamento-ok');
+        return redirect('/payment/ok');
     }
 }

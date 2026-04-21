@@ -66,7 +66,7 @@
                                 <h5 class="card-title">Pagamento Extra</h5>
                                 <p class="card-text">Questa sezione serve per pagare le lezioni private
                                 </p>
-                                <a href="pagamento-extra" class="btn btn-primary">Accedi</a>
+                                <a href="/payment/extra" class="btn btn-primary">Accedi</a>
                             </div>
                         </div>
                         <div class="card" style="width: 30rem;">

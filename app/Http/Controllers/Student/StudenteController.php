@@ -7,10 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Course;
+use App\Models\Lesson;
+use App\Models\Exercise;
 
 class StudenteController extends Controller
 {
-    public function mod_indirizzo_stud(Request $request){
+    public function mod_indirizzo_stud(Request $request)
+    {
         $indirizzo = $request->input('inputIndirizzo');
         $numeroCivico =  $request->input('inputNumeroCivico');
         $citta =  $request->input('inputCitta');
@@ -30,25 +34,27 @@ class StudenteController extends Controller
         return redirect('mod-dati-pers-stud');
     }
 
-    function mod_email_stud(Request $request){
+    function mod_email_stud(Request $request)
+    {
         $email = $request->input('inputEmail');
-        $user = DB::table('users')->where('email','=',$email)->first();
-        if($user != null){
+        $user = DB::table('users')->where('email', '=', $email)->first();
+        if ($user != null) {
             return back()->withErrors([
                 'email' => 'Email già presente',
             ])->onlyInput('email');
-        }else{
-            $usr = User::where('email','=',auth()->user()->email)->first();
+        } else {
+            $usr = User::where('email', '=', auth()->user()->email)->first();
             $usr->email = $email;
             $usr->save();
             return redirect('mod-cred-stud');
         }
     }
 
-    function mod_pass_stud(Request $request){
+    function mod_pass_stud(Request $request)
+    {
 
         $pass_old = password_hash($request->input('inputPassword_old'), PASSWORD_DEFAULT);
-        if(Hash::check($pass_old, auth()->user()->password) ){
+        if (Hash::check($pass_old, auth()->user()->password)) {
             return back()->withErrors([
                 'pass0' => 'La password non corrisponde  a quella già inserita'
             ]);
@@ -57,13 +63,48 @@ class StudenteController extends Controller
         $new_pass = $request->input('inputPassword');
         $confirm_pass = $request->input('inputPassword2');
 
-        $usr = User::where('email','=',auth()->user()->email)->first();
+        $usr = User::where('email', '=', auth()->user()->email)->first();
 
         $usr->password = password_hash($new_pass, PASSWORD_DEFAULT);
 
         $usr->save();
 
         return redirect('mod-cred-stud')->withSuccess('Password Modificata con successo');
+    }
 
+    public function lezione($id_corso, $id_lezione)
+    {
+        // DEBUG iniziale (poi lo togli)
+        // dd($id_corso, $id_lezione);
+
+        // Recupero dati (esempio base)
+        $corso = Course::find($id_corso);
+        $lezione = Lesson::find($id_lezione);
+
+        // Controlli minimi (IMPORTANTI)
+        if (!$corso || !$lezione) {
+            abort(404);
+        }
+
+        return view('studente.lezione', compact('corso', 'lezione'));
+    }
+
+    public function esercizio($id_corso, $id_esercizio)
+    {
+        $corso = Course::find($id_corso);
+        $esercizio = Exercise::find($id_esercizio);
+
+        // Controlli base
+        if (!$corso || !$esercizio) {
+            abort(404);
+        }
+
+        // 🔴 MIGLIORIA rispetto a prima
+        // Verifica che l'esercizio appartenga al corso
+        if ($esercizio->course_id != $corso->id) {
+            abort(404);
+        }
+
+        return view('studente.esercizio', compact('corso', 'esercizio'));
     }
 }
