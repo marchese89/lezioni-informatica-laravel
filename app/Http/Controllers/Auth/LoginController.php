@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-include(app_path('Http/Utility/phpmailer/PHPMailer.php'));
-include(app_path('Http/Utility/phpmailer/SMTP.php'));
-include(app_path('Http/Utility/phpmailer/Exception.php'));
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Utility\Carrello;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
-use PHPMailer\PHPMailer\PHPMailer;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RecuperaPasswordMail;
+use Illuminate\Support\Facades\Password;
+
 
 class LoginController extends Controller
 {
@@ -70,51 +69,39 @@ class LoginController extends Controller
         return $codiceAtt;
     }
 
+    // public function recupera_password()
+    // {
+    //     $email = request('email');
+
+    //     $utente = User::where('email', $email)->first();
+
+    //     if (!$utente) {
+    //         return back()->withErrors([
+    //             'email' => 'Email non presente',
+    //         ]);
+    //     }
+
+    //     $pass = self::generaCodice();
+    //     $utente->password = password_hash($pass, PASSWORD_DEFAULT);
+    //     $utente->save();
+
+    //     Mail::to($email)->send(new RecuperaPasswordMail($pass));
+
+    //     return back()->withSuccess('Password modificata e inviata via email');
+    // }
+
     public function recupera_password()
     {
-        $email = request('email');
-        $utente = User::where('email', '=', $email)->first();
-        $count = User::where('email', '=', $email)->count();
-        if ($count == 0) {
-            return back()->withError(
-                'Email non presente',
-            );
+        $status = Password::sendResetLink(
+            request()->only('email')
+        );
+
+        if ($status == Password::RESET_LINK_SENT) {
+            return back()->withSuccess('Link di reset inviato via email');
         }
-        $pass = LoginController::generaCodice();
-        $password = password_hash($pass, PASSWORD_DEFAULT);
-        $utente->password = $password;
-        $utente->save();
-                //invio email
-        // Create instance of PHPMailer
-        $mail = new PHPMailer();
-        // Set mailer to use smtp
-        $mail->isSMTP();
-        // Define smtp host
-        $mail->Host = "smtps.aruba.it";
-        // Enable smtp authentication
-        $mail->SMTPAuth = true;
-        // Set smtp encryption type (ssl/tls)
-        $mail->SMTPSecure = "ssl";
-        // Port to connect smtp
-        $mail->Port = "465";
-        // Set gmail username
-        $mail->Username = "info@lezioni-informatica.it";
-        // Set gmail password
-        $mail->Password = "3DWjnkVW.tkez5NS";
-        // Email subject
-        $mail->Subject = "Recupero Password";
-        // Set sender email
-        $mail->setFrom('info@lezioni-informatica.it');
-        // Enable HTML
-        $mail->isHTML(true);
-        // Email body
-        $mail->Body = "Gentile cliente,<br>la sua password &egrave; stata modificata ed &egrave; la seguente:<br><strong>". $pass . "</strong><br><br><br>Lezioni Informatica";
-        // Add recipient
-        $mail->addAddress($email);
-        // Finally send email
-        $mail->send();
-        // Closing smtp connection
-        $mail->smtpClose();
-        return back()->withSuccess('Password modificata');
+
+        return back()->withErrors([
+            'email' => 'Email non valida o non presente'
+        ]);
     }
 }

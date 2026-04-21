@@ -19,6 +19,18 @@
 
         }
     </script>
+    <div class="container" style="width: 100%">
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
+        @endif
+        @if (session()->has('success'))
+            <div class="alert alert-success">
+                {{ session()->get('success') }}
+            </div>
+        @endif
+    </div>
     <div class="container" style="width: 15%; text-align: center;height:800px">
         <br>
         <h2>Login</h2>

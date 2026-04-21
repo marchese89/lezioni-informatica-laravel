@@ -17,6 +17,7 @@
         <form action="recupera-password" method="POST">
             @csrf
             <div class="col-md-12">
+                <h2 style="margin-top: 2em">Recupera Password</h2>
                 <br>
                 <h4>Email</h4>
                 <br>

@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Student;
 use App\Models\Admin;
 use Laravel\Cashier\Billable;
+use Illuminate\Notifications\Messages\MailMessage;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -18,6 +19,28 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable, Billable;
 
     protected $table = 'users';
+
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new class($token) extends \Illuminate\Auth\Notifications\ResetPassword {
+
+            public function __construct($token)
+            {
+                parent::__construct($token);
+            }
+
+            public function toMail($notifiable)
+            {
+                return (new \Illuminate\Notifications\Messages\MailMessage)
+                    ->subject('Reimpostazione Password')
+                    ->view('emails.reset-password', [
+                        'url' => $this->resetUrl($notifiable),
+                        'user' => $notifiable
+                    ]);
+            }
+        });
+    }
 
 
     /**
@@ -56,11 +79,11 @@ class User extends Authenticatable
 
     public function student(): HasOne
     {
-        return $this->hasOne(Student::class,'user_id','id');
+        return $this->hasOne(Student::class, 'user_id', 'id');
     }
 
     public function admin(): HasOne
     {
-        return $this->hasOne(Admin::class,'user_id','id');
+        return $this->hasOne(Admin::class, 'user_id', 'id');
     }
 }
