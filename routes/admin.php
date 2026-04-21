@@ -127,7 +127,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
     Route::get('studenti', fn() => view('admin.studenti'));
     Route::get('richieste-studenti', fn() => view('admin.richieste-studenti'));
-    Route::get('visualizza-richiesta-{id}', fn() => view('admin.visualizza-richiesta-lezione'));
+    Route::get('visualizza-richiesta/{id}', function ($id) {
+        return view('admin.visualizza-richiesta-lezione', compact('id'));
+    })->name('visualizza-richiesta');
 
     Route::post('sol-rich-upload', [LessonOnRequestController::class, 'sol_rich_upload']);
     Route::get('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec']);

@@ -29,9 +29,9 @@
                 </tr>
             </thead>
             @php
-                $lezioni_su_richiesta = LessonOnRequest::where('student_id','=', auth()->user()->student->id)
-                ->where('paid','=',0)
-                ->get();
+                $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
+                    ->where('paid', '=', 0)
+                    ->get();
             @endphp
             <tbody>
                 @foreach ($lezioni_su_richiesta as $item)
@@ -57,7 +57,7 @@
                         <td>
                             <div>
                                 <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="stud-visualizza-richiesta-{{ $item->id }}">Visualizza</button>
+                                    onclick=location.href="{{ route('visualizza-richiesta-studente', ['id' => $item->id]) }}">Visualizza</button>
                             </div>
                         </td>
 

@@ -15,15 +15,24 @@ class Student extends Model
 
     protected $table = 'students';
 
+    protected $fillable = [
+        'user_id',
+        'street',
+        'house_number',
+        'city',
+        'province',
+        'postal_code',
+        'cf',
+        'remember_token',
+    ];
+
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function lesson_on_request(): HasMany
+    public function lessonOnRequests(): HasMany
     {
         return $this->hasMany(LessonOnRequest::class);
     }
-
-
 }

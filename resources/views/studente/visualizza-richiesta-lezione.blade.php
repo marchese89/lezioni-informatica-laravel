@@ -13,14 +13,13 @@
         use App\Models\Exercise;
         use App\Helpers\DateHelper;
 
-        $richiesta = LessonOnRequest::where('id', '=', request('id'))->first();
+        $richiesta = LessonOnRequest::findOrFail($id);
 
-        $chat = Chat::where('id_prodotto', '=', request('id'))
+        $chat = Chat::where('id_prodotto', '=', $id)
             ->where('tipo_prodotto', '=', 5)
             ->where('id_studente', '=', auth()->user()->student->id)
             ->first();
     @endphp
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
         setInterval(leggi_messaggi, 1000);
 
@@ -68,15 +67,15 @@
     </script>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="/dashboard-studente">Dashboard</a>
         </li>
         @if ($richiesta->paid == 0)
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="richieste-dirette">Richieste Dirette</a>
+                <a class="nav-link active" aria-current="page" href="/richieste-dirette">Richieste Dirette</a>
             </li>
         @else
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="richieste-dirette-acquistate">Richieste Dirette</a>
+                <a class="nav-link active" aria-current="page" href="/richieste-dirette-acquistate">Richieste Dirette</a>
             </li>
         @endif
     </ul>

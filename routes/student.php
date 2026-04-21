@@ -88,7 +88,9 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     Route::view('richieste-dirette', 'studente.richieste-dirette');
     Route::view('richieste-dirette-acquistate', 'studente.richieste-dirette-acquistate');
-    Route::view('stud-visualizza-richiesta-{id}', 'studente.visualizza-richiesta-lezione');
+    Route::get('visualizza-richiesta-studente/{id}', function ($id) {
+        return view('studente.visualizza-richiesta-lezione', compact('id'));
+    })->name('visualizza-richiesta-studente');
 
     // =========================
     // CHAT

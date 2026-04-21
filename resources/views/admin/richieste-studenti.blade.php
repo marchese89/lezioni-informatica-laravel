@@ -64,7 +64,7 @@
                         <td>
                             <div>
                                 <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="visualizza-richiesta-{{ $item->id }}">Visualizza</button>
+                                    onclick=location.href="{{ route('visualizza-richiesta', ['id' => $item->id]) }}">Visualizza</button>
                             </div>
                         </td>
 

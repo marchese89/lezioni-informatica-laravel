@@ -11,8 +11,15 @@ class LessonOnRequest extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'student_id',
+        'trace'
+    ];
+
+
     public function student(): BelongsTo
     {
-        return $this->belongsTo(Student::class,'student_id','id');
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
 }
