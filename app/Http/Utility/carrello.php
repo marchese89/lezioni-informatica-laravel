@@ -11,17 +11,17 @@ use App\Models\Course;
 class ElementoC
 {
 
-    private $idProdotto;
+    private int $idProdotto;
 
-    private $prezzo;
+    private int $prezzo;
 
     // tipi: 0=lezione, 1=tutte le lezioni di un corso, 2=esercizio, 3=tutti gli esercizi di un corso
     // 4= tutte le lezioni e tutti gli esercizi di un corso, 5=lezione su richiesta
-    private $tipoElemento = 0;
+    private int $tipoElemento = 0;
 
-    private $nome;
+    private string $nome;
 
-    public function __construct($id, $tipo_elem)
+    public function __construct(int $id, int $tipo_elem)
     {
         DB::beginTransaction();
 
@@ -59,7 +59,6 @@ class ElementoC
                 break;
         }
         DB::commit();
-
     }
 
     public function getId()
@@ -77,7 +76,7 @@ class ElementoC
         return $this->prezzo;
     }
 
-    public function setPrezzo($prezzo)
+    public function setPrezzo(int $prezzo)
     {
         $this->prezzo = $prezzo;
     }
@@ -90,7 +89,7 @@ class ElementoC
 
 class Carrello
 {
-
+    /** @var ElementoC[] */
     private $elementi;
 
     public function __construct()
@@ -111,7 +110,7 @@ class Carrello
         // verifichiamo se è già presente un insieme che include già l'elemento (niente da inserire)
         // il tipo è una lezione
         if ($tipo === 0) {
-            $lez = Lesson::where('id','=',$id)->first();
+            $lez = Lesson::where('id', '=', $id)->first();
             $id_corso = $lez->course_id;
             $ind = $this->trovaElemento($id_corso, 1); // tutte le lezioni
             if ($ind !== -1) {
@@ -125,7 +124,7 @@ class Carrello
 
         // il tipo è un esercizio
         if ($tipo === 2) {
-            $ex = Exercise::where('id','=',$id)->first();
+            $ex = Exercise::where('id', '=', $id)->first();
             $id_corso = $ex->course_id;
             $ind = $this->trovaElemento($id_corso, 3); // tutti gli esercizi
             if ($ind !== -1) {
@@ -142,8 +141,8 @@ class Carrello
         // stiamo aggiungendo tutte le lezioni di un corso (eliminiamo tutte le lezioni singole già eventualmente
         // inserite
         if ($tipo === 1) { // tutte le lezioni
-            $lessons = Lesson::where('course_id','=',$id)->get();
-            foreach($lessons as $lesson){
+            $lessons = Lesson::where('course_id', '=', $id)->get();
+            foreach ($lessons as $lesson) {
                 $id_lez = $lesson->id;
                 $ind = $this->trovaElemento($id_lez, 0);
                 if ($ind !== -1) { // la lezione esiste già e va cancellata
@@ -157,8 +156,8 @@ class Carrello
         }
 
         if ($tipo === 3) { // inseriamo tutti gli esercizi di un corso (eliminiamo quelli singoli)
-            $exercises = Exercise::where('course_id','=',$id)->get();
-            foreach($exercises as $ex){
+            $exercises = Exercise::where('course_id', '=', $id)->get();
+            foreach ($exercises as $ex) {
                 $id_ex = $ex->id;
                 $ind = $this->trovaElemento($id_ex, 2);
                 if ($ind !== -1) { // la lezione esiste già e va cancellata
@@ -173,8 +172,8 @@ class Carrello
         }
 
         if ($tipo === 4) { // inseriamo tutte le lezioni e tutti gli esercizi di un corso (eliminiamo tutti i singoli)
-            $lessons = Lesson::where('course_id','=',$id)->get();
-            foreach($lessons as $lesson){
+            $lessons = Lesson::where('course_id', '=', $id)->get();
+            foreach ($lessons as $lesson) {
                 $id_lez = $lesson->id;
                 $ind = $this->trovaElemento($id_lez, 0);
                 if ($ind !== -1) { // la lezione esiste già e va cancellata
@@ -182,8 +181,8 @@ class Carrello
                 }
             }
 
-            $exercises = Exercise::where('course_id','=',$id)->get();
-            foreach($exercises as $ex){
+            $exercises = Exercise::where('course_id', '=', $id)->get();
+            foreach ($exercises as $ex) {
                 $id_ex = $ex->id;
                 $ind = $this->trovaElemento($id_ex, 2);
                 if ($ind !== -1) { // la lezione esiste già e va cancellata
@@ -213,7 +212,7 @@ class Carrello
         return TRUE;
     }
 
-    public function rimuovi($id, $tipo)
+    public function rimuovi(int $id, int $tipo)
     {
         $index = $this->trovaElemento($id, $tipo);
         if ($index !== -1) {
@@ -224,7 +223,7 @@ class Carrello
         return FALSE;
     }
 
-    private function trovaElemento($id, $tipo)
+    private function trovaElemento(int $id, int $tipo)
     {
         $index = -1;
         for ($i = 0; $i < count($this->elementi); $i++) {

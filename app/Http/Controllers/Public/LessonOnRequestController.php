@@ -10,25 +10,20 @@ use App\Models\LessonOnRequest;
 use App\Models\User;
 use App\Mail\NuovaRichiestaStudenteMail;
 use App\Mail\RichiestaEvasaMail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class LessonOnRequestController extends Controller
 {
-    private function filePath($file = null)
+
+    private function deleteFile($path = null)
     {
-        return storage_path('app/private/' . $file);
+        !empty($path) && Storage::disk('private')->delete($path);
     }
 
-    private function deleteFile($file = null)
+    private function saveFile($file, $path)
     {
-        if ($file && File::exists($this->filePath($file))) {
-            File::delete($this->filePath($file));
-        }
-    }
-
-    private function saveFile($file)
-    {
-        $name = $file->hashName();
-        $file->move(storage_path('app/private'), $name);
+        $name = $file->store($path, 'private');
         return $name;
     }
 
@@ -37,7 +32,7 @@ class LessonOnRequestController extends Controller
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
 
         $file = $request->file('file');
-        $name = $this->saveFile($file);
+        $name = $this->saveFile($file, 'lessons_on_request/trace');
 
         $request->session()->put('uploaded_lez_rich', $name);
 
@@ -76,8 +71,10 @@ class LessonOnRequestController extends Controller
 
         $this->deleteFile($lezione->execution);
 
+        $path = $this->saveFile($request->file('file'), 'lessons_on_request/execution');
+
         $lezione->update([
-            'execution' => $this->saveFile($request->file('file'))
+            'execution' => $path
         ]);
 
         return redirect()->route('visualizza-richiesta', $lezione->id);

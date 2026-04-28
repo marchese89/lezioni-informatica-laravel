@@ -35,15 +35,22 @@
             <br>
             @if ($richiesta->escaped == 0)
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick=location.href="lez-rich-rem-exec-{{ $richiesta->id }}">Elimina</button>
+                    <form action="{{ route('lez-rich-rem-exec', $richiesta->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="btn btn-primary">
+                            Elimina
+                        </button>
+                    </form>
                 </div>
                 <br>
             @endif
         @endif
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="sol-rich-upload" enctype="multipart/form-data" id="upload">
+            <form method="POST" action="/sol-rich-upload" enctype="multipart/form-data" id="upload">
                 @csrf
+                @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
                 <input type="file" class="form-control" id="file" name="file" />
                 <p>
@@ -62,21 +69,25 @@
             </form>
             <br>
             <br>
-            <form action="carica-prezzo-lez-rich" method="POST">
+            <form action="/carica-prezzo-lez-rich" method="POST">
                 @csrf
+                @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{$richiesta->price}}" maxlength="5" style="display: inline">
+                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{ $richiesta->price }}"
+                        maxlength="5" style="display: inline">
                     <script type="text/javascript">
-                        var prezzo_ = new LiveValidation('prezzo', {onlyOnSubmit: true});
+                        var prezzo_ = new LiveValidation('prezzo', {
+                            onlyOnSubmit: true
+                        });
                         prezzo_.add(Validate.Presence);
                         prezzo_.add(Validate.InteriPositivi);
                     </script>
                 </div>
                 <br>
                 <div class="col-12" style="text-align:center">
-                    <button type="submit" class="btn btn-primary" >Carica Prezzo</button>
+                    <button type="submit" class="btn btn-primary">Carica Prezzo</button>
                 </div>
             </form>
             <br>

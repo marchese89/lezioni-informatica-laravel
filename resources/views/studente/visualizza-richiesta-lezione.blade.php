@@ -19,52 +19,55 @@
             ->where('tipo_prodotto', '=', 5)
             ->where('id_studente', '=', auth()->user()->student->id)
             ->first();
+
     @endphp
-    <script type="text/javascript">
-        setInterval(leggi_messaggi, 1000);
+    @if ($chat)
+        <script type="text/javascript">
+            setInterval(leggi_messaggi, 1000);
 
-        function leggi_messaggi() {
-            let xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    _("messaggi").innerHTML = this.responseText;
-                }
-            };
-            //aut=1 -> insegnante
-            xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
-            xmlhttp.send();
-        }
-
-        function invia_messaggio(testo) {
-            document.getElementById("messaggio").value = "";
-
-            if (!testo || testo.trim() === "") {
-                return;
+            function leggi_messaggi() {
+                let xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        _("messaggi").innerHTML = this.responseText;
+                    }
+                };
+                //aut=1 -> insegnante
+                xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
+                xmlhttp.send();
             }
 
-            let xmlhttp = new XMLHttpRequest();
+            function invia_messaggio(testo) {
+                document.getElementById("messaggio").value = "";
 
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    console.log(this.responseText);
+                if (!testo || testo.trim() === "") {
+                    return;
                 }
-            };
 
-            xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
+                let xmlhttp = new XMLHttpRequest();
 
-            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState === 4 && this.status === 200) {
+                        console.log(this.responseText);
+                    }
+                };
 
-            // CSRF Laravel (OBBLIGATORIO)
-            xmlhttp.setRequestHeader(
-                "X-CSRF-TOKEN",
-                document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-            );
+                xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
 
-            xmlhttp.send(
-                "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
-            );
-        }
-    </script>
+                xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                // CSRF Laravel (OBBLIGATORIO)
+                xmlhttp.setRequestHeader(
+                    "X-CSRF-TOKEN",
+                    document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                );
+
+                xmlhttp.send(
+                    "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
+                );
+            }
+        </script>
+    @endif
     <ul class="nav">
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/dashboard-studente">Dashboard</a>

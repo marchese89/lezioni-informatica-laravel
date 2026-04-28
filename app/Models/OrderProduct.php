@@ -11,8 +11,15 @@ class OrderProduct extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id_ordine',
+        'id_prodotto',
+        'tipo_prodotto',
+        'price',
+    ];
+
     public function order(): BelongsTo
     {                                      // foreign_key owner_key
-        return $this->belongsTo(Order::class,'order_id', 'id');
+        return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 }

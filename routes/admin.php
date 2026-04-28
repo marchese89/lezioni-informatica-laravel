@@ -132,7 +132,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     })->name('visualizza-richiesta');
 
     Route::post('sol-rich-upload', [LessonOnRequestController::class, 'sol_rich_upload']);
-    Route::get('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec']);
+    Route::delete('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec'])->name('lez-rich-rem-exec');
     Route::post('carica-prezzo-lez-rich', [LessonOnRequestController::class, 'carica_prezzo_lez_rich']);
 
     Route::get('vendite', fn() => view('admin.vendite'));

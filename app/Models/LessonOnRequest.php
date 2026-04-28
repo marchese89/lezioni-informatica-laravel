@@ -14,7 +14,11 @@ class LessonOnRequest extends Model
     protected $fillable = [
         'title',
         'student_id',
-        'trace'
+        'trace',
+        'execution',
+        'price',
+        'escaped',
+        'paid'
     ];
 
 

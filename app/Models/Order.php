@@ -13,6 +13,10 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id',
+    ];
+
     public function order_products(): HasMany
     {
         return $this->hasMany(OrderProduct::class);
@@ -20,7 +24,6 @@ class Order extends Model
 
     public function student(): BelongsTo
     {                                      // foreign_key owner_key
-        return $this->belongsTo(Student::class,'student_id', 'id');
+        return $this->belongsTo(Student::class, 'student_id', 'id');
     }
-
 }
