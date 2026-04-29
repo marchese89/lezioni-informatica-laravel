@@ -12,13 +12,14 @@ use App\Models\Exercise;
 use App\Models\LessonOnRequest;
 use App\Models\Order;
 use App\Models\InvoiceSheet;
+use App\Models\Invoice;
 use App\Models\StudentInvoice;
 
 use App\Services\AcquistiService;
 
 class FileAccessController extends Controller
 {
-    public function __invoke(Request $request, $path)
+    public function __invoke(Request $request, string $path)
     {
         // 🔒 Protezione base path traversal
         if (str_contains($path, '..')) {
@@ -133,26 +134,21 @@ class FileAccessController extends Controller
             return true;
         }
 
-        // 🧾 Ordini
-        $ordine = Order::where('student_id', $studente->id)
-            ->where('invoice', $path)
-            ->first();
+        // // 🧾 Ordini
+        // $ordine = Order::where('student_id', $studente->id)
+        //     ->where('invoice', $path)
+        //     ->first();
 
-        if ($ordine) {
-            return true;
-        }
+        // if ($ordine) {
+        //     return true;
+        // }
 
         // 🧾 Fatture
-        $fattura = InvoiceSheet::where('file', $path)->first();
+        // $fattura = InvoiceSheet::where('file', $path)->first();
+        $fattura = Invoice::where('path', $path)->first();
 
         if ($fattura) {
-            $count = StudentInvoice::where('student_id', $studente->id)
-                ->where('invoice_sheet_id', $fattura->id)
-                ->count();
-
-            if ($count > 0) {
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -162,7 +158,7 @@ class FileAccessController extends Controller
     // 📁 FILE RESPONSE
     // =========================
 
-    private function serve($path)
+    private function serve(string $path)
     {
         return Storage::response($path);
     }

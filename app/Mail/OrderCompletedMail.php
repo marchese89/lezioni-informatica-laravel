@@ -2,15 +2,17 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Storage;
 
 class OrderCompletedMail extends Mailable
 {
     public function __construct(
-        public $user,
-        public $pdf,
-        public $data,
-        public $total
+        public User $user,
+        public string $pdf_path,
+        public string $data,
+        public float $total
     ) {}
 
     public function build()
@@ -22,10 +24,12 @@ class OrderCompletedMail extends Mailable
                 'data' => $this->data,
                 'total' => $this->total,
             ])
-            ->attachData(
-                $this->pdf,
-                'fattura.pdf',
-                ['mime' => 'application/pdf']
+            ->attach(
+                Storage::disk('private')->path($this->pdf_path),
+                [
+                    'as' => 'fattura.pdf',
+                    'mime' => 'application/pdf',
+                ]
             );
     }
 }

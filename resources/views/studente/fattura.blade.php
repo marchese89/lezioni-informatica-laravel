@@ -14,11 +14,12 @@
     </ul>
     <div class="container">
         @php
-            use App\Models\Order;
-            $ordine = Order::where('id', '=', request('id'))->first();
+            use App\Models\Invoice;
         @endphp
         <h4>Fattura</h4>
-        <iframe width="90%" src="/protected_file/{{ $ordine->invoice }}#view=FitH" height="800px">
+        <iframe width="90%"
+            src="/protected_file/{{ Invoice::where('order_id', '=', request('id'))->first()->path }}#view=FitH"
+            height="800px">
         </iframe>
     </div>
 @endsection

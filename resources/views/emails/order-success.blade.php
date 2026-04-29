@@ -32,7 +32,12 @@
     <br>
 
     <p>
-        Grazie per aver scelto il nostro servizio.<br>
+        Grazie per aver scelto il nostro servizio.
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <b>Lezioni Informatica</b>
     </p>
 

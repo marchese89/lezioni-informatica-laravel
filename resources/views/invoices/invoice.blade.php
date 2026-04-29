@@ -121,12 +121,12 @@
                         <td align="center"><b>IMPORTO</b></td>
                     </tr>
 
-                    @foreach ($rows as $row)
+                    @foreach ($order_products as $row)
                         <tr>
-                            <td align="center">{{ $row['desc'] }}</td>
+                            <td align="center">{{ $row['description'] }}</td>
                             <td align="center">{{ $row['price'] }} €</td>
-                            <td align="center">{{ $row['qty'] }}</td>
-                            <td align="center"><b>{{ $row['total'] }} €</b></td>
+                            <td align="center">1</td>
+                            <td align="center"><b>{{ $row['price'] }} €</b></td>
                         </tr>
                     @endforeach
 

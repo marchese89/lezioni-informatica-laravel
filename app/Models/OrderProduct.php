@@ -16,10 +16,11 @@ class OrderProduct extends Model
         'id_prodotto',
         'tipo_prodotto',
         'price',
+        'description',
     ];
 
     public function order(): BelongsTo
     {                                      // foreign_key owner_key
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class, 'id_ordine', 'id');
     }
 }

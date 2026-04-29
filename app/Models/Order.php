@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\OrderProduct;
 use App\Models\Student;
+use App\Models\Invoice;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
 
 class Order extends Model
 {
@@ -19,7 +22,7 @@ class Order extends Model
 
     public function order_products(): HasMany
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->hasMany(OrderProduct::class, 'id_ordine', 'id');
     }
 
     public function student(): BelongsTo

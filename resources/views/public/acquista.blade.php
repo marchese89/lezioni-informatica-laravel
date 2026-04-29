@@ -8,7 +8,7 @@
         <h2>Acquista</h2>
     </div>
     <br>
-    <div class="container" style="text-align: center;width:80%; height:500px">
+    <div class="container" style="text-align: center;width:80%; height:550px">
 
         @php
             $carrello = session()->get('carrello');

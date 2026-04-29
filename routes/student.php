@@ -48,7 +48,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // CHECKOUT / PAGAMENTI
     // =========================
-    Route::view('acquista', 'public.acquista');
     Route::view('checkout', 'public.acquista');
 
     Route::post('prepara-pagamento', [AcquistiController::class, 'prepara_pagamento']);

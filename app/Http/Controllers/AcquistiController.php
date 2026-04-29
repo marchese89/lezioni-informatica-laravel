@@ -8,10 +8,11 @@ use App\Models\Exercise;
 use App\Models\Lesson;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
-use App\Http\Utility\Carrello;
 use App\Services\OrderService;
 use App\Services\InvoiceService;
 use App\Mail\OrderCompletedMail;
+use App\Models\Order;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\Mail;
 
 class AcquistiController extends Controller
@@ -29,7 +30,7 @@ class AcquistiController extends Controller
         return match ($type) {
             0 => redirect('/corso/' . Lesson::find($id)->course_id),
             2 => redirect('/corso/' . Exercise::find($id)->course_id),
-            1, 4 => redirect('corso-' . $id),
+            1, 4 => redirect('/corso/' . $id),
             5 => redirect('/visualizza-richiesta-studente/' . $id),
             default => redirect('/carrello')
         };
@@ -78,18 +79,16 @@ class AcquistiController extends Controller
             /*
              * 1. CREA ORDINE + RIGHE
              */
-            $orderData = $orderService->process($studente, $carrello);
+            $orderId = $orderService->process($studente, $carrello);
 
             /*
              * 2. GENERA PDF (ON DEMAND, via InvoiceService)
              */
-            $pdf = $invoiceService->generatePdf(
-                $user,
-                $studente,
-                $orderData['rows'],
-                $orderData['total'],
-                $orderData['order']
-            );
+            $invoiceService->generatePdf($orderId);
+
+            $invoice = Invoice::where('order_id', $orderId)->first();
+
+
 
             /*
              * 3. INVIO EMAIL
@@ -97,9 +96,9 @@ class AcquistiController extends Controller
             Mail::to($user->email)->send(
                 new OrderCompletedMail(
                     $user,
-                    $pdf,
-                    now(),
-                    $orderData['total']
+                    $invoice->path,
+                    now()->format('d/m/Y'),
+                    Order::find($orderId)->order_products()->sum('price')
                 )
             );
 
