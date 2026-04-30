@@ -109,5 +109,5 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // AJAX VARI
     // =========================
-    Route::get('cambia_tabella_ordini_studente', [AjaxController::class, 'cambia_tabella_ordini_studente']);
+    Route::get('cambia_tabella_ordini_studente', [AjaxController::class, 'getOrdini']);
 });

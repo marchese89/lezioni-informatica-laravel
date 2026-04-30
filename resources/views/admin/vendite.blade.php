@@ -3,25 +3,36 @@
 @section('inner')
     <script>
         function aggiorna_tabella(anno, mese) {
-            console.log('anno: ' + anno);
-            console.log('mese: ' + mese);
+            fetch(`/cambia_tabella_ordini?anno=${anno}&mese=${mese}`)
+                .then(res => res.json())
+                .then(data => {
+                    let html = '';
 
-            // Crea un oggetto XMLHttpRequest
-            var xhr = new XMLHttpRequest();
+                    data.ordini.forEach(o => {
+                        html += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.studente}</td>
+                        <td>${o.data}</td>
+                        <td>${o.totale}€</td>
+                        <td>
+                            <button class="btn btn-primary"
+                                onclick="location.href='admin-ordine-${o.id}'">
+                                Visualizza Ordine
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                    });
 
-            // Imposta la funzione di gestione dell'evento di completamento della richiesta
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // La richiesta è stata completata con successo
-                    _('tabella_ordini').innerHTML = xhr.responseText;
-                }
-            };
-
-            // Imposta il metodo e l'URL della richiesta
-            xhr.open("GET", "cambia_tabella_ordini?anno=" + anno + "&mese=" + mese, true);
-
-            // Invia la richiesta
-            xhr.send();
+                    document.getElementById('tabella-body').innerHTML = html;
+                    document.getElementById('totale').innerHTML =
+                        `<strong>Totale: ${data.totale}€</strong>`;
+                });
+        }
+        window.onload = function() {
+            aggiorna_tabella(document.getElementById('floatingSelect1').value,
+                document.getElementById('floatingSelect2').value);
         }
     </script>
     <ul class="nav">
@@ -87,50 +98,25 @@
                 </select>
                 <label for="floatingSelect">Mese</label>
             </div>
-            <table class="table" id="tabella_ordini">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Studente</th>
-                        <th scope="col">Data</th>
-                        <th scope="col">Totale</th>
-                        <th scope="col">Visualizza</th>
+                        <th>#</th>
+                        <th>Studente</th>
+                        <th>Data</th>
+                        <th>Totale</th>
+                        <th>Visualizza</th>
                     </tr>
                 </thead>
-                @php
-                    $totale = 0;
-                @endphp
-                <tbody>
-                    @foreach ($ordine as $item)
-                        <tr>
 
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
-                                @php
-                                    $studente = Student::where('id', '=', $item->student_id)->first();
-                                    $utente = $studente->user;
-                                    echo $utente->name . ' ' . $utente->surname;
-                                @endphp
-                            </td>
-                            <td>
-                                {{ DateHelper::format($item->date) }}
-                            </td>
-                            <td>
-                                {{ AcquistiService::get_totale_ordine($item->id) }}<strong>&euro;</strong>
-                                @php
-                                    $totale += AcquistiService::get_totale_ordine($item->id);
-                                @endphp
-                            </td>
-                            <td><button class="btn btn-primary"
-                                    onclick=location.href="admin-ordine-{{ $item->id }}">Visualizza Ordine</button>
-                            </td>
-                        </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="5"><strong>Totale: {{ $totale }}&euro;</strong></td>
-                    </tr>
+                <tbody id="tabella-body">
                 </tbody>
 
+                <tfoot>
+                    <tr>
+                        <td colspan="5" id="totale"></td>
+                    </tr>
+                </tfoot>
             </table>
         @else
             <br>

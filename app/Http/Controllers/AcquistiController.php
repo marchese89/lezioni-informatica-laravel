@@ -82,13 +82,11 @@ class AcquistiController extends Controller
             $orderId = $orderService->process($studente, $carrello);
 
             /*
-             * 2. GENERA PDF (ON DEMAND, via InvoiceService)
+             * 2. GENERA PDF
              */
             $invoiceService->generatePdf($orderId);
 
             $invoice = Invoice::where('order_id', $orderId)->first();
-
-
 
             /*
              * 3. INVIO EMAIL

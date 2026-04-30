@@ -11,127 +11,53 @@ use App\Models\ChatMessage;
 use App\Models\Chat;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use App\Models\Order;
 
 class AjaxController extends Controller
 {
-    public function cambia_tabella_ordini()
-    {
-        $anno = request('anno');
-        $mese = request('mese');
 
-        $ordine = DB::table('orders')
-            ->whereMonth('date', $mese)
-            ->whereYear('date', $anno)
-            ->orderBy(DB::raw('date'), 'desc')
+    public function getOrdini(Request $request)
+    {
+        $anno = $request->input('anno');
+        $mese = $request->input('mese');
+
+        $query = Order::query()
+            ->with('student.user')
+            ->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id')
+            ->select(
+                'orders.id',
+                'orders.date',
+                'orders.student_id',
+                DB::raw('SUM(order_products.price) as totale')
+            )
+            ->whereMonth('orders.date', $mese)
+            ->whereYear('orders.date', $anno)
+            ->groupBy('orders.id', 'orders.date', 'orders.student_id');
+
+        // filtro studente
+        if (auth()->user()->student !== null) {
+            $query->where('orders.student_id', auth()->user()->student->id);
+        }
+
+        $ordini = $query
+            ->orderByDesc('orders.date')
             ->get();
 
-        $html =
+        // mapping leggero (niente più calcoli)
+        $ordiniMapped = $ordini->map(function ($order) {
+            return [
+                'id' => $order->id,
+                'data' => DateHelper::format($order->date),
+                'totale' => $order->totale ?? 0,
+                'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
+            ];
+        });
 
-            '<thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Studente</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Totale</th>
-                    <th scope="col">Visualizza</th>
-                </tr>
-            </thead><tbody>';
-
-        $totale = 0;
-        foreach ($ordine as $item) {
-            $html = $html .
-                '<tr>
-
-                        <th scope="row">' .  $item->id .  '</th>
-                        <td>';
-
-            $studente = Student::where('id', '=', $item->student_id)->first();
-            $utente = $studente->user;
-            $html = $html .  $utente->name . ' ' . $utente->surname;
-            $html = $html .
-                '</td>
-                        <td>';
-            $html = $html .  DateHelper::format($item->date);
-            $html = $html .
-                '</td>
-                        <td>';
-            $html = $html .   AcquistiService::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
-
-            $totale = $totale + AcquistiService::get_totale_ordine($item->id);
-            $html = $html .
-                '</td>
-                        <td><button class="btn btn-primary"
-                                onclick=location.href="admin-ordine-' . $item->id . '">Visualizza Ordine</button></td>
-                    </tr>';
-        }
-        $html = $html .
-            '<tr>
-                    <td colspan="5"><strong>Totale:' . $totale . '&euro;</strong></td>
-                </tr>
-            </tbody>';
-
-        return $html;
+        return response()->json([
+            'ordini' => $ordiniMapped,
+            'totale' => $ordiniMapped->sum('totale'),
+        ]);
     }
-
-    public function cambia_tabella_ordini_studente()
-    {
-        $anno = request('anno');
-        $mese = request('mese');
-
-        $ordine = DB::table('orders')
-            ->whereMonth('date', $mese)
-            ->whereYear('date', $anno)
-            ->orderBy(DB::raw('date'), 'desc')
-            ->get();
-
-        $html =
-
-            '<thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Studente</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Totale</th>
-                    <th scope="col">Visualizza</th>
-                </tr>
-            </thead><tbody>';
-
-        $totale = 0;
-        foreach ($ordine as $item) {
-            $html = $html .
-                '<tr>
-
-                        <th scope="row">' .  $item->id .  '</th>
-                        <td>';
-
-            $studente = Student::where('id', '=', $item->student_id)->first();
-            $utente = $studente->user;
-            $html = $html .  $utente->name . ' ' . $utente->surname;
-            $html = $html .
-                '</td>
-                        <td>';
-            $html = $html .  DateHelper::format($item->date);
-            $html = $html .
-                '</td>
-                        <td>';
-            $html = $html .   AcquistiService::get_totale_ordine($item->id) . '<strong>&euro;</strong>';
-
-            $totale = $totale + AcquistiService::get_totale_ordine($item->id);
-            $html = $html .
-                '</td>
-                        <td><button class="btn btn-primary"
-                                onclick=location.href="ordine-' . $item->id . '">Visualizza Ordine</button></td>
-                    </tr>';
-        }
-        $html = $html .
-            '<tr>
-                    <td colspan="5"><strong>Totale:' . $totale . '&euro;</strong></td>
-                </tr>
-            </tbody>';
-
-        return $html;
-    }
-
     public function invia_messaggio(Request $request)
     {
         $request->validate([

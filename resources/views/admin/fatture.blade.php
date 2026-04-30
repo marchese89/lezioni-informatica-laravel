@@ -9,11 +9,11 @@
     <div class="container" style="text-align: center">
 
         @php
-            use App\Models\InvoiceSheet;
+            use App\Models\Invoice;
             use App\Helpers\DateHelper;
-            $fatture = InvoiceSheet::orderBy('date', 'desc')->get();
+            $fatture = Invoice::orderBy('date', 'desc')->get();
         @endphp
-        @if (InvoiceSheet::count() > 0)
+        @if (Invoice::count() > 0)
             <br>
             <h3>Elenco Fatture</h3>
             <table class="table">
@@ -25,10 +25,10 @@
                 <tbody>
                     @foreach ($fatture as $item)
                         <tr>
-                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->number }}</td>
                             <td>{{ DateHelper::format($item->date) }}</td>
                             <td><button class="btn btn-primary"
-                                    onclick=location.href="visualizza-fattura-{{ $item->id }}">Visualizza</button></td>
+                                    onclick=location.href="visualizza-fattura-{{ $item->number }}">Visualizza</button></td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -3,25 +3,34 @@
 @section('inner')
     <script>
         function aggiorna_tabella(anno, mese) {
-            console.log('anno: ' + anno);
-            console.log('mese: ' + mese);
 
-            // Crea un oggetto XMLHttpRequest
-            var xhr = new XMLHttpRequest();
+            fetch(`cambia_tabella_ordini_studente?anno=${anno}&mese=${mese}`)
+                .then(res => res.json())
+                .then(data => {
 
-            // Imposta la funzione di gestione dell'evento di completamento della richiesta
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    // La richiesta è stata completata con successo
-                    _('tabella_ordini').innerHTML = xhr.responseText;
-                }
-            };
+                    let html = '';
 
-            // Imposta il metodo e l'URL della richiesta
-            xhr.open("GET", "cambia_tabella_ordini_studente?anno=" + anno + "&mese=" + mese, true);
+                    data.ordini.forEach(o => {
+                        html += `
+                    <tr>
+                        <td>${o.id}</td>
+                        <td>${o.data}</td>
+                        <td>
+                            <button class="btn btn-primary"
+                                onclick="location.href='ordine-${o.id}'">
+                                Visualizza
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                    });
 
-            // Invia la richiesta
-            xhr.send();
+                    document.getElementById('tabella-body').innerHTML = html;
+                });
+        }
+        window.onload = function() {
+            aggiorna_tabella(document.getElementById('floatingSelect1').value, document.getElementById(
+                'floatingSelect2').value);
         }
     </script>
     <ul class="nav">
@@ -89,31 +98,17 @@
                 </select>
                 <label for="floatingSelect">Mese</label>
             </div>
-            <table class="table" id="tabella_ordini">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Data</th>
-                        <th scope="col">Operazioni</th>
+                        <th>#</th>
+                        <th>Data</th>
+                        <th>Operazioni</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @php
 
-                    @endphp
-                    @foreach ($ordini as $item)
-                        <tr>
-
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
-                                {{ DateHelper::format($item->date) }}
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="ordine-{{ $item->id }}">Visualizza</button>
-                            </td>
-                        </tr>
-                    @endforeach
+                <tbody id="tabella-body">
+                    <!-- riempita via JS -->
                 </tbody>
             </table>
         @else
