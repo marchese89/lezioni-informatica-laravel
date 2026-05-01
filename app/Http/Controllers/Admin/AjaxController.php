@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Services\AcquistiService;
 use App\Helpers\DateHelper;
 use App\Models\Student;
 use App\Models\ChatMessage;
@@ -12,6 +11,7 @@ use App\Models\Chat;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Events\MessageSent;
 
 class AjaxController extends Controller
 {
@@ -58,6 +58,7 @@ class AjaxController extends Controller
             'totale' => $ordiniMapped->sum('totale'),
         ]);
     }
+
     public function invia_messaggio(Request $request)
     {
         $request->validate([
@@ -65,20 +66,20 @@ class AjaxController extends Controller
             'testo' => 'required|string'
         ]);
 
-        $messaggio = new ChatMessage();
-        $messaggio->chat_id = $request->id_chat;
-        $messaggio->message = $request->testo;
+        $messaggio = ChatMessage::create([
+            'chat_id' => $request->id_chat,
+            'message' => $request->testo,
+            'author' => auth()->user()->role === 'admin' ? 1 : 0
+        ]);
 
-        // NON fidarti del client per "aut"
-        $messaggio->author = auth()->user()->role === 'admin' ? 1 : 0;
-
-        $messaggio->save();
+        broadcast(new MessageSent($messaggio));
 
         return response()->json([
             'success' => true,
             'message' => $messaggio
         ]);
     }
+
 
     public function leggi_messaggi()
     {

@@ -1,50 +1,29 @@
 @extends('admin.dashboard-admin')
 
 @section('inner')
+    @php $enableEcho = true; @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script type="text/javascript">
-        setInterval(leggi_messaggi, 1000);
-
-        function leggi_messaggi() {
-            let xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    _("messaggi").innerHTML = this.responseText;
-                }
-            };
-            //aut=1 -> insegnante
-            xmlhttp.open("GET", "leggi-messaggi-insegnante-" + <?php echo request('id'); ?>, true);
-            xmlhttp.send();
-        }
-
         function invia_messaggio(testo) {
+            if (!testo || testo.trim() === "") return;
+
             document.getElementById("messaggio").value = "";
 
-            if (!testo || testo.trim() === "") {
-                return;
-            }
+            const xhr = new XMLHttpRequest();
 
-            let xmlhttp = new XMLHttpRequest();
+            xhr.open("POST", "/chat/admin/invia-messaggio", true);
 
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState === 4 && this.status === 200) {
-                    console.log(this.responseText);
-                }
-            };
-
-            xmlhttp.open("POST", "/chat/admin/invia-messaggio", true);
-
-            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            // CSRF Laravel (OBBLIGATORIO se middleware attivo)
-            xmlhttp.setRequestHeader(
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader(
                 "X-CSRF-TOKEN",
                 document.querySelector('meta[name="csrf-token"]').getAttribute("content")
             );
 
-            xmlhttp.send(
-                "id_chat=<?php echo request('id'); ?>&aut=1&testo=" + encodeURIComponent(testo)
-            );
+            const params = new URLSearchParams();
+            params.append("id_chat", "{{ request('id') }}");
+            params.append("aut", 1);
+            params.append("testo", testo);
+            xhr.send(params.toString());
         }
     </script>
     <ul class="nav">
@@ -167,4 +146,41 @@
             <br>
         </div>
     </div>
+    <script>
+        function appendMessage(msg) {
+            const html = `
+        <div class="chat-message" style="justify-content: ${msg.author == 1 ? 'flex-end' : 'flex-start'};">
+            <div class="message-content" style="${msg.author == 1 ? 'background-color: #5755c559;' : ''}">
+                <p class="sender-name">${msg.author == 1 ? 'Tu' : 'Studente'}</p>
+                <p class="message-text">${msg.message}</p>
+                <span class="timestamp">${msg.date ?? ''}</span>
+            </div>
+        </div>
+    `;
+
+            const container = document.getElementById("messaggi");
+            container.insertAdjacentHTML('beforeend', html);
+
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+    <script>
+        const chatId = {{ request('id') }};
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const chatId = {{ request('id') }};
+
+            if (!window.Echo) {
+                console.error("Echo NON è disponibile");
+                return;
+            }
+
+            window.Echo.channel('chat.' + chatId)
+                .listen('.MessageSent', function(e) {
+                    appendMessage(e);
+                });
+
+        });
+    </script>
 @endsection

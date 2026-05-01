@@ -11,8 +11,17 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
+    protected   $table = 'chat_messages';
+
+    protected $fillable = [
+        'chat_id',
+        'message',
+        'author',
+        'date',
+    ];
+
     public function chat(): BelongsTo
     {                                      // foreign_key owner_key
-        return $this->belongsTo(Chat::class,'chat_id', 'id');
+        return $this->belongsTo(Chat::class, 'chat_id', 'id');
     }
 }

@@ -52,7 +52,7 @@
     </div>
     <script>
         // This is your test publishable API key.
-        console.log("SCRIPT LOADED");
+
         const stripe = Stripe(
             "{{ env('STRIPE_KEY') }}"
         );
@@ -104,8 +104,6 @@
 
                 const paymentElement = elements.create("payment");
                 paymentElement.mount("#payment-element");
-
-                console.log("Stripe Elements mounted");
 
             } catch (error) {
                 console.error("FETCH FAILED:", error);

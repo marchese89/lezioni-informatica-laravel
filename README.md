@@ -1,66 +1,131 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Lezioni Informatica – Laravel Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Applicazione web sviluppata con Laravel per la gestione di studenti, lezioni ed esercizi, pensata per supportare l’attività di un insegnante freelance.
 
-## About Laravel
+## 📌 Descrizione
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Questo progetto nasce come base per una piattaforma dedicata alla vendita e gestione di lezioni private di informatica.
+L’applicazione consente a uno studente di acquistare lezioni, esercizi e richiedere contenuti personalizzati, mentre l’insegnante (admin) gestisce l’offerta e monitora le attività.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Attualmente il progetto è utilizzato come portfolio tecnico.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 👥 Tipologie di utenti
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Admin (insegnante)**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+  * Gestisce lezioni ed esercizi
+  * Imposta prezzi
+  * Visualizza richieste degli studenti
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* **Studente**
 
-## Laravel Sponsors
+  * Acquista lezioni ed esercizi
+  * Invia richieste personalizzate
+  * Accede ai contenuti acquistati
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## ⚙️ Funzionalità principali
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+* Gestione lezioni ed esercizi con prezzo
+* Sistema di acquisto
+* Integrazione pagamenti con Stripe
+* Generazione e invio fatture via email
+* Sistema di autenticazione personalizzato (due ruoli)
+* Chat in tempo reale (Laravel Reverb – opzionale)
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🧱 Stack tecnologico
 
-## Code of Conduct
+* **Backend:** Laravel 10
+* **Database:** MySQL
+* **Frontend:** Blade + Bootstrap + JavaScript
+* **Pagamenti:** Stripe
+* **Realtime:** Laravel Reverb (WebSocket)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Installazione
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Clona il repository:
 
-## License
+```bash
+git clone https://github.com/marchese89/lezioni-informatica-laravel.git
+cd lezioni-informatica-laravel
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Installa le dipendenze:
+
+```bash
+composer install
+```
+
+Configura l’ambiente:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Configura il database nel file `.env`, poi esegui:
+
+```bash
+php artisan migrate
+```
+
+---
+
+## 💬 Chat in tempo reale (opzionale)
+
+La chat utilizza Laravel Reverb e richiede l’avvio manuale del server WebSocket:
+
+```bash
+php artisan reverb:start
+```
+
+> Nota: questa funzionalità potrebbe non essere compatibile con hosting condivisi (es. Aruba).
+
+---
+
+## 💳 Pagamenti
+
+Il sistema utilizza Stripe per la gestione dei pagamenti.
+È necessario configurare le chiavi API nel file `.env`.
+
+---
+
+## 📦 Stato del progetto
+
+* ✔ Funzionale a livello core
+* ⚠️ Alcune funzionalità (chat realtime) non ottimizzate per ambienti di produzione condivisi
+* 🎯 Attualmente utilizzato come progetto portfolio
+
+---
+
+## 🎯 Obiettivi del progetto
+
+* Dimostrare competenze nello sviluppo con Laravel
+* Gestione completa di un flusso reale (prodotti → pagamento → fatturazione)
+* Personalizzazione del sistema di autenticazione
+* Integrazione con servizi esterni (Stripe, WebSocket)
+
+---
+
+## 🔧 Possibili miglioramenti
+
+* Introduzione di un sistema di calendario per le lezioni
+* Miglioramento della gestione ruoli (es. policy più strutturate)
+* Refactoring della chat per ambienti serverless o polling fallback
+* UI/UX più moderna
+
+---
+
+## 👤 Autore
+
+Giovanni Marchese
+[GitHub](https://github.com/marchese89)
+
+---

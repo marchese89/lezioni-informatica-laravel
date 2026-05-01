@@ -9,12 +9,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script type="text/javascript" src="custom_javascript/livevalidation_standalone.compressed.js"></script>
-    <script type="text/javascript" src="custom_javascript/utility.js?ts=<?= time() ?>&quot"></script>
-    <link href="custom_css/validation.css" rel="stylesheet" type="text/css">
-    <link href="custom_css/admin.css" rel="stylesheet" type="text/css">
-    <link href="custom_css/index.css" rel="stylesheet" type="text/css">
-    <link href="custom_css/chat.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/custom_javascript/livevalidation_standalone.compressed.js"></script>
+    <script type="text/javascript" src="/custom_javascript/utility.js?ts=<?= time() ?>&quot"></script>
+    <link href="/custom_css/validation.css" rel="stylesheet" type="text/css">
+    <link href="/custom_css/admin.css" rel="stylesheet" type="text/css">
+    <link href="/custom_css/index.css" rel="stylesheet" type="text/css">
+    <link href="/custom_css/chat.css" rel="stylesheet" type="text/css">
     <style>
         body {
             overflow-y: scroll;
@@ -140,6 +140,25 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
     </script>
 
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <script src="https://unpkg.com/laravel-echo@1.16.1/dist/echo.iife.js"></script>
+
+
+    @if (isset($enableEcho) && $enableEcho)
+        <script>
+            window.Pusher = Pusher;
+
+            window.Echo = new Echo({
+                broadcaster: 'reverb',
+                key: 'local',
+                wsHost: window.location.hostname,
+                wsPort: 8080,
+                forceTLS: false,
+                enabledTransports: ['ws', 'wss'],
+            });
+        </script>
+    @endif
 </body>
 
 </html>
