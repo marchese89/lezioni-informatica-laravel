@@ -36,7 +36,7 @@ class LoginController extends Controller
                 if (request('return') === '1') {
                     return redirect('lezione-su-richiesta');
                 } else {
-                    return redirect('/');
+                    return redirect('dashboard-studente');
                 }
             }
         }

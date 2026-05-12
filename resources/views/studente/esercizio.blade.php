@@ -1,6 +1,7 @@
-@extends('admin.dashboard-admin')
+@extends('studente.dashboard-studente')
 
 @section('inner')
+    @php $enableEcho = true; @endphp
     @php
         use App\Models\Course;
         use App\Models\Lesson;
@@ -18,20 +19,6 @@
             ->first();
     @endphp
     <script type="text/javascript">
-        setInterval(leggi_messaggi, 1000);
-
-        function leggi_messaggi() {
-            let xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    _("messaggi").innerHTML = this.responseText;
-                }
-            };
-            //aut=1 -> insegnante
-            xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
-            xmlhttp.send();
-        }
-
         function invia_messaggio(testo) {
             document.getElementById("messaggio").value = "";
 
@@ -51,9 +38,12 @@
                 document.querySelector('meta[name="csrf-token"]').getAttribute("content")
             );
 
-            xmlhttp.send(
-                "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
-            );
+            const params = new URLSearchParams();
+            params.append("id_chat", "{{ $chat->id }}");
+            params.append("testo", testo);
+
+            xmlhttp.send(params.toString());
+            console.log("Messaggio inviato: " + testo);
         }
     </script>
     <ul class="nav">
@@ -138,7 +128,44 @@
                 <button id="invia" class="btn btn-primary" onclick=invia_messaggio(_("messaggio").value)>Invia</button>
                 <br>
                 <br>
+
             </div>
         </div>
     </div>
+    <script>
+        function appendMessage(msg) {
+            console.log("append message", msg);
+            const html = `
+        <div class="chat-message" style="justify-content: ${msg.author == 0 ? 'flex-end' : 'flex-start'};">
+            <div class="message-content" style="${msg.author == 0 ? 'background-color: #5755c559;' : ''}">
+                <p class="sender-name">${msg.author == 0 ? 'Tu' : 'Insegnante'}</p>
+                <p class="message-text">${msg.message}</p>
+                <span class="timestamp">${msg.date ?? ''}</span>
+            </div>
+        </div>
+    `;
+
+            const container = document.getElementById("messaggi");
+            container.insertAdjacentHTML('beforeend', html);
+
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Script da testare");
+            const chatId = {{ $chat->id }};
+
+            if (!window.Echo) {
+                console.error("Echo NON è disponibile");
+                return;
+            }
+
+            window.Echo.channel('chat.' + chatId)
+                .listen('.MessageSent', function(e) {
+                    appendMessage(e);
+                });
+
+        });
+    </script>
 @endsection

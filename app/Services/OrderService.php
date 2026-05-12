@@ -31,19 +31,46 @@ class OrderService
         return $order->id;
     }
 
-    private function handleItem(ElementoC $item, int  $orderId, int $studentId)
+    private function handleItem(ElementoC $item, int $orderId, int $studentId)
     {
-        $type = $item->getTipoElemento();
-        $id = $item->getId();
+        return match ($item->getTipo()) {
 
-        return match ($type) {
+            ElementoC::LEZIONE => $this->handleLesson($item->getId(), $orderId, $studentId),
 
-            0 => $this->handleLesson($id, $orderId, $studentId),
-            2 => $this->handleExercise($id, $orderId, $studentId),
-            5 => $this->handleRequest($id, $orderId, $studentId),
+            ElementoC::ESERCIZIO => $this->handleExercise($item->getId(), $orderId, $studentId),
+
+            ElementoC::LEZIONE_RICHIESTA => $this->handleRequest($item->getId(), $orderId, $studentId),
+
+            ElementoC::LEZIONI_CORSO => $this->handleLessonsOfCourse($item->getId(), $orderId, $studentId),
+
+            ElementoC::ESERCIZI_CORSO => $this->handleExercisesOfCourse($item->getId(), $orderId, $studentId),
+
+            ElementoC::CORSO_COMPLETO => $this->handleFullCourse($item->getId(), $orderId, $studentId),
 
             default => null,
         };
+    }
+
+    private function handleLessonsOfCourse($courseId, $orderId, $studentId)
+    {
+        $lessons = Lesson::where('course_id', $courseId)->get();
+        foreach ($lessons as $l) {
+            $this->handleLesson($l->id, $orderId, $studentId);
+        }
+    }
+
+    private function handleExercisesOfCourse($courseId, $orderId, $studentId)
+    {
+        $exs = Exercise::where('course_id', $courseId)->get();
+        foreach ($exs as $e) {
+            $this->handleExercise($e->id, $orderId, $studentId);
+        }
+    }
+
+    private function handleFullCourse($courseId, $orderId, $studentId)
+    {
+        $this->handleLessonsOfCourse($courseId, $orderId, $studentId);
+        $this->handleExercisesOfCourse($courseId, $orderId, $studentId);
     }
 
     private function handleLesson(int $id, int  $orderId, int $studentId)

@@ -10,11 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\LessonOnRequest;
-use App\Models\Order;
-use App\Models\InvoiceSheet;
 use App\Models\Invoice;
-use App\Models\StudentInvoice;
-
+use App\Models\Student;
 use App\Services\AcquistiService;
 
 class FileAccessController extends Controller
@@ -86,8 +83,15 @@ class FileAccessController extends Controller
             ($exerciseExecution !== null && $exerciseExecution->price === 0);
     }
 
-    private function canAccessStudent($request, $studente, $path, $lessonPresentation, $lessonFile, $exerciseTrace, $exerciseExecution)
-    {
+    private function canAccessStudent(
+        $request,
+        $studente,
+        $path,
+        $lessonPresentation,
+        $lessonFile,
+        $exerciseTrace,
+        $exerciseExecution
+    ) {
         // 📘 Lezioni
         if ($lessonPresentation) {
             return true;
@@ -133,15 +137,6 @@ class FileAccessController extends Controller
         if ($lezRichExec && $lezRichExec->paid == 1) {
             return true;
         }
-
-        // // 🧾 Ordini
-        // $ordine = Order::where('student_id', $studente->id)
-        //     ->where('invoice', $path)
-        //     ->first();
-
-        // if ($ordine) {
-        //     return true;
-        // }
 
         // 🧾 Fatture
         // $fattura = InvoiceSheet::where('file', $path)->first();

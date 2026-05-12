@@ -94,7 +94,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // CHAT
     // =========================
-    Route::get('chat/{id_chat}/messaggi', [AjaxController::class, 'leggi_messaggi_stud']);
 
     Route::post('chat/studente/invia-messaggio', [AjaxController::class, 'invia_messaggio']);
 

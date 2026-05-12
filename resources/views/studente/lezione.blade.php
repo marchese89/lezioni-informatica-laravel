@@ -153,7 +153,7 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
 
-                const chatId = {{ request('id_lezione') }};
+                const chatId = {{ $chat->id }};
 
                 if (!window.Echo) {
                     console.error("Echo NON è disponibile");

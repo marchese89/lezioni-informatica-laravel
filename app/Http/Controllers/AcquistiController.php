@@ -14,24 +14,28 @@ use App\Mail\OrderCompletedMail;
 use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Utility\Carrello;
 
 class AcquistiController extends Controller
 {
     public function aggiungi_al_carrello(Request $request)
     {
-        $id = (int) request('id');
-        $type =  (int) request('type');
+        $id = (int) $request->input('id');
+        $type = (int) $request->input('type');
 
-        $carrello = $request->session()->get('carrello');
+        $carrello = $request->session()->get('carrello', new \App\Http\Utility\Carrello());
 
         $elemento = new ElementoC($id, $type);
         $carrello->aggiungi($elemento);
 
+        $request->session()->put('carrello', $carrello);
+
         return match ($type) {
-            0 => redirect('/corso/' . Lesson::find($id)->course_id),
-            2 => redirect('/corso/' . Exercise::find($id)->course_id),
-            1, 4 => redirect('/corso/' . $id),
-            5 => redirect('/visualizza-richiesta-studente/' . $id),
+            ElementoC::LEZIONE => redirect('/corso/' . Lesson::find($id)->course_id),
+            ElementoC::ESERCIZIO => redirect('/corso/' . Exercise::find($id)->course_id),
+            ElementoC::LEZIONI_CORSO,
+            ElementoC::CORSO_COMPLETO => redirect('/corso/' . $id),
+            ElementoC::LEZIONE_RICHIESTA => redirect('/visualizza-richiesta-studente/' . $id),
             default => redirect('/carrello')
         };
     }
@@ -39,6 +43,10 @@ class AcquistiController extends Controller
     public function rimuovi_dal_carrello(Request $request)
     {
         $carrello = $request->session()->get('carrello');
+
+        if (!$carrello || $carrello->nElementi() === 0) {
+            return response()->json(['error' => 'Carrello vuoto'], 400);
+        }
 
         $carrello->rimuovi(request('id'), request('type'));
 
@@ -75,6 +83,10 @@ class AcquistiController extends Controller
             $studente = Student::where('user_id', $user->id)->first();
 
             $carrello = $request->session()->get('carrello');
+
+            if (!$carrello || $carrello->nElementi() === 0) {
+                throw new \Exception("Carrello vuoto");
+            }
 
             /*
              * 1. CREA ORDINE + RIGHE
