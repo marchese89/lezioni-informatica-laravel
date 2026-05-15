@@ -58,3 +58,8 @@ Breadcrumbs::for('modifica-dettagli-corso', function (BreadcrumbTrail $trail, $i
     $trail->parent('elenco-corsi');
     $trail->push('Modifica dettagli corso', route('modifica-dettagli-corso', $id));
 });
+
+Breadcrumbs::for('nuova-lezione', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('modifica-dettagli-corso', $id);
+    $trail->push('Nuova lezione', route('nuova-lezione', $id));
+});

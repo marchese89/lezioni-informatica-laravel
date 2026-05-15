@@ -71,8 +71,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // ===============================
 
     // UI
-    Route::get('nuova-lezione-{id}', fn() => view('admin.nuova-lezione'));
-    Route::get('modifica-lezione-{id_corso}-{id_lezione}', fn() => view('admin.modifica-lezione'));
+    Route::get('nuova-lezione/{id}', [LessonController::class, 'create'])->name('nuova-lezione');
+    Route::post('carica-lezione', [LessonController::class, 'store']);
+    Route::get('modifica-lezione/{id_corso}/{id_lezione}', [fn($id_corso, $id_lezione) => view('admin.modifica-lezione', compact('id_corso', 'id_lezione'))])->name('modifica-lezione');
 
     // Upload temporanei (sessione)
     Route::post('lessons/upload-presentation', [LessonController::class, 'uploadPresentation']);

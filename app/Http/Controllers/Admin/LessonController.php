@@ -6,9 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Lesson;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Course;
 
 class LessonController extends Controller
 {
+    public function create(int $id)
+    {
+        $corso = Course::where('id', '=', $id)->first();
+        return view('admin.nuova-lezione', compact('id', 'corso'));
+    }
+
     // ===============================
     // 📤 Upload presentazione (sessione)
     // ===============================
@@ -95,7 +102,7 @@ class LessonController extends Controller
             'uploaded_lesson'
         ]);
 
-        return redirect('modifica-dettagli-corso-' . $request->id);
+        return redirect('modifica-dettagli-corso/' . $request->id);
     }
 
     // ===============================
@@ -114,7 +121,7 @@ class LessonController extends Controller
 
         $lesson->delete();
 
-        return redirect('modifica-dettagli-corso-' . $courseId);
+        return redirect('modifica-dettagli-corso/' . $courseId);
     }
 
     // ===============================
