@@ -1,69 +1,192 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-    <div id="layoutSidenav" >
-        <div id="layoutSidenav_nav">
+    <div id="layoutSidenav">
 
-        </div>
-        <div id="layoutSidenav_content" >
-            <main>
+        <div id="layoutSidenav_content">
+            <main class="py-5" style="background: #f4f6f9; min-height: 100vh;">
 
                 @if (!Request::is('dashboard-admin'))
+                    @yield('page-title')
+                    <div class="container">
+                        {{ Breadcrumbs::render() }}
+                    </div>
                     @yield('inner')
                 @else
-                    <div class="row g-0 container-fluid">
+                    <div class="container">
 
-                        <div class="card col-md-6" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Impostazioni Account</h5>
-                                <p class="card-text">Qui si possono modificare i dati personali e la password</p>
-                                <a href="imp-account" class="btn btn-primary">Accedi</a>
-                            </div>
-                        </div>
+                        {{-- HEADER --}}
+                        <div class="d-flex justify-content-between align-items-center mb-5">
 
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Insegnamento</h5>
-                                <p class="card-text">Tutto quello che riguarada l'Insegnamento si trova in questa pagina,
-                                    inserimento aree tematiche, materie,
-                                    corsi, lezioni ed esercizi
+                            <div>
+                                <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+                                    Dashboard Admin
+                                </h1>
+
+                                <p class="text-muted mb-0">
+                                    Gestione piattaforma Lezioni Informatica
                                 </p>
-                                <a href="insegnamento" class="btn btn-primary">Accedi</a>
                             </div>
                         </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Studenti</h5>
-                                <p class="card-text">In questa sezione ci sono le richieste degli studenti e le pagine di
-                                    chat</p>
-                                <a href="studenti" class="btn btn-primary">Accedi</a>
+
+                        {{-- CARDS --}}
+                        <div class="row g-4">
+
+                            {{-- ACCOUNT --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-user-gear fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Impostazioni Account
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Modifica dati personali, email e password dell'account amministratore.
+                                        </p>
+
+                                        <a href="imp-account" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Vendite</h5>
-                                <p class="card-text">Qui c'&egrave; tutto quello che riguarada le vendite: ogni singolo
-                                    ordine e il totale dei guadagni mensile e totale</p>
-                                <a href="vendite" class="btn btn-primary">Accedi</a>
+
+                            {{-- INSEGNAMENTO --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-graduation-cap fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Insegnamento
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Gestione aree tematiche, materie, corsi, lezioni ed esercizi.
+                                        </p>
+
+                                        <a href="insegnamento" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Fattura Extra</h5>
-                                <p class="card-text">Questa sezione &egrave; dedicata alla scrittura di fatture custom per
-                                    attività extra</p>
-                                <a href="fattura-extra" class="btn btn-primary">Accedi</a>
+
+                            {{-- STUDENTI --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-users fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Studenti
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Richieste studenti, gestione chat e monitoraggio attività.
+                                        </p>
+
+                                        <a href="studenti" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Elenco Fatture</h5>
-                                <p class="card-text">In questa sezione si trovano tutte le fatture emesse</p>
-                                <a href="fatture" class="btn btn-primary">Accedi</a>
+
+                            {{-- VENDITE --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-cart-shopping fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Vendite
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Controllo ordini, statistiche e guadagni mensili e totali.
+                                        </p>
+
+                                        <a href="vendite" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
+
+                            {{-- FATTURA EXTRA --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-file-invoice fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Fattura Extra
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Creazione di fatture personalizzate per attività esterne.
+                                        </p>
+
+                                        <a href="extra-fattura" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- ELENCO FATTURE --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-file-lines fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Elenco Fatture
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Archivio completo delle fatture emesse dalla piattaforma.
+                                        </p>
+
+                                        <a href="fatture" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
                 @endif
+
             </main>
         </div>
     </div>

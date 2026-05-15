@@ -8,6 +8,13 @@ use App\Models\ThemeArea;
 
 class ThemeAreaController extends Controller
 {
+
+    public function index()
+    {
+        $aree_t = ThemeArea::all();
+
+        return view('admin.aree-tem', compact('aree_t'));
+    }
     // CREATE
     public function store(Request $request)
     {

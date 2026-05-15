@@ -1,111 +1,121 @@
 @extends('admin.dashboard-admin')
 
-@section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="insegnamento">Insegnamento</a>
-        </li>
-    </ul>
-    <div class="container" style="text-align: center;width:35%">
-        <h2>Corsi</h2>
-        <br>
-
-        <form method="POST" action="/courses">
-            @csrf
-            @method('POST')
-            <div>
-                <h4>Nuovo Corso</h4>
-                @php
-                    use App\Models\ThemeArea;
-                    use App\Models\Matter;
-                    use App\Models\Course;
-                    $materie = Matter::all();
-                @endphp
-                <h5>Area Tematica - Materia</h5>
-                <select class="form-select" name="materia">
-                    @foreach ($materie as $item)
-                        <option value="{{ $item->id }}">{{ $item->theme_area->name }} - {{ $item->name }}</option>
-                    @endforeach
-                </select>
-                <br>
-                <h5>Nome</h5>
-                <input type="text" class="form-control" id="corso" name="corso" maxlength="255">
-                <script type="text/javascript">
-                    var area_t = new LiveValidation('materia', {
-                        onlyOnSubmit: true
-                    });
-                    area_t.add(Validate.Presence);
-                    area_t.add(Validate.SoloTesto);
-                </script>
-            </div>
-            <br>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary">Inserisci</button>
-            </div>
-        </form>
-
+@section('page-title')
+    <div class="container">
+        <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+            Nuovo Corso
+        </h1>
     </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%">
-        <h3>Corsi Inseriti</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Area Tematica</th>
-                    <th scope="col">Materia</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Input</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $corsi = Course::all();
-            @endphp
-            <tbody>
-                @foreach ($corsi as $item)
-                    <tr>
+@endsection
 
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-                            {{ $item->matter->theme_area->name }}
-                        </td>
-                        <td>
-                            {{ $item->matter->name }}
-                        </td>
-                        <td>{{ $item->name }}</td>
-                        <form method="POST" action="/courses/{{ $item->id }}" style="display: inline">
+@section('inner')
+    <div class="container">
+
+        {{-- FORM --}}
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-3">Nuovo Corso</h4>
+
+                        <form method="POST" action="/courses">
                             @csrf
-                            @method('PUT')
-                            <td>
-                                <input type="text" class="form-control" id="nome" name="nome" maxlength="255">
-                                <script type="text/javascript">
-                                    var nome_ = new LiveValidation('nome', {
-                                        onlyOnSubmit: true
-                                    });
-                                    nome_.add(Validate.Presence);
-                                    nome_.add(Validate.SoloTesto);
-                                </script>
-                            </td>
-                            <td>
 
-                                <button type="submit" class="btn btn-primary">Modifica</button>
+                            <label class="form-label">Materia</label>
+                            <select class="form-select mb-3" name="matter_id">
+                                @foreach ($materie as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->theme_area->name }} - {{ $item->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <label class="form-label">Nome corso</label>
+                            <input type="text" class="form-control mb-3" name="name" maxlength="255">
+
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                Inserisci
+                            </button>
+
                         </form>
-                        @if (/*count($item->matter) == 0*/ true)
-                            <form method="POST" action="/courses/{{ $item->id }}" style="display: inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-primary">Elimina</button>
-                            </form>
-                        @endif
-                        </td>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- TABLE --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+
+                <h4 class="fw-bold mb-4">Corsi Inseriti</h4>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Area Tematica</th>
+                                <th>Materia</th>
+                                <th>Nome</th>
+                                <th style="width: 30%">Modifica</th>
+                                <th>Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($corsi as $item)
+                                <tr>
+
+                                    <td>{{ $item->id }}</td>
+
+                                    <td>{{ $item->matter->theme_area->name ?? '-' }}</td>
+
+                                    <td>{{ $item->matter->name ?? '-' }}</td>
+
+                                    <td>{{ $item->name }}</td>
+
+                                    {{-- UPDATE --}}
+                                    <td>
+                                        <form method="POST" action="/courses/{{ $item->id }}" class="d-flex gap-2">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <input type="text" class="form-control" name="name"
+                                                value="{{ $item->name }}" maxlength="255">
+
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Modifica
+                                            </button>
+
+                                        </form>
+                                    </td>
+
+                                    {{-- DELETE --}}
+                                    <td>
+                                        <form method="POST" action="/courses/{{ $item->id }}">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                Elimina
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 @endsection

@@ -1,129 +1,130 @@
 @extends('admin.dashboard-admin')
 
-@section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="../dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="../insegnamento">Insegnamento</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="../elenco-corsi">Elenco Corsi</a>
-        </li>
-    </ul>
-    <div class="container" style="text-align: center;width:35%">
-        @php
-            use App\Models\ThemeArea;
-            use App\Models\Matter;
-            use App\Models\Course;
-            use App\Models\Lesson;
-            use App\Models\Exercise;
-
-            $corso = Course::where('id', '=', request('id'))->first();
-
-        @endphp
-        <h2>Modifica Corso</h2>
-        <h2>{{ $corso->name }}</h2>
-        <br>
-
+@section('page-title')
+    <div class="container">
+        <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+            Modifica Corso
+        </h1>
     </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%">
-        <div>
-            <button type="submit" class="btn btn-primary" onclick=location.href="nuova-lezione-{{ request('id') }}">Nuova
-                Lezione</button>
+@endsection
+
+@section('inner')
+    <div class="container">
+
+        {{-- HEADER --}}
+        <div class="mb-4 text-center">
+            <h2>Modifica Corso</h2>
+            <h3 class="text-muted">{{ $corso->name }}</h3>
         </div>
-        <br>
-        <br>
-        <h3>Lezioni</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Numero</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Prezzo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $lezioni = Lesson::where('course_id', '=', request('id'))->get();
-            @endphp
-            <tbody>
-                @foreach ($lezioni as $item)
+
+        {{-- LEZIONI --}}
+        <div class="mb-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Lezioni</h3>
+
+                <a href="{{ url('nuova-lezione/' . $corso->id) }}" class="btn btn-primary">
+                    Nuova Lezione
+                </a>
+            </div>
+
+            <table class="table">
+
+                <thead>
                     <tr>
-
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-                            {{ $item->number }}
-                        </td>
-                        <td>
-                            {{ $item->title }}
-                        </td>
-                        <td>{{ $item->price }} <strong>&euro;</strong></td>
-                        <td>
-                            <button class="btn btn-primary"
-                                onclick=location.href="modifica-lezione-{{ request('id') }}-{{ $item->id }}">Modifica</button>
-                            <form method="POST" action="lessons/{{ $item->id }}" style="display: inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-primary">Elimina</button>
-                            </form>
-                        </td>
-
+                        <th>#</th>
+                        <th>Numero</th>
+                        <th>Titolo</th>
+                        <th>Prezzo</th>
+                        <th>Operazioni</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <br>
-        <br>
-        <h3>Esercizi</h3>
-        <div>
-            <button type="submit" class="btn btn-primary"
-                onclick=location.href="exercises/create/{{ request('id') }}">Nuovo
-                Esercizio</button>
+                </thead>
+
+                <tbody>
+                    @foreach ($lezioni as $item)
+                        <tr>
+
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->number }}</td>
+                            <td>{{ $item->title }}</td>
+                            <td>{{ $item->price }} €</td>
+
+                            <td>
+                                <a class="btn btn-primary btn-sm"
+                                    href="{{ url('modifica-lezione/' . $corso->id . '/' . $item->id) }}">
+                                    Modifica
+                                </a>
+
+                                <form method="POST" action="{{ url('lessons/' . $item->id) }}" style="display:inline">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-outline-danger btn-sm">
+                                        Elimina
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
         </div>
-        <br>
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Prezzo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $esercizi = Exercise::where('course_id', '=', request('id'))->get();
-            @endphp
-            <tbody>
-                @foreach ($esercizi as $item)
+
+        {{-- ESERCIZI --}}
+        <div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Esercizi</h3>
+
+                <a href="{{ url('exercises/create/' . $corso->id) }}" class="btn btn-primary">
+                    Nuovo Esercizio
+                </a>
+            </div>
+
+            <table class="table">
+
+                <thead>
                     <tr>
-
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-
-                        </td>
-                        <td>
-                            {{ $item->title }}
-                        </td>
-                        <td>{{ $item->price }} <strong>&euro;</strong></td>
-                        <td>
-                            <button class="btn btn-primary"
-                                onclick=location.href="/exercises/{{ request('id') }}/edit/{{ $item->id }}">Modifica</button>
-                            <form method="POST" action="/exercises/{{ $item->id }}" style="display: inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-primary">Elimina</button>
-                            </form>
-                        </td>
-
+                        <th>#</th>
+                        <th>Titolo</th>
+                        <th>Prezzo</th>
+                        <th>Operazioni</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+
+                <tbody>
+                    @foreach ($esercizi as $item)
+                        <tr>
+
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->title }}</td>
+                            <td>{{ $item->price }} €</td>
+
+                            <td>
+                                <a class="btn btn-primary btn-sm"
+                                    href="{{ url('exercises/' . $corso->id . '/edit/' . $item->id) }}">
+                                    Modifica
+                                </a>
+
+                                <form method="POST" action="{{ url('exercises/' . $item->id) }}" style="display:inline">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button class="btn btn-outline-danger btn-sm">
+                                        Elimina
+                                    </button>
+                                </form>
+                            </td>
+
+                        </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
 @endsection

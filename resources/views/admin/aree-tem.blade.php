@@ -1,94 +1,109 @@
 @extends('admin.dashboard-admin')
 
-@section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="insegnamento">Insegnamento</a>
-        </li>
-    </ul>
-    <div class="container" style="text-align: center;width:40%">
-        <h2>Aree Tematiche</h2>
-        <br>
+@section('page-title')
+    <div class="container">
+        {{-- HEADER --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
 
-        <form method="POST" action="/theme-areas">
-            @csrf
-            @method('POST')
             <div>
-                <h4>Nuova Area Tematica</h4>
-                <input type="text" class="form-control" id="area-t" name="name" maxlength="255">
-                <script type="text/javascript">
-                    var area_t = new LiveValidation('area-t', {
-                        onlyOnSubmit: true
-                    });
-                    area_t.add(Validate.Presence);
-                    area_t.add(Validate.SoloTesto);
-                </script>
+                <h2>Aree Tematiche</h2>
             </div>
-            <br>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary">Inserisci</button>
-            </div>
-        </form>
-
+        </div>
     </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%">
-        <h3>Aree Tematiche Inserite</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nome</th>
-                    <th scope="col">Input</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                use App\Models\ThemeArea;
-                $aree_t = ThemeArea::all();
-            @endphp
-            <tbody>
-                @foreach ($aree_t as $item)
-                    <tr>
+@endsection
 
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>{{ $item->name }}</td>
-                        <form method="POST" action="/theme-areas/{{ $item->id }}" style="display: inline">
+@section('inner')
+    <div class="container">
 
-                            <input type="hidden" name="id" value="{{ $item->id }}" />
+        {{-- FORM INSERIMENTO --}}
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold mb-3">Nuova Area Tematica</h4>
+
+                        <form method="POST" action="/theme-areas">
                             @csrf
-                            @method('PUT')
-                            <td>
-                                <input type="text" class="form-control" id="nome" name="name"
-                                    value="{{ $item->name }}" maxlength="255">
-                                <script type="text/javascript">
-                                    var nome_ = new LiveValidation('nome', {
-                                        onlyOnSubmit: true
-                                    });
-                                    nome_.add(Validate.Presence);
-                                    nome_.add(Validate.SoloTesto);
-                                </script>
-                            </td>
-                            <td>
 
-                                <button type="submit" class="btn btn-primary">Modifica</button>
+                            <input type="text" class="form-control mb-3" name="name" maxlength="255"
+                                placeholder="Nome area tematica">
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">
+                                Inserisci
+                            </button>
                         </form>
-                        @if (count($item->matter) == 0)
-                            <form method="POST" action="/theme-areas/{{ $item->id }}" style="display: inline">
-                                <input type="hidden" name="id" value="{{ $item->id }}" />
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-primary">Elimina</button>
-                            </form>
-                        @endif
-                        </td>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        {{-- LISTA --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+
+                <h4 class="fw-bold mb-4">Aree Tematiche Inserite</h4>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th style="width: 40%">Modifica</th>
+                                <th>Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($aree_t as $item)
+                                <tr>
+
+                                    <td>{{ $item->id }}</td>
+
+                                    <td>{{ $item->name }}</td>
+
+                                    {{-- UPDATE --}}
+                                    <td>
+                                        <form method="POST" action="/theme-areas/{{ $item->id }}" class="d-flex gap-2">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <input type="text" class="form-control" name="name"
+                                                value="{{ $item->name }}" maxlength="255">
+
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Salva
+                                            </button>
+                                        </form>
+                                    </td>
+
+                                    {{-- DELETE --}}
+                                    <td>
+                                        @if ($item->matter->count() == 0)
+                                            <form method="POST" action="/theme-areas/{{ $item->id }}">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                    Elimina
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 @endsection

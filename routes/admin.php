@@ -16,19 +16,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
     // 🧩 UI / PAGINE ADMIN (SOLO VIEW)
     // =====================================================
-    Route::get('dashboard-admin', fn() => view('admin.dashboard-admin'));
-    Route::get('imp-account', fn() => view('admin.imp-account'));
-    Route::get('mod-dati-pers', fn() => view('admin.mod-dati-pers'));
-    Route::get('mod-cred', fn() => view('admin.mod-cred'));
-    Route::get('mod-foto-admin', fn() => view('admin.mod-foto'));
-    Route::get('mod-indirizzo-admin', fn() => view('admin.mod-indirizzo'));
-    Route::get('mod-certif', fn() => view('admin.mod-certif'));
-    Route::get('aggiungi-certif', fn() => view('admin.add-certif'));
-    Route::get('insegnamento', fn() => view('admin.insegnamento'));
-    Route::get('nuovo-corso', fn() => view('admin.nuovo-corso'));
-    Route::get('aree-tem', fn() => view('admin.aree-tem'));
-    Route::get('materie', fn() => view('admin.materie'));
-    Route::get('elenco-corsi', fn() => view('admin.elenco-corsi'));
+    Route::get('dashboard-admin', fn() => view('admin.dashboard-admin'))->name('dashboard-admin');
+    Route::get('imp-account', fn() => view('admin.imp-account'))->name('imp-account');
+    Route::get('mod-dati-pers', fn() => view('admin.mod-dati-pers'))->name('mod-dati-pers');
+    Route::get('mod-cred', fn() => view('admin.mod-cred'))->name('mod-cred');
+    Route::get('mod-foto-admin', fn() => view('admin.mod-foto'))->name('mod-foto-admin');
+    Route::get('mod-indirizzo-admin', fn() => view('admin.mod-indirizzo'))->name('mod-indirizzo-admin');
+    Route::get('mod-certif', fn() => view('admin.mod-certif'))->name('mod-certif');
+    Route::get('aggiungi-certif', fn() => view('admin.add-certif'))->name('aggiungi-certif');
+    Route::get('insegnamento', fn() => view('admin.insegnamento'))->name('insegnamento');
+    Route::get('nuovo-corso', [CourseController::class, 'index'])->name('nuovo-corso');
+    Route::get('aree-tem', [ThemeAreaController::class, 'index'])
+        ->name('aree-tem');
+    Route::get('materie', [MatterController::class, 'index'])
+        ->name('materie');
+    Route::get('elenco-corsi', [CourseController::class, 'list'])
+        ->name('elenco-corsi');
 
     // =====================================================
     // 👤 ACCOUNT / PROFILO ADMIN
@@ -61,7 +64,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('courses/{id}', [CourseController::class, 'update']);
     Route::delete('courses/{id}', [CourseController::class, 'destroy']);
 
-    Route::get('modifica-dettagli-corso-{id}', fn() => view('admin.modifica-corso'));
+    Route::get('modifica-dettagli-corso/{id}', [CourseController::class, 'edit'])->name('modifica-dettagli-corso');
 
     // ===============================
     // 🎓 LEZIONI
@@ -140,7 +143,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('admin-fattura-{id}', fn() => view('admin.fattura'));
 
     Route::post('crea_fattura_extra', [AcquistiController::class, 'crea_fattura']);
-    Route::get('fattura-extra', fn() => view('admin.fattura-extra'));
+    Route::get('extra-fattura', fn() => view('admin.fattura-extra'));
     Route::get('fattura-creata', fn() => view('admin.fattura-creata'));
     Route::get('fatture', fn() => view('admin.fatture'));
     Route::get('visualizza-fattura-{id}', fn() => view('admin.visualizza-fattura'));

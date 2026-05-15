@@ -5,9 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Matter;
+use App\Models\ThemeArea;
 
 class MatterController extends Controller
 {
+    public function index()
+    {
+        $materie = Matter::with('theme_area')->get();
+        $aree_t = ThemeArea::all();
+        return view('admin.materie', compact('materie', 'aree_t'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

@@ -1,61 +1,66 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+            Elenco Corsi
+        </h1>
+    </div>
+@endsection
+
 @section('inner')
-@php
-use App\Models\ThemeArea;
-use App\Models\Matter;
-use App\Models\Course;
+    <div class="container">
 
-@endphp
-<ul class="nav">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="insegnamento">Insegnamento</a>
-      </li>
-  </ul>
-<div class="container"  style="text-align: center;width:35%">
-    <h2>Elenco Corsi</h2>
-    <br>
-</div>
-<br>
-<div class="container"  style="text-align: center;width:80%">
+        {{-- HEADER --}}
+        <div class="mb-4 text-center">
+            <h2>Elenco Corsi</h2>
+        </div>
 
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Area Tematica</th>
-            <th scope="col">Materia</th>
-            <th scope="col">Corso</th>
-            <th scope="col">Operazioni</th>
-          </tr>
-        </thead>
-        @php
-           $corsi = Course::all();
-        @endphp
-        <tbody>
-            @foreach ($corsi as $item)
-          <tr>
+        {{-- TABLE --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
 
-            <th scope="row">{{$item->id}}</th>
-            <td>
-                {{$item->matter->theme_area->name}}
-            </td>
-            <td>
-                {{$item->matter->name}}
-            </td>
-            <td>{{$item->name}}</td>
-            <td>
-                <div>
-                <button type="submit" class="btn btn-primary" onclick=location.href="modifica-dettagli-corso-{{$item->id}}">Modifica</button>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Area Tematica</th>
+                                <th>Materia</th>
+                                <th>Corso</th>
+                                <th>Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach ($corsi as $item)
+                                <tr>
+
+                                    <td>{{ $item->id }}</td>
+
+                                    <td>{{ $item->matter->theme_area->name ?? '-' }}</td>
+
+                                    <td>{{ $item->matter->name ?? '-' }}</td>
+
+                                    <td>{{ $item->name }}</td>
+
+                                    <td>
+                                        <a href="{{ url('modifica-dettagli-corso/' . $item->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Modifica
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            @endforeach
+                        </tbody>
+
+                    </table>
                 </div>
-            </td>
 
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
-</div>
+            </div>
+        </div>
+
+    </div>
 @endsection
