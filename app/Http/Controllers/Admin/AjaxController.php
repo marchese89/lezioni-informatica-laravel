@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\DateHelper;
-use App\Models\Student;
 use App\Models\ChatMessage;
-use App\Models\Chat;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -23,7 +21,7 @@ class AjaxController extends Controller
 
         $query = Order::query()
             ->with('student.user')
-            ->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id')
+            ->leftJoin('order_products', 'orders.id', '=', 'order_products.id_ordine')
             ->select(
                 'orders.id',
                 'orders.date',

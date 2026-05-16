@@ -1,11 +1,12 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container my-4">
+        <h2>Elenco Fatture</h2>
+    </div>
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-    </ul>
     <div class="container" style="text-align: center">
 
         @php
@@ -14,8 +15,6 @@
             $fatture = Invoice::orderBy('date', 'desc')->get();
         @endphp
         @if (Invoice::count() > 0)
-            <br>
-            <h3>Elenco Fatture</h3>
             <table class="table">
                 <thead>
                     <th scope="col">#</th>

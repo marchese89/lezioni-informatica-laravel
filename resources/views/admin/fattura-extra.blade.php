@@ -1,13 +1,15 @@
 @extends('admin.dashboard-admin')
 
-@section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-    </ul>
-    <div class="container" style="width: 60%;text-align:center">
+@section('page-title')
+    <div class="container my-4">
         <h2>Fattura per prestazioni esterne al sito</h2>
+    </div>
+@endsection
+
+
+@section('inner')
+    <div class="container" style="width: 60%;text-align:center">
+
         <form class="row g-3" method="POST" action="crea_fattura_extra" onsubmit="modifica_pass()">
             @csrf
             <div class="col-md-6">

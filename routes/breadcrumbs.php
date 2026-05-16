@@ -36,7 +36,27 @@ Breadcrumbs::for('aggiungi-certif', function (BreadcrumbTrail $trail) {
     $trail->push('Aggiungi certificato', route('aggiungi-certif'));
 });
 
-breadcrumbs::for('mod-part-iva', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('extra-fattura', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-admin');
+    $trail->push('Fattura extra', route('extra-fattura'));
+});
+
+Breadcrumbs::for('fatture', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-admin');
+    $trail->push('Fatture', route('fatture'));
+});
+
+Breadcrumbs::for('visualizza-fattura', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('fatture');
+    $trail->push('Visualizza fattura', route('visualizza-fattura', $id));
+});
+
+Breadcrumbs::for('vendite', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-admin');
+    $trail->push('Vendite', route('vendite'));
+});
+
+Breadcrumbs::for('mod-part-iva', function (BreadcrumbTrail $trail) {
     $trail->parent('mod-dati-pers');
     $trail->push('Modifica Partita IVA', route('mod-part-iva'));
 });
