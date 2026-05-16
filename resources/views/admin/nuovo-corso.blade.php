@@ -2,9 +2,9 @@
 
 @section('page-title')
     <div class="container">
-        <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
             Nuovo Corso
-        </h1>
+        </h2>
     </div>
 @endsection
 

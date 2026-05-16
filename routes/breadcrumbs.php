@@ -21,17 +21,26 @@ Breadcrumbs::for('mod-cred', function (BreadcrumbTrail $trail) {
     $trail->push('Modifica credenziali', route('mod-cred'));
 });
 Breadcrumbs::for('mod-foto-admin', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica foto', route('mod-foto-admin'));
 });
 Breadcrumbs::for('mod-indirizzo-admin', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica indirizzo', route('mod-indirizzo-admin'));
 });
 Breadcrumbs::for('mod-certif', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica certificati', route('mod-certif'));
 });
 Breadcrumbs::for('aggiungi-certif', function (BreadcrumbTrail $trail) {
     $trail->push('Aggiungi certificato', route('aggiungi-certif'));
 });
+
+breadcrumbs::for('mod-part-iva', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
+    $trail->push('Modifica Partita IVA', route('mod-part-iva'));
+});
+
 Breadcrumbs::for('insegnamento', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard-admin');
     $trail->push('Insegnamento', route('insegnamento'));
