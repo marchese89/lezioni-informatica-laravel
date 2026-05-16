@@ -2,86 +2,248 @@
 
 @section('content')
     <div id="layoutSidenav">
-        <div id="layoutSidenav_nav">
 
+        <div id="layoutSidenav_nav">
         </div>
+
         <div id="layoutSidenav_content">
             <main>
 
                 @if (!Request::is('dashboard-studente'))
+                    @yield('page-title')
+                    <div class="container">
+                        {{ Breadcrumbs::render() }}
+                    </div>
                     @yield('inner')
                 @else
-                    <div class="row g-0 container-fluid">
+                    <div class="container">
 
-                        <div class="card col-md-6" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Impostazioni Account</h5>
-                                <p class="card-text">Qui si possono modificare i dati personali e la password</p>
-                                <a href="imp-account-studente" class="btn btn-primary">Accedi</a>
+                        {{-- HEADER --}}
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+
+                            <div>
+                                <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+                                    Dashboard Studente
+                                </h1>
+
+                                <p class="text-muted mb-0">
+                                    Area personale studente
+                                </p>
                             </div>
+
                         </div>
 
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Corsi Acquistati</h5>
-                                <p class="card-text">Qui si trovano tutti i corsi aquistati, comprensivi di lezioni ed
-                                    esercizi
-                                </p>
-                                <a href="corsi" class="btn btn-primary">Accedi</a>
+                        {{-- CARDS --}}
+                        <div class="row g-4">
+
+                            {{-- ACCOUNT --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-user-gear fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Impostazioni Account
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Modifica dati personali e password dell’account.
+                                        </p>
+
+                                        <a href="{{ url('imp-account-studente') }}"
+                                            class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Richieste Dirette</h5>
-                                <p class="card-text">Qui ci sono le richieste dirette già fatte, con i relativi prezzi di
-                                    vendita</p>
-                                <a href="richieste-dirette" class="btn btn-primary">Accedi</a>
+
+                            {{-- CORSI --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-book-open fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Corsi Acquistati
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Lezioni ed esercizi dei corsi acquistati.
+                                        </p>
+
+                                        <a href="{{ url('corsi') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Lezioni su Richiesta Acquistate</h5>
-                                <p class="card-text">In questa sezione ci sono le lezioni/gli esercizi su richiesta già
-                                    acquistate/i</p>
-                                <a href="richieste-dirette-acquistate" class="btn btn-primary">Accedi</a>
+
+                            {{-- RICHIESTE DIRETTE --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-comments fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Richieste Dirette
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Storico richieste e relative informazioni economiche.
+                                        </p>
+
+                                        <a href="{{ url('richieste-dirette') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Ordini</h5>
-                                <p class="card-text">Questa sezione &egrave; dedicata agli Ordini</p>
-                                <a href="ordini" class="btn btn-primary">Accedi</a>
+
+                            {{-- LEZIONI SU RICHIESTA --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-chalkboard-teacher fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Lezioni su Richiesta
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Materiali e contenuti acquistati su richiesta.
+                                        </p>
+
+                                        <a href="{{ url('richieste-dirette-acquistate') }}"
+                                            class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Recensione</h5>
-                                <p class="card-text">In questa sezione si può lasciare una recensione con voto sul servizio
-                                </p>
-                                <a href="recensione" class="btn btn-primary">Accedi</a>
+
+                            {{-- ORDINI --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-box fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Ordini
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Storico e stato degli ordini effettuati.
+                                        </p>
+
+                                        <a href="{{ url('ordini') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Pagamento Extra</h5>
-                                <p class="card-text">Questa sezione serve per pagare le lezioni private
-                                </p>
-                                <a href="/payment/extra" class="btn btn-primary">Accedi</a>
+
+                            {{-- RECENSIONI --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-star fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Recensione
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Valutazione del servizio e feedback.
+                                        </p>
+
+                                        <a href="{{ url('recensione') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card" style="width: 30rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">Fatture</h5>
-                                <p class="card-text">Fatture relative ai pagamenti extra (lezioni private)
-                                </p>
-                                <a href="fatture-studente" class="btn btn-primary">Accedi</a>
+
+                            {{-- PAGAMENTI --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-credit-card fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Pagamento Extra
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Pagamento lezioni private e servizi aggiuntivi.
+                                        </p>
+
+                                        <a href="{{ url('/payment/extra') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
                             </div>
+
+                            {{-- FATTURE --}}
+                            <div class="col-xl-4 col-md-6">
+                                <div class="card border-0 shadow-sm h-100 rounded-4">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-4">
+                                            <i class="fa-solid fa-file-invoice fa-2x text-primary"></i>
+                                        </div>
+
+                                        <h4 class="fw-bold mb-3">
+                                            Fatture
+                                        </h4>
+
+                                        <p class="text-muted mb-4">
+                                            Storico fatture dei pagamenti extra.
+                                        </p>
+
+                                        <a href="{{ url('fatture-studente') }}" class="btn btn-primary rounded-pill px-4">
+                                            Accedi
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
+
                     </div>
                 @endif
+
             </main>
         </div>
     </div>
-
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 @endsection

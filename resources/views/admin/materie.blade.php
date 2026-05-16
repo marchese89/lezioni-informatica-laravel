@@ -4,7 +4,7 @@
     <div class="container">
 
         <div class="mb-4">
-            <h1 class="fw-bold" style="font-size: 2.5rem;">Materie</h1>
+            <h2 class="fw-bold" style="font-size: 2.5rem;">Materie</h2>
             <p class="text-muted">
                 Gestione delle materie della piattaforma didattica.
             </p>

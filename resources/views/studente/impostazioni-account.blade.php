@@ -1,23 +1,70 @@
 @extends('studente.dashboard-studente')
 
+@section('page-title')
+    <div class="container">
+        <h2>
+            Impostazioni Account
+        </h2>
+    </div>
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
-        </li>
-    </ul>
-    <div class="row g-0 container-fluid">
-        <div class="card col-md-6" style="width: 30rem;">
-            <div class="card-body">
-                <h5 class="card-title">Modifica Dati personali</h5>
-                <a href="mod-dati-pers-stud" class="btn btn-primary">Accedi</a>
+    <div class="container py-4">
+
+        {{-- CARDS --}}
+        <div class="row g-4">
+
+            {{-- DATI PERSONALI --}}
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4">
+
+                        <div class="mb-4">
+                            <i class="fa-solid fa-id-card fa-2x text-primary"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">
+                            Dati Personali
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            Modifica le informazioni personali associate al profilo.
+                        </p>
+
+                        <a href="{{ url('mod-dati-pers-stud') }}" class="btn btn-primary rounded-pill px-4">
+                            Accedi
+                        </a>
+
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="card col-md-6" style="width: 30rem;">
-            <div class="card-body">
-                <h5 class="card-title">Modifica Credenziali</h5>
-                <a href="mod-cred-stud" class="btn btn-primary">Accedi</a>
+
+            {{-- CREDENZIALI --}}
+            <div class="col-xl-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100 rounded-4">
+                    <div class="card-body p-4">
+
+                        <div class="mb-4">
+                            <i class="fa-solid fa-key fa-2x text-primary"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-3">
+                            Credenziali
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            Aggiorna password e dati di accesso dell’account.
+                        </p>
+
+                        <a href="{{ url('mod-cred-stud') }}" class="btn btn-primary rounded-pill px-4">
+                            Accedi
+                        </a>
+
+                    </div>
+                </div>
             </div>
+
         </div>
+
     </div>
 @endsection

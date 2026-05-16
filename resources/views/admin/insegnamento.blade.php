@@ -6,9 +6,9 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
 
             <div>
-                <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
+                <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
                     Insegnamento
-                </h1>
+                </h2>
 
                 <p class="text-muted mb-0">
                     Gestisci le aree tematiche, le materie e i corsi.

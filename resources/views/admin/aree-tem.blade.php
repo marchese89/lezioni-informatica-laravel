@@ -4,7 +4,6 @@
     <div class="container">
         {{-- HEADER --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
-
             <div>
                 <h2>Aree Tematiche</h2>
             </div>

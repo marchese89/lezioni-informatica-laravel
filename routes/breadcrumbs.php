@@ -21,17 +21,26 @@ Breadcrumbs::for('mod-cred', function (BreadcrumbTrail $trail) {
     $trail->push('Modifica credenziali', route('mod-cred'));
 });
 Breadcrumbs::for('mod-foto-admin', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica foto', route('mod-foto-admin'));
 });
 Breadcrumbs::for('mod-indirizzo-admin', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica indirizzo', route('mod-indirizzo-admin'));
 });
 Breadcrumbs::for('mod-certif', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
     $trail->push('Modifica certificati', route('mod-certif'));
 });
 Breadcrumbs::for('aggiungi-certif', function (BreadcrumbTrail $trail) {
     $trail->push('Aggiungi certificato', route('aggiungi-certif'));
 });
+
+breadcrumbs::for('mod-part-iva', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-dati-pers');
+    $trail->push('Modifica Partita IVA', route('mod-part-iva'));
+});
+
 Breadcrumbs::for('insegnamento', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard-admin');
     $trail->push('Insegnamento', route('insegnamento'));
@@ -62,4 +71,23 @@ Breadcrumbs::for('modifica-dettagli-corso', function (BreadcrumbTrail $trail, $i
 Breadcrumbs::for('nuova-lezione', function (BreadcrumbTrail $trail, $id) {
     $trail->parent('modifica-dettagli-corso', $id);
     $trail->push('Nuova lezione', route('nuova-lezione', $id));
+});
+
+Breadcrumbs::for('dashboard-studente', function (BreadcrumbTrail $trail) {
+    $trail->push('Dashboard', route('dashboard-studente'));
+});
+
+Breadcrumbs::for('imp-account-studente', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Impostazioni account', route('imp-account-studente'));
+});
+
+Breadcrumbs::for('mod-dati-pers-stud', function (BreadcrumbTrail $trail) {
+    $trail->parent('imp-account-studente');
+    $trail->push('Modifica dati personali', route('mod-dati-pers-stud'));
+});
+
+Breadcrumbs::for('mod-cred-stud', function (BreadcrumbTrail $trail) {
+    $trail->parent('imp-account-studente');
+    $trail->push('Modifica credenziali', route('mod-cred-stud'));
 });

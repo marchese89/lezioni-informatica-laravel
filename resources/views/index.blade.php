@@ -10,9 +10,9 @@
             font-size: 1.4em;
         }
 
-        .stars2 a{
+        .stars2 a {
             opacity: 20%;
-            cursor:  default;
+            cursor: default;
         }
     </style>
     @php
@@ -63,16 +63,11 @@
             @endphp
             <strong style="font-size: 20pt">{{ $f }}/5</strong>
             <div class="stars2" id="stars">
-                <a <?php if($somma / $count > 0.5){?> style="opacity: 100%;" <?php }?>
-                    >⭐</a>
-                <a <?php if($somma / $count > 1.5){?> style="opacity: 100%;" <?php }?>
-                    >⭐</a>
-                <a <?php if($somma / $count > 2.5){?> style="opacity: 100%;" <?php }?>
-                    >⭐</a>
-                <a <?php if($somma / $count > 3.5){?> style="opacity: 100%;" <?php }?>
-                    >⭐</a>
-                <a <?php if($somma / $count > 4.5){?> style="opacity: 100%;" <?php }?>
-                    >⭐</a>
+                <a <?php if($somma / $count > 0.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
+                <a <?php if($somma / $count > 1.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
+                <a <?php if($somma / $count > 2.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
+                <a <?php if($somma / $count > 3.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
+                <a <?php if($somma / $count > 4.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
             </div>
             <br>
             <br>
@@ -96,4 +91,5 @@
             @endforeach
         @endif
     </div>
+
 @endsection

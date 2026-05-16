@@ -143,7 +143,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
     <script src="https://unpkg.com/laravel-echo@1.16.1/dist/echo.iife.js"></script>
-
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
     @if (isset($enableEcho) && $enableEcho)
         <script>

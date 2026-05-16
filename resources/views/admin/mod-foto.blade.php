@@ -1,19 +1,15 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
+            Modifica Foto
+        </h2>
+    </div>
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="imp-account">Impostazioni Account</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="mod-dati-pers">Modifica Dati Personali</a>
-        </li>
-    </ul>
-    <div class="container" style="width: 30%; text-align: center;height:800px">
-        <h4>Modifica Foto</h4>
+    <div class="container mt-5" style="width: 30%; text-align: center;height:800px">
 
         <img alt="Nessuna Foto Caricata" src="{{ auth()->user()->admin->photo }}" width="300" height="300" />
         <p>

@@ -10,16 +10,16 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // DASHBOARD
     // =========================
-    Route::view('dashboard-studente', 'studente.dashboard-studente');
+    Route::view('dashboard-studente', 'studente.dashboard-studente')->name('dashboard-studente');
 
     // =========================
     // ACCOUNT (MANCAVA LA COMPATIBILITÀ VECCHIA)
     // =========================
-    Route::view('imp-account-studente', 'studente.impostazioni-account');
-    Route::view('account', 'studente.impostazioni-account');
+    Route::view('imp-account-studente', 'studente.impostazioni-account')->name('imp-account-studente');
+    Route::view('account', 'studente.impostazioni-account')->name('account');
 
-    Route::view('mod-dati-pers-stud', 'studente.mod-dati-pers');
-    Route::view('mod-cred-stud', 'studente.mod-cred');
+    Route::view('mod-dati-pers-stud', 'studente.mod-dati-pers')->name('mod-dati-pers-stud');
+    Route::view('mod-cred-stud', 'studente.mod-cred')->name('mod-cred-stud');
 
     Route::post('mod-indirizzo-stud', [StudenteController::class, 'mod_indirizzo_stud']);
     Route::post('mod-email-stud', [StudenteController::class, 'mod_email_stud']);

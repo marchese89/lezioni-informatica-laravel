@@ -46,8 +46,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('add-cert-admin', [ModDatiAdminController::class, 'add_cert_admin']);
     Route::post('mod-email-admin', [ModDatiAdminController::class, 'mod_email_admin']);
     Route::post('mod-pass-admin', [ModDatiAdminController::class, 'mod_pass_admin']);
-
     Route::post('mod-piva', [ModDatiAdminController::class, 'mod_piva']);
+    Route::get('mod-part-iva', fn() => view('admin.mod-part-iva'))->name('mod-part-iva');
 
     // =====================================================
     // 📚 CORSI / MATERIE / AREE TEMATICHE
