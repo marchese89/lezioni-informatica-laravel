@@ -1,41 +1,83 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container my-4">
-        <h2>Elenco Fatture</h2>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Elenco Fatture</h2>
+            </div>
+        </div>
     </div>
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center">
+
+    <div class="container">
 
         @php
             use App\Models\Invoice;
             use App\Helpers\DateHelper;
-            $fatture = Invoice::orderBy('date', 'desc')->get();
         @endphp
-        @if (Invoice::count() > 0)
-            <table class="table">
-                <thead>
-                    <th scope="col">#</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">File</th>
-                </thead>
-                <tbody>
-                    @foreach ($fatture as $item)
-                        <tr>
-                            <td>{{ $item->number }}</td>
-                            <td>{{ DateHelper::format($item->date) }}</td>
-                            <td><button class="btn btn-primary"
-                                    onclick=location.href="visualizza-fattura-{{ $item->number }}">Visualizza</button></td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+        @if ($fatture->count() > 0)
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body p-4">
+
+                    <h4 class="fw-bold mb-4">
+                        Fatture
+                    </h4>
+
+                    <div class="table-responsive">
+
+                        <table class="table align-middle">
+
+                            <thead>
+                                <tr>
+                                    <th>Numero</th>
+                                    <th>Data</th>
+                                    <th>Operazioni</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach ($fatture as $item)
+                                    <tr>
+
+                                        <td>
+                                            {{ $item->number }}
+                                        </td>
+
+                                        <td>
+                                            {{ DateHelper::format($item->date) }}
+                                        </td>
+
+                                        <td>
+                                            <a href="{{ route('visualizza-fattura', $item->number) }}"
+                                                class="btn btn-primary btn-sm rounded-pill px-3">
+                                                Visualizza
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
         @else
-            <br>
-            <h3>Non ci sono fatture!</h3>
+            <div class="text-center py-5">
+                <h4 class="text-muted">Non ci sono fatture</h4>
+            </div>
         @endif
 
     </div>
+
 @endsection

@@ -8,6 +8,8 @@ use App\Models\Course;
 use App\Models\Matter;
 use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Order;
+use App\Models\OrderProduct;
 
 
 class CourseController extends Controller
@@ -24,6 +26,41 @@ class CourseController extends Controller
         $corsi = Course::with('matter.theme_area')->get();
 
         return view('admin.elenco-corsi', compact('corsi'));
+    }
+
+    public function mieiCorsi(Request $request)
+    {
+        $userId = $request->user()->id;
+
+        $orderIds = Order::where('student_id', $userId)->pluck('id');
+
+        $productRows = OrderProduct::whereIn('id_ordine', $orderIds)->get();
+
+        $courseIds = [];
+
+        foreach ($productRows as $row) {
+            if ($row->tipo_prodotto == 0) {
+                $lesson = Lesson::find($row->id_prodotto);
+                if ($lesson) {
+                    $courseIds[] = $lesson->course_id;
+                }
+            }
+
+            if ($row->tipo_prodotto == 2) {
+                $exercise = Exercise::find($row->id_prodotto);
+                if ($exercise) {
+                    $courseIds[] = $exercise->course_id;
+                }
+            }
+        }
+
+        $courseIds = array_unique($courseIds);
+
+        $courses = Course::with('matter.theme_area')
+            ->whereIn('id', $courseIds)
+            ->get();
+
+        return view('studente.elenco-corsi', compact('courses'));
     }
 
     public function edit(int $id)

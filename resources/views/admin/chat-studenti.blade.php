@@ -1,135 +1,104 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Chat Studenti</h2>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('inner')
     <style>
-        .cerchio {
-            width: 40px;
-            height: 40px;
-            background-color: red;
+        .status-dot {
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
         }
     </style>
-    @php
-        use App\Models\Chat;
-        use App\Models\ChatMessage;
-        use App\Models\Exercise;
-        use App\Models\Lesson;
-        use App\Models\LessonOnRequest;
-        use App\Models\User;
-        use App\Models\Student;
-        use App\Helpers\DateHelper;
-        use Illuminate\Support\Facades\DB;
-    @endphp
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="studenti">Studenti</a>
-        </li>
-    </ul>
-    <div class="row g-0 container-fluid" style="text-align: center">
-        <h2>Chat Studenti</h2>
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Tipo Prodotto</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Studente</th>
-                    <th scope="col">Stato</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $prima_chat = DB::table('chats')->orderBy(DB::raw('created_at'), 'desc')->first();
-                $data_primo = DateHelper::parse($prima_chat->created_at);
-                $chat = DB::table('chats')->get();
-            @endphp
-            <tbody>
-                @foreach ($chat as $item)
-                    <tr>
 
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-                            @php
-                                $tipo_prod = $item->tipo_prodotto;
-                                $tipo_stringa = '';
-                                switch ($tipo_prod) {
-                                    case 0:
-                                        $tipo_stringa = 'Lezione';
-                                        break;
-                                    case 2:
-                                        $tipo_stringa = 'Esercizio';
-                                        break;
-                                    case 5:
-                                        $tipo_stringa = 'Lezione su Richiesta';
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            @endphp
-                            {{ $tipo_stringa }}
-                        </td>
-                        <td>
-                            @php
-                                $nome = '';
-                                switch ($tipo_prod) {
-                                    case 0:
-                                        $lezione = Lesson::where('id', '=', $item->id_prodotto)->first();
-                                        $nome = $lezione->title;
-                                        break;
-                                    case 2:
-                                        $esercizio = Exercise::where('id', '=', $item->id_prodotto)->first();
-                                        $nome = $esercizio->title;
-                                        break;
-                                    case 5:
-                                        $lezione_su_rich = LessonOnRequest::where(
-                                            'id',
-                                            '=',
-                                            $item->id_prodotto,
-                                        )->first();
-                                        $nome = $lezione_su_rich->title;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            @endphp
-                            {{ $nome }}
-                        </td>
-                        <td>
-                            @php
-                                $studente = Student::where('id', '=', $item->id_studente)->first();
-                                $utente = $studente->user;
-                            @endphp
-                            {{ $utente->name . ' ' . $utente->surname }}
-                        </td>
-                        <td style="text-align: center">
-                            @php
-                                $chat_ = ChatMessage::where('chat_id', '=', $item->id)
-                                    ->orderBy('date', 'desc')
-                                    ->first();
-                                if ($chat_ != null && $chat_->author == 0) {
-                                    echo '<div class="cerchio" style="background-color: red;"></div>';
-                                } else {
-                                    echo '<div class="cerchio" style="background-color: green;"></div>';
-                                }
-                            @endphp
-                        </td>
-                        <td>
-                            <div>
-                                <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="visualizza-chat-{{ $item->id }}">Visualizza Chat</button>
-                            </div>
-                        </td>
+    <div class="container">
+        {{-- CARD --}}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                <h4 class="fw-bold mb-4">
+                    Elenco Chat
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo Prodotto</th>
+                                <th>Titolo</th>
+                                <th>Studente</th>
+                                <th>Stato</th>
+                                <th>Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @forelse ($chat as $item)
+                                <tr>
+
+                                    <td>
+                                        {{ $item->id }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->tipo_stringa }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->nome_prodotto }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->studente_nome }}
+                                    </td>
+
+                                    <td class="text-center">
+
+                                        @if ($item->non_letta_admin)
+                                            <span class="status-dot bg-danger"></span>
+                                        @else
+                                            <span class="status-dot bg-success"></span>
+                                        @endif
+
+                                    </td>
+
+                                    <td>
+                                        <a href="visualizza-chat-{{ $item->id }}"
+                                            class="btn btn-primary btn-sm rounded-pill px-3">
+                                            Visualizza Chat
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        Nessuna chat presente.
+                                    </td>
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
 @endsection

@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Chat;
+use App\Models\ChatMessage;
 
 class StudenteController extends Controller
 {
@@ -74,19 +76,40 @@ class StudenteController extends Controller
 
     public function lezione($id_corso, $id_lezione)
     {
-        // DEBUG iniziale (poi lo togli)
-        // dd($id_corso, $id_lezione);
-
-        // Recupero dati (esempio base)
         $corso = Course::find($id_corso);
         $lezione = Lesson::find($id_lezione);
 
-        // Controlli minimi (IMPORTANTI)
         if (!$corso || !$lezione) {
             abort(404);
         }
 
-        return view('studente.lezione', compact('corso', 'lezione'));
+        $studente = auth()->user()->student;
+
+        $chat = Chat::where('id_prodotto', $id_lezione)
+            ->where('tipo_prodotto', 0)
+            ->where('id_studente', $studente->id)
+            ->first();
+
+        // Se la chat non esiste la creo
+        if (!$chat) {
+
+            $chat = Chat::create([
+                'id_prodotto' => $id_lezione,
+                'tipo_prodotto' => 0,
+                'id_studente' => $studente->id
+            ]);
+        }
+
+        $messaggi = ChatMessage::where('chat_id', $chat->id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return view('studente.lezione', compact(
+            'corso',
+            'lezione',
+            'chat',
+            'messaggi'
+        ));
     }
 
     public function esercizio($id_corso, $id_esercizio)

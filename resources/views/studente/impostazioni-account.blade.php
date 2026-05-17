@@ -1,7 +1,7 @@
 @extends('studente.dashboard-studente')
 
 @section('page-title')
-    <div class="container">
+    <div class="container my-4">
         <h2>
             Impostazioni Account
         </h2>

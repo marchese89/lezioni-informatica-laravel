@@ -1,76 +1,101 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Richieste Studenti</h2>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('inner')
-    <style>
-        .cerchio {
-            width: 40px;
-            height: 40px;
-            background-color: red;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-    </style>
     @php
         use App\Helpers\DateHelper;
-        use App\Models\LessonOnRequest;
     @endphp
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="studenti">Studenti</a>
-        </li>
-    </ul>
-    <div class="row g-0 container-fluid" style="text-align: center">
-        <h2>Richieste Studenti</h2>
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Evasa</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $lezioni_su_richiesta = LessonOnRequest::orderBy('date', 'asc')->get();
-            @endphp
-            <tbody>
-                @foreach ($lezioni_su_richiesta as $item)
-                    <tr>
 
-                        <th scope="row">{{ $item->id }}</th>
-                        <td>
-                            {{ $item->title }}
-                        </td>
-                        <td>
-                            {{ DateHelper::format($item->date) }}
-                        </td>
-                        <td>
-                            @php
-                                $r = $item->escaped;
-                                if ($r == 0) {
-                                    echo '<div class="cerchio" style="background-color: red;"></div>';
-                                } else {
-                                    echo '<div class="cerchio" style="background-color: green;"></div>';
-                                }
-                            @endphp
-                        </td>
-                        <td>
-                            <div>
-                                <button type="submit" class="btn btn-primary"
-                                    onclick=location.href="{{ route('visualizza-richiesta', ['id' => $item->id]) }}">Visualizza</button>
-                            </div>
-                        </td>
+    <style>
+        .status-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+    </style>
 
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="container">
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+
+                <h4 class="fw-bold mb-4">
+                    Elenco Richieste
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table align-middle">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Titolo</th>
+                                <th>Data</th>
+                                <th>Stato</th>
+                                <th>Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            @forelse ($lezioni_su_richiesta as $item)
+                                <tr>
+
+                                    <td>
+                                        {{ $item->id }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->title }}
+                                    </td>
+
+                                    <td>
+                                        {{ DateHelper::format($item->date) }}
+                                    </td>
+
+                                    <td>
+                                        @if ($item->escaped == 0)
+                                            <span class="status-dot bg-danger"></span>
+                                        @else
+                                            <span class="status-dot bg-success"></span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        <a href="{{ route('visualizza-richiesta', ['id' => $item->id]) }}"
+                                            class="btn btn-primary btn-sm rounded-pill px-3">
+                                            Visualizza
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">
+                                        Nessuna richiesta presente.
+                                    </td>
+                                </tr>
+                            @endforelse
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
     </div>
 @endsection

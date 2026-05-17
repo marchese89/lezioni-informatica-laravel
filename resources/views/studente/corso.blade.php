@@ -1,28 +1,22 @@
 @extends('studente.dashboard-studente')
+@php
+    use App\Models\Course;
+    use App\Models\Lesson;
+    use App\Models\Exercise;
+    use App\Services\AcquistiService;
+
+    $corso = Course::where('id', '=', request('id'))->first();
+
+@endphp
+@section('page-title')
+    <div class="container my-5">
+        <h2>Visualizza Corso </h2>
+    </div>
+@endsection
 
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/corsi">Corsi</a>
-        </li>
-    </ul>
     <div class="container" style="text-align: center;width:35%">
-        @php
-            use App\Models\Course;
-            use App\Models\Lesson;
-            use App\Models\Exercise;
-            use App\Services\AcquistiService;
-
-            $corso = Course::where('id', '=', request('id'))->first();
-
-        @endphp
-        <h2>Visualizza Corso</h2>
-        <h2>{{ $corso->name }}</h2>
-        <br>
-
+        <h3 class="font-weight-bold">{{ $corso->name }}</h3>
     </div>
     <br>
     <div class="container" style="text-align: center;width:80%">

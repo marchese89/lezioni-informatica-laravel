@@ -1,23 +1,67 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <h2>Richieste Studenti</h2>
+    </div>
+@endsection
+
 @section('inner')
-<ul class="nav">
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-    </li>
-  </ul>
-<div class="row g-0 container-fluid" >
-    <div class="card col-md-6" style="width: 30rem;">
-        <div class="card-body">
-          <h5 class="card-title">Richieste Studenti</h5>
-          <a href="richieste-studenti" class="btn btn-primary">Accedi</a>
+    <div class="container">
+
+        <div class="row g-4">
+
+            {{-- RICHIESTE STUDENTI --}}
+            <div class="col-lg-5">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4 d-flex flex-column">
+
+                        <h4 class="fw-bold mb-3">
+                            Richieste Studenti
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            Visualizza e gestisci tutte le richieste inviate dagli studenti.
+                        </p>
+
+                        <div class="mt-auto">
+                            <a href="richieste-studenti" class="btn btn-primary rounded-pill px-4">
+                                Accedi
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- CHAT STUDENTI --}}
+            <div class="col-lg-5">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4 d-flex flex-column">
+
+                        <h4 class="fw-bold mb-3">
+                            Chat Studenti
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            Accedi alle conversazioni e comunica con gli studenti.
+                        </p>
+
+                        <div class="mt-auto">
+                            <a href="chat-studenti" class="btn btn-primary rounded-pill px-4">
+                                Accedi
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
         </div>
+
     </div>
-    <div class="card col-md-6" style="width: 30rem;">
-        <div class="card-body">
-          <h5 class="card-title">Chat Studenti</h5>
-          <a href="chat-studenti" class="btn btn-primary">Accedi</a>
-        </div>
-    </div>
-</div>
 @endsection

@@ -93,6 +93,31 @@ Breadcrumbs::for('nuova-lezione', function (BreadcrumbTrail $trail, $id) {
     $trail->push('Nuova lezione', route('nuova-lezione', $id));
 });
 
+Breadcrumbs::for('studenti', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-admin');
+    $trail->push('Studenti', route('studenti'));
+});
+
+Breadcrumbs::for('richieste-studenti', function (BreadcrumbTrail $trail) {
+    $trail->parent('studenti');
+    $trail->push('Richieste studenti', route('richieste-studenti'));
+});
+
+Breadcrumbs::for('chat-studenti', function (BreadcrumbTrail $trail) {
+    $trail->parent('studenti');
+    $trail->push('Chat studenti', route('chat-studenti'));
+});
+
+Breadcrumbs::for('visualizza-richiesta', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('richieste-studenti');
+    $trail->push('Visualizza richiesta', route('visualizza-richiesta', $id));
+});
+
+Breadcrumbs::for('visualizza-chat', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('chat-studenti');
+    $trail->push('Visualizza chat', route('visualizza-chat', $id));
+});
+
 Breadcrumbs::for('dashboard-studente', function (BreadcrumbTrail $trail) {
     $trail->push('Dashboard', route('dashboard-studente'));
 });
@@ -110,4 +135,24 @@ Breadcrumbs::for('mod-dati-pers-stud', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('mod-cred-stud', function (BreadcrumbTrail $trail) {
     $trail->parent('imp-account-studente');
     $trail->push('Modifica credenziali', route('mod-cred-stud'));
+});
+
+Breadcrumbs::for('corsi', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Corsi', route('corsi'));
+});
+
+Breadcrumbs::for('course', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('corsi');
+    $trail->push('Corso', route('course', $id));
+});
+
+Breadcrumbs::for('lezione', function (BreadcrumbTrail $trail, $id_corso, $id_lezione) {
+    $trail->parent('course', $id_corso);
+    $trail->push('Lezione', route('lezione', ['id_corso' => $id_corso, 'id_lezione' => $id_lezione]));
+});
+
+Breadcrumbs::for('esercizio', function (BreadcrumbTrail $trail, $id_corso, $id_esercizio) {
+    $trail->parent('course', $id_corso);
+    $trail->push('Esercizio', route('esercizio', ['id_corso' => $id_corso, 'id_esercizio' => $id_esercizio]));
 });

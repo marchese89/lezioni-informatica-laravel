@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\AcquistiController;
 use App\Http\Controllers\Public\LessonOnRequestController;
+use App\Http\Controllers\InvoiceController;
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
@@ -129,31 +130,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
     // 👥 STUDENTI / RICHIESTE / VENDITE
     // =====================================================
-    Route::get('studenti', fn() => view('admin.studenti'));
-    Route::get('richieste-studenti', fn() => view('admin.richieste-studenti'));
-    Route::get('visualizza-richiesta/{id}', function ($id) {
-        return view('admin.visualizza-richiesta-lezione', compact('id'));
-    })->name('visualizza-richiesta');
-
+    Route::get('studenti', fn() => view('admin.studenti'))->name('studenti');
+    Route::get('richieste-studenti', [LessonOnRequestController::class, 'index'])->name('richieste-studenti');
+    Route::get('visualizza-richiesta/{id}', [LessonOnRequestController::class, 'visualizzaRichiesta'])->name('visualizza-richiesta');
     Route::post('sol-rich-upload', [LessonOnRequestController::class, 'sol_rich_upload']);
     Route::delete('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec'])->name('lez-rich-rem-exec');
     Route::post('carica-prezzo-lez-rich', [LessonOnRequestController::class, 'carica_prezzo_lez_rich']);
 
     Route::get('vendite', fn() => view('admin.vendite'))->name('vendite');
-    Route::get('admin-ordine-{id}', fn() => view('admin.ordine'));
-    Route::get('admin-fattura-{id}', fn() => view('admin.fattura'));
+    Route::get('admin-ordine-{id}', fn() => view('admin.ordine'))->name('admin-ordine');
+    Route::get('admin-fattura-{id}', fn() => view('admin.fattura'))->name('admin-fattura');
 
     Route::post('crea_fattura_extra', [AcquistiController::class, 'crea_fattura']);
     Route::get('extra-fattura', fn() => view('admin.fattura-extra'))->name('extra-fattura');
     Route::get('fattura-creata', fn() => view('admin.fattura-creata'))->name('fattura-creata');
-    Route::get('fatture', fn() => view('admin.fatture'))->name('fatture');
-    Route::get('visualizza-fattura-{id}', fn() => view('admin.visualizza-fattura'))->name('visualizza-fattura');
+    Route::get('fatture', [InvoiceController::class, 'showAll'])->name('fatture');
+    Route::get('visualizza-fattura/{id}', [InvoiceController::class, 'show'])->name('visualizza-fattura');
 
     // =====================================================
     // 💬 CHAT / AJAX
     // =====================================================
-    Route::get('chat-studenti', fn() => view('admin.chat-studenti'));
-    Route::get('visualizza-chat-{id}', fn() => view('admin.visualizza-chat'))->name('visualizza-chat');
+    Route::get('chat-studenti', [LessonOnRequestController::class, 'chatStudenti'])->name('chat-studenti');
+    Route::get('visualizza-chat-{id}', [LessonOnRequestController::class, 'visualizzaChat'])->name('visualizza-chat');
 
     Route::get('cambia_tabella_ordini', [AjaxController::class, 'getOrdini']);
     Route::post('chat/admin/invia-messaggio', [AjaxController::class, 'invia_messaggio']);

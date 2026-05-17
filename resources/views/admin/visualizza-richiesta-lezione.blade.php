@@ -1,24 +1,17 @@
 @extends('admin.dashboard-admin')
 
+@section('page-title')
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2>Visualizza Richiesta Lezione</h2>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section('inner')
-    @php
-        use App\Models\LessonOnRequest;
-    @endphp
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="studenti">Studenti</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="richieste-studenti">Richieste Studenti</a>
-        </li>
-    </ul>
     <div class="container" style="text-align: center">
-        @php
-            $richiesta = LessonOnRequest::where('id', '=', request('id'))->first();
-        @endphp
         <h3>Richiesta Lezione: </h3>
         <h3 style="color: blue">{{ $richiesta->title }}</h3>
         <h4>Traccia</h4>

@@ -4,17 +4,163 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\LessonOnRequest;
 use App\Models\User;
 use App\Mail\NuovaRichiestaStudenteMail;
 use App\Mail\RichiestaEvasaMail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Chat;
+use App\Models\ChatMessage;
+use App\Models\Student;
+use App\Models\Lesson;
+use App\Models\Exercise;
 
 class LessonOnRequestController extends Controller
 {
+    public function index()
+    {
+        $lezioni_su_richiesta = LessonOnRequest::with('student.user')->get();
+        return view('admin.richieste-studenti', compact('lezioni_su_richiesta'));
+    }
+
+    public function visualizzaRichiesta($id)
+    {
+        $richiesta = LessonOnRequest::where('id', '=', $id)->first();
+        return view('admin.visualizza-richiesta-lezione', compact('richiesta'));
+    }
+
+    public function chatStudenti()
+    {
+        $chat = Chat::orderBy('created_at', 'desc')->get();
+
+        foreach ($chat as $item) {
+
+            // TIPO PRODOTTO
+            switch ($item->tipo_prodotto) {
+
+                case 0:
+                    $item->tipo_stringa = 'Lezione';
+
+                    $lezione = Lesson::find($item->id_prodotto);
+                    $item->nome_prodotto = $lezione?->title;
+                    break;
+
+                case 2:
+                    $item->tipo_stringa = 'Esercizio';
+
+                    $esercizio = Exercise::find($item->id_prodotto);
+                    $item->nome_prodotto = $esercizio?->title;
+                    break;
+
+                case 5:
+                    $item->tipo_stringa = 'Lezione su Richiesta';
+
+                    $lezioneRich = LessonOnRequest::find($item->id_prodotto);
+                    $item->nome_prodotto = $lezioneRich?->title;
+                    break;
+
+                default:
+                    $item->tipo_stringa = '-';
+                    $item->nome_prodotto = '-';
+                    break;
+            }
+
+            // STUDENTE
+            $studente = Student::find($item->id_studente);
+
+            if ($studente && $studente->user) {
+                $item->studente_nome =
+                    $studente->user->name . ' ' . $studente->user->surname;
+            } else {
+                $item->studente_nome = '-';
+            }
+
+            // STATO CHAT
+            $ultimoMessaggio = ChatMessage::where('chat_id', $item->id)
+                ->orderBy('date', 'desc')
+                ->first();
+
+            $item->non_letta_admin =
+                $ultimoMessaggio && $ultimoMessaggio->author == 0;
+        }
+
+        return view('admin.chat-studenti', compact('chat'));
+    }
+
+    public function visualizzaChat($id)
+    {
+        $chat = Chat::findOrFail($id);
+
+        $pres = '';
+        $exec = '';
+        $titolo = '';
+
+        switch ($chat->tipo_prodotto) {
+
+            case 0:
+
+                $lezione = Lesson::find($chat->id_prodotto);
+
+                $pres = $lezione?->presentation;
+                $exec = $lezione?->lesson;
+
+                $titolo =
+                    'Lezione n. ' .
+                    $lezione?->id .
+                    ', ' .
+                    $lezione?->title;
+
+                break;
+
+            case 2:
+
+                $esercizio = Exercise::find($chat->id_prodotto);
+
+                $pres = $esercizio?->trace;
+                $exec = $esercizio?->execution;
+
+                $titolo =
+                    'Esercizio n. ' .
+                    $esercizio?->id .
+                    ', ' .
+                    $esercizio?->title;
+
+                break;
+
+            case 5:
+
+                $lezioneRich = LessonOnRequest::find($chat->id_prodotto);
+
+                $pres = $lezioneRich?->trace;
+                $exec = $lezioneRich?->execution;
+
+                $titolo =
+                    'Lezione su richiesta n. ' .
+                    $lezioneRich?->id .
+                    ', ' .
+                    $lezioneRich?->title;
+
+                break;
+        }
+
+        $messaggi = ChatMessage::where('chat_id', $chat->id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $studente = Student::find($chat->id_studente);
+
+        $utente = $studente?->user;
+
+        return view('admin.visualizza-chat', compact(
+            'chat',
+            'pres',
+            'exec',
+            'titolo',
+            'messaggi',
+            'utente'
+        ));
+    }
 
     private function deleteFile($path = null)
     {

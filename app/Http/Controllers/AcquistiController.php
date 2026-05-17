@@ -14,7 +14,6 @@ use App\Mail\OrderCompletedMail;
 use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Utility\Carrello;
 
 class AcquistiController extends Controller
 {

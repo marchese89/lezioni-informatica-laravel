@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AcquistiController;
 use App\Http\Controllers\Student\StudenteController;
 use App\Http\Controllers\Admin\AjaxController;
+use App\Http\Controllers\Admin\CourseController;
 
 Route::middleware(['auth', 'role:student'])->group(function () {
 
@@ -28,18 +29,19 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // CORSI
     // =========================
-    Route::view('corsi', 'studente.elenco-corsi');
-    Route::view('course/{id}', 'studente.corso');
+    Route::view('corsi', [CourseController::class, 'mieiCorsi'])->name('corsi');
+    // 'studente.elenco-corsi'  [CourseController::class, 'mieiCorsi']
+    Route::view('course/{id}', 'studente.corso')->name('course');
 
-    Route::view('studente/corso/{id}', 'studente.corso');
+    Route::view('studente/corso/{id}', 'studente.corso')->name('studente.corso');
 
-    Route::get('lezione/{id_corso}/{id_lezione}', [StudenteController::class, 'lezione']);
-    Route::get('esercizio/{id_corso}/{id_esercizio}', [StudenteController::class, 'esercizio']);
+    Route::get('lezione/{id_corso}/{id_lezione}', [StudenteController::class, 'lezione'])->name('lezione');
+    Route::get('esercizio/{id_corso}/{id_esercizio}', [StudenteController::class, 'esercizio'])->name('esercizio');
 
     // =========================
     // CARRELLO (NUOVO + VECCHIO COMPATIBILE)
     // =========================
-    Route::view('carrello', 'public.visualizza-carrello');
+    Route::view('carrello', 'public.visualizza-carrello')->name('carrello');
 
     Route::get('carrello/add/{id}/{type}', [AcquistiController::class, 'aggiungi_al_carrello']);
 
