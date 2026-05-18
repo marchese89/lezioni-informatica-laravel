@@ -2,80 +2,107 @@
 
 @section('content')
     <script>
-        function mostraPassword1() {
-            var x = document.getElementById("password");
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
-            }
+        function togglePassword() {
+            const x = document.getElementById("password");
+            x.type = (x.type === "password") ? "text" : "password";
         }
 
         function modifica_pass() {
-            var x = document.getElementById("password");
+            const x = document.getElementById("password");
             if (x.type === "text") {
                 x.type = "password";
             }
-
         }
     </script>
-    <div class="container" style="width: 100%">
-        @if (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
+
+    <div class="container py-5 h-fill">
+
+        {{-- ALERT --}}
+        <div class="mb-3">
+            @if (session()->has('error'))
+                <div class="alert alert-danger">
+                    {{ session()->get('error') }}
+                </div>
+            @endif
+
+            @if (session()->has('success'))
+                <div class="alert alert-success">
+                    {{ session()->get('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+        </div>
+
+        {{-- LOGIN CARD --}}
+        <div class="card shadow-sm mx-auto" style="max-width: 420px;">
+
+            <div class="card-body p-4">
+
+                <h3 class="text-center mb-4">Login</h3>
+
+                <form method="POST" action="login" class="row g-3">
+                    @csrf
+
+                    <input type="hidden" name="return" value="{{ request('back') ? '1' : '0' }}">
+
+                    {{-- EMAIL --}}
+                    <div class="col-12">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" maxlength="255">
+
+                        <script>
+                            var email1 = new LiveValidation('email', {
+                                onlyOnSubmit: true
+                            });
+                            email1.add(Validate.Presence);
+                            email1.add(Validate.Email);
+                        </script>
+                    </div>
+
+                    {{-- PASSWORD --}}
+                    <div class="col-12">
+                        <label class="form-label">Password</label>
+
+                        <input type="password" class="form-control" id="password" name="password" maxlength="255">
+
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" onclick="togglePassword()" id="showPass">
+
+                            <label class="form-check-label" for="showPass">
+                                Mostra password
+                            </label>
+                        </div>
+
+                        <script>
+                            var pass1_ = new LiveValidation('password', {
+                                onlyOnSubmit: true
+                            });
+                            pass1_.add(Validate.Presence);
+                            pass1_.add(Validate.Pass);
+                        </script>
+                    </div>
+
+                    {{-- RECUPERO --}}
+                    <div class="col-12 text-center">
+                        <a href="recupera-password">Recupera password</a>
+                    </div>
+
+                    {{-- SUBMIT --}}
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Accedi
+                        </button>
+                    </div>
+
+                </form>
+
             </div>
-        @endif
-        @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session()->get('success') }}
-            </div>
-        @endif
-    </div>
-    <div class="container" style="width: 15%; text-align: center;height:800px">
-        <br>
-        <h2>Login</h2>
-        <form class="row g-3" method="POST" action="login">
-            @csrf
-            <input type="hidden" name="return" value="<?php if (request('back') != null) {
-                echo '1';
-            } else {
-                echo '0';
-            } ?>">
-            <div class="col-md-12">
-                <label for="inputEmail4" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" maxlength="255">
-                <script type="text/javascript">
-                    var email1 = new LiveValidation('email', {
-                        onlyOnSubmit: true
-                    });
-                    email1.add(Validate.Presence);
-                    email1.add(Validate.Email);
-                </script>
-            </div>
-            <div class="col-md-12">
-                <label for="inputPassword4" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" maxlength="255">
-                </p>
-                <input type="checkbox" onclick="mostraPassword1()">&nbsp;Mostra Password
-                <script type="text/javascript">
-                    var pass1_ = new LiveValidation('password', {
-                        onlyOnSubmit: true
-                    });
-                    pass1_.add(Validate.Presence);
-                    pass1_.add(Validate.Pass);
-                </script>
-            </div>
-            <div class="col-md-12">
-                <a href="recupera-password">Recupera Password</a>
-            </div>
-            <div class="col-md-12">
-                @if ($errors->any())
-                    <label style="color: red">{{ $errors->first() }}</label>
-                @endif
-            </div>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary">Accedi</button>
-            </div>
-        </form>
+        </div>
+
     </div>
 @endsection

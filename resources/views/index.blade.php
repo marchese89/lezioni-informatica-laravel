@@ -1,95 +1,117 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
+
     <style>
-        p {
-            font-size: 1.4em;
+        .hero {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #0d6efd10, #00000005);
+            border-radius: 16px;
+            margin-bottom: 40px;
         }
 
-        p a {
-            font-size: 1.4em;
+        .soft-card {
+            border: 0;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            transition: .2s;
         }
 
-        .stars2 a {
-            opacity: 20%;
-            cursor: default;
+        .soft-card:hover {
+            transform: translateY(10px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+            cursor: pointer;
         }
     </style>
-    @php
-        use App\Models\User;
-        use App\Models\Student;
-        use App\Models\Admin;
-        use App\Models\Feedback;
 
-        $feedbacks = Feedback::all();
+    <div class="container py-5">
 
-        $user = User::where('role', '=', 'admin')->first();
-        $admin = $user->admin;
-    @endphp
-    <div class="container" style="text-align: center">
-        <br>
-        <br>
-        <img alt="Foto" src=".{{ $admin->photo }}" height="400" style="border-radius: 10px 10px 10px 10px" />
-        <p>Laureato Magistrale in Ingegeria Informatica (110/110)</p>
-        <p>Offre supporto allo studio:</p>
-        <p>soluzione esercizi</p>
-        <p>lezioni private online</p>
-        <p>Tariffe:</p>
-        <p>15&euro; l'ora per le scuole superiori</p>
-        <p>20&euro; l'ora per l'univesit&agrave;</p>
-        <p><strong>Contatti:</strong></p>
-        <p>
-            Email: <a href="mailto:marchese89@hotmail.com">marchese89@hotmail.com</a>
-        </p>
-        <p>
-            Telefono: <a href="tel:+393272991334">+393272991334</a>
-        </p>
-        <p>
-            <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png?w=360" width="30px"
-                style="border-radius: 5px 5px 5px 5px;">
-            <a href="https://api.whatsapp.com/send?phone=3272991334" target="_blank">Invia
-                messaggio su WhatsApp</a>
-        </p>
+        <x-hero title="Lezioni private di Ingegneria Informatica" subtitle="Metodo pratico per superare esami e verifiche"
+            ctaText="Contattami su WhatsApp" ctaLink="https://api.whatsapp.com/send?phone=3272991334" />
 
-        @if ($feedbacks != null && $feedbacks->count() > 0)
-            <h2>Punteggio Feedback</h2>
-            @php
-                $count = $feedbacks->count();
-                $somma = 0.0;
-                foreach ($feedbacks as $feed) {
-                    $somma += $feed->punteggio;
-                }
-                $f = number_format($somma / $count, 2, ',', '.');
-            @endphp
-            <strong style="font-size: 20pt">{{ $f }}/5</strong>
-            <div class="stars2" id="stars">
-                <a <?php if($somma / $count > 0.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
-                <a <?php if($somma / $count > 1.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
-                <a <?php if($somma / $count > 2.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
-                <a <?php if($somma / $count > 3.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
-                <a <?php if($somma / $count > 4.5){?> style="opacity: 100%;" <?php }?>>⭐</a>
+        {{-- PROFILO --}}
+        <div class="row align-items-center mb-5">
+            <div class="col-md-5">
+                <img src=".{{ $admin->photo }}" class="img-fluid rounded-3 shadow-sm">
             </div>
-            <br>
-            <br>
-            <h2>Recensioni</h2>
-            <br>
-            <br>
-            @foreach ($feedbacks as $feed)
-                @if ($feed->recensione != null && $feed->recensione != '')
-                    @php
 
-                        $id_studente = $feed->student_id;
-                        $studente = Student::where('id', '=', $id_studente)->first();
-                    @endphp
-                    <h4>{{ $studente->user->name . ' ' . $studente->user->surname }}</h4>
-                    <p>{{ $feed->recensione }}</p>
-                    <br>
-                    <br>
-                @else
-                    <h4>Al momento non ci sono recensioni</h4>
-                @endif
-            @endforeach
+            <div class="col-md-7">
+                <x-section-title>Chi sono</x-section-title>
+
+                <p>
+                    Laurea Magistrale 110/110 in Ingegneria Informatica.
+                    Approccio orientato alla comprensione reale, non alla memorizzazione.
+                </p>
+            </div>
+        </div>
+
+        {{-- SERVIZI --}}
+        <x-section-title>Servizi</x-section-title>
+
+        <div class="row mb-5">
+            <div class="col-md-4">
+                <x-service-card title="Esercizi guidati" description="Metodo passo-passo" />
+            </div>
+            <div class="col-md-4">
+                <x-service-card title="Lezioni online" description="Sessioni individuali" />
+            </div>
+            <div class="col-md-4">
+                <x-service-card title="Metodo di studio" description="Autonomia dello studente" />
+            </div>
+        </div>
+
+        {{-- PREZZI --}}
+        <x-section-title>Tariffe</x-section-title>
+
+        <div class="row mb-5 justify-content-center">
+            <div class="col-md-4">
+                <x-price-card title="Superiori" price="15€" unit="all’ora" />
+            </div>
+
+            <div class="col-md-4">
+                <x-price-card title="Università" price="20€" unit="all’ora" />
+            </div>
+        </div>
+
+        {{-- CONTATTI --}}
+        <div class="card soft-card p-4 text-center mb-5">
+            <h4>Contatti</h4>
+
+            <p>
+                Email: <a href="mailto:marchese89@hotmail.com">marchese89@hotmail.com</a>
+            </p>
+
+            <p>
+                Telefono: <a href="tel:+393272991334">+39 327 299 1334</a>
+            </p>
+
+            <a class="btn btn-success" href="https://api.whatsapp.com/send?phone=3272991334">
+                Scrivimi su WhatsApp
+            </a>
+        </div>
+
+        {{-- RECENSIONI --}}
+        @if ($feedbacks->count())
+            <x-section-title>Recensioni</x-section-title>
+
+            <div class="text-center mb-4">
+                <h4>{{ number_format($avg, 2) }}/5</h4>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+
+                    @foreach ($feedbacks as $feed)
+                        @if ($feed->recensione)
+                            <x-testimonial-card :name="$feed->student->user->name . ' ' . $feed->student->user->surname" :text="$feed->recensione" />
+                        @endif
+                    @endforeach
+
+                </div>
+            </div>
         @endif
+
     </div>
 
 @endsection

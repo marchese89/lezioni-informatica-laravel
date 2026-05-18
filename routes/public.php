@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Public\LessonOnRequestController;
 
-Route::get('/', fn() => view('index'));
+Route::get('/', [HomeController::class, 'index']);
 
 Route::view('registrati', 'sicurezza.registrati');
 Route::view('registrazione_ok', 'sicurezza.registrazione_ok')->name('registrazione_ok');
