@@ -9,103 +9,114 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:50%">
-        <h4>Modifica Email</h4>
-        <form method="POST" action="mod-email-admin">
-            @csrf
-            <div>
-                <input type="email" class="form-control" id="inputEmail" name="inputEmail" maxlength="255"
-                    value="{{ auth()->user()->email }}">
-                <script type="text/javascript">
-                    var email1 = new LiveValidation('inputEmail', {
-                        onlyOnSubmit: true
-                    });
-                    email1.add(Validate.Presence);
-                    email1.add(Validate.Email);
-                </script>
+    <div class="container py-4" style="max-width: 700px;">
+
+        {{-- EMAIL --}}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Modifica Email</h5>
             </div>
-            <div>
-                @if ($errors->any())
-                    <label style="color: red">{{ $errors->first('email') }}</label>
+
+            <div class="card-body">
+                <form method="POST" action="mod-email-admin">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" id="inputEmail" name="inputEmail" maxlength="255"
+                            value="{{ auth()->user()->email }}">
+
+                        @if ($errors->any())
+                            <small class="text-danger">
+                                {{ $errors->first('email') }}
+                            </small>
+                        @endif
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Aggiorna Email
+                    </button>
+                </form>
+            </div>
+        </div>
+
+
+        {{-- PASSWORD --}}
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Modifica Password</h5>
+            </div>
+
+            <div class="card-body">
+
+                @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}
+                    </div>
                 @endif
-            </div>
-            <br>
-            <div>
-                <button type="submit" class="btn btn-primary">Modifica Email</button>
-            </div>
-        </form>
-        <br>
-        <h4>Modifica Password</h4>
-        @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session()->get('success') }}
-            </div>
-        @endif
-        <form method="POST" action="mod-pass-admin" onsubmit="modifica_pass()">
-            @csrf
-            <div>
-                <h5>Vecchia Password</h5>
-                <input type="password" class="form-control" id="inputPassword_old" name="inputPassword_old" maxlength="255">
-                </p>
-                <input type="checkbox" onclick="mostraPassword_old()">&nbsp;Mostra Password
-                <script type="text/javascript">
-                    var pass2_ = new LiveValidation('inputPassword_old', {
-                        onlyOnSubmit: true
-                    });
-                    pass2_.add(Validate.Presence);
-                    pass2_.add(Validate.Pass);
-                </script>
-            </div>
-            <div>
-                @if ($errors->any())
-                    <label style="color: red">{{ $errors->first('pass0') }}</label>
-                @endif
-            </div>
-            <div>
-                <h5>Nuova Password</h5>
-                <input type="password" class="form-control" id="inputPassword" name="inputPassword" maxlength="255">
-                </p>
-                <input type="checkbox" onclick="mostraPassword1()">&nbsp;Mostra Password
-                <script type="text/javascript">
-                    var pass1_ = new LiveValidation('inputPassword', {
-                        onlyOnSubmit: true
-                    });
-                    pass1_.add(Validate.Presence);
-                    pass1_.add(Validate.Pass);
-                </script>
-            </div>
-            <div>
-                <h5>Conferma Password</h5>
-                <input type="password" class="form-control" id="inputPassword2" name="inputPassword2" maxlength="255">
-                </p>
-                <input type="checkbox" onclick="mostraPassword2()">&nbsp;Mostra Password
-                <script type="text/javascript">
-                    var pass2_ = new LiveValidation('inputPassword2', {
-                        onlyOnSubmit: true
-                    });
-                    pass2_.add(Validate.Presence);
-                    pass2_.add(Validate.Confirmation, {
-                        match: 'inputPassword'
-                    });
-                </script>
-            </div>
-            <div style="text-align: center">
-                <label>La password deve essere lunga alemno 10
-                    caratteri,
-                    <p>contenere almeno una lettera maiuscola e una minuscola,
 
-                    <p>un numero, e uno tra i seguenti caratteri speciali: @ # ! ? . ,
-                        ; :
+                <form method="POST" action="mod-pass-admin">
+                    @csrf
 
-                    <p>non deve inoltre contenere più di due cifre uguali ripetute o
-                        più di due lettere ripetute
+                    {{-- vecchia password --}}
+                    <div class="mb-3">
+                        <label class="form-label">Vecchia password</label>
+                        <input type="password" class="form-control" id="inputPassword_old" name="inputPassword_old">
 
-                </label>
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" onclick="mostraPassword_old()" id="showOld">
+                            <label class="form-check-label" for="showOld">
+                                Mostra password
+                            </label>
+                        </div>
+
+                        @if ($errors->any())
+                            <small class="text-danger">
+                                {{ $errors->first('pass0') }}
+                            </small>
+                        @endif
+                    </div>
+
+                    {{-- nuova password --}}
+                    <div class="mb-3">
+                        <label class="form-label">Nuova password</label>
+                        <input type="password" class="form-control" id="inputPassword" name="inputPassword">
+
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" onclick="mostraPassword1()" id="showNew">
+                            <label class="form-check-label" for="showNew">
+                                Mostra password
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- conferma --}}
+                    <div class="mb-3">
+                        <label class="form-label">Conferma password</label>
+                        <input type="password" class="form-control" id="inputPassword2" name="inputPassword2">
+
+                        <div class="form-check mt-1">
+                            <input class="form-check-input" type="checkbox" onclick="mostraPassword2()" id="showConfirm">
+                            <label class="form-check-label" for="showConfirm">
+                                Mostra password
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- regole password --}}
+                    <div class="alert alert-secondary small">
+                        Password: almeno 10 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale (@ #
+                        ! ? . , ; :).
+                        Evitare più di 2 caratteri uguali consecutivi.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Aggiorna Password
+                    </button>
+
+                </form>
             </div>
-            <div>
-                <button type="submit" class="btn btn-primary">Modifica Password</button>
-            </div>
-        </form>
+        </div>
 
     </div>
 @endsection

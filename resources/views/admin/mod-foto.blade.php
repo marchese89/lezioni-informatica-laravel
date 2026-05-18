@@ -9,27 +9,46 @@
 @endsection
 
 @section('inner')
-    <div class="container mt-5" style="width: 30%; text-align: center;height:800px">
+    <div class="container py-4" style="max-width: 600px;">
 
-        <img alt="Nessuna Foto Caricata" src="{{ auth()->user()->admin->photo }}" width="300" height="300" />
-        <p>
+        <div class="card shadow-sm">
 
-        <form method="POST" action="upload-foto-admin" enctype="multipart/form-data" id="upload">
-            @csrf
-            <input type="file" class="form-control" id="file" name="file" />
-            <p>
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                aria-valuemax="100" id="progressbar" style="display: none">
-                <div class="progress-bar" style="width: 25%" id="percent">25%</div>
+            <div class="card-header">
+                <h5 class="mb-0">Foto profilo amministratore</h5>
             </div>
 
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary"
-                    onclick="upload('upload','file','upload-foto-admin',1)">Upload</button>
+            <div class="card-body text-center">
+
+                <div class="mb-4">
+                    <img alt="Nessuna foto caricata" src="{{ auth()->user()->admin->photo }}"
+                        class="img-fluid rounded shadow-sm" style="max-width: 300px; height: auto;">
+                </div>
+
+                <form method="POST" action="upload-foto-admin" enctype="multipart/form-data" id="upload">
+
+                    @csrf
+
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Seleziona immagine</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+
+                    <div class="progress mb-3" id="progressbar" style="display:none; height: 20px;">
+                        <div class="progress-bar" id="percent" style="width: 0%;">
+                            0%
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100"
+                        onclick="upload('upload','file','upload-foto-admin',1)">
+                        Carica foto
+                    </button>
+
+                </form>
+
             </div>
 
-
-        </form>
+        </div>
 
     </div>
 @endsection

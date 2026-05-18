@@ -9,68 +9,98 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:60%">
+    <div class="container py-4" style="max-width: 1000px;">
 
-        <button class="btn btn-primary mt-5" onclick=location.href="aggiungi-certif">Aggiungi Certificato</button>
-        <br>
-        <br>
-        <br>
+        <div class="text-center mb-4">
+            <button class="btn btn-primary" onclick="location.href='aggiungi-certif'">
+                Aggiungi certificato
+            </button>
+        </div>
+
         @php
             $certificates = DB::table('certificates')->select('*')->get();
         @endphp
+
         @foreach ($certificates as $item)
-            <div class="container" style="text-align: center;width:60%">
-                <h4>Nome Certficato</h4>
-                <form method="POST" action="mod-nome-cert-admin">
-                    @csrf
-                    <input type="hidden" name="id" value="{{ $item->id }}" />
-                    <input class="form-control col-4"=maxlength="255" type="text" name="nome_{{ $item->id }}"
-                        value="{{ $item->nome }}"></input>
-                    <script type="text/javascript">
-                        var nome_ = new LiveValidation('nome_' + {{ $item->id }}, {
-                            onlyOnSubmit: true
-                        });
-                        nome_.add(Validate.Presence);
-                        nome_.add(Validate.SoloTesto);
-                    </script>
-                    <br>
-                    <button type="submit" class="btn btn-primary">Modifica</button>
-                </form>
-                <br>
-                <br>
-                <h4>Certficato</h4>
-                <br>
-                <iframe width="90%" @if ($item->percorso_file != null) src="{{ $item->percorso_file }}#view=FitH" @endif
-                    height="400px">
-                </iframe>
-                <br>
-                <br>
-                <br>
-                <form method="POST" action="mod-foto-cert-admin" enctype="multipart/form-data" id="upload">
-                    @csrf
-                    <input type="file" class="form-control" id="file_{{ $item->id }}"
-                        name="file_{{ $item->id }}" />
-                    <input type="hidden" name="id" value="{{ $item->id }}" />
-                    <p>
-                    <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100" id="progressbar" style="display: none">
-                        <div class="progress-bar" style="width: 25%" id="percent">25%</div>
+            <div class="card shadow-sm mb-4">
+
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Certificato #{{ $item->id }}</strong>
+
+                    <form method="POST" action="elimina_certificato">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $item->id }}">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Elimina
+                        </button>
+                    </form>
+                </div>
+
+                <div class="card-body">
+
+                    {{-- NOME CERTIFICATO --}}
+                    <form method="POST" action="mod-nome-cert-admin" class="mb-4">
+                        @csrf
+                        <input type="hidden" name="id" value="{{ $item->id }}">
+
+                        <label class="form-label">Nome certificato</label>
+
+                        <input class="form-control" type="text" id="nome_{{ $item->id }}"
+                            name="nome_{{ $item->id }}" maxlength="255" value="{{ $item->nome }}">
+
+                        <script>
+                            var nome_{{ $item->id }} =
+                                new LiveValidation('nome_{{ $item->id }}', {
+                                    onlyOnSubmit: true
+                                });
+
+                            nome_{{ $item->id }}.add(Validate.Presence);
+                            nome_{{ $item->id }}.add(Validate.SoloTesto);
+                        </script>
+
+                        <button type="submit" class="btn btn-primary mt-2">
+                            Modifica nome
+                        </button>
+                    </form>
+
+                    {{-- FILE --}}
+                    <div class="mb-3">
+                        <label class="form-label">File certificato</label>
+
+                        <iframe width="100%" height="350"
+                            @if ($item->percorso_file) src="{{ $item->percorso_file }}#view=FitH" @endif>
+                        </iframe>
                     </div>
-                    <div class="col-12">
+
+                    {{-- UPLOAD --}}
+                    <form method="POST" action="mod-foto-cert-admin" enctype="multipart/form-data"
+                        id="upload_{{ $item->id }}">
+
+                        @csrf
+
+                        <input type="hidden" name="id" value="{{ $item->id }}">
+
+                        <div class="mb-2">
+                            <input type="file" class="form-control" id="file_{{ $item->id }}"
+                                name="file_{{ $item->id }}">
+                        </div>
+
+                        <div class="progress mb-2" id="progressbar_{{ $item->id }}"
+                            style="display:none; height: 18px;">
+                            <div class="progress-bar" id="percent_{{ $item->id }}" style="width: 0%;">
+                                0%
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-primary"
-                            onclick="upload('upload','file_{{ $item->id }}','mod-foto-cert-admin',1)">Upload</button>
-                    </div>
-                </form>
-                <br>
-                <br>
-                <form method="POST" action="elimina_certificato">
-                    @csrf
-                    <input type="hidden" name="id" value="{{ $item->id }}" />
-                    <button type="submit" class="btn btn-danger">Elimina Certficato</button>
-                </form>
-                <br>
-                <br>
+                            onclick="upload('upload_{{ $item->id }}','file_{{ $item->id }}','mod-foto-cert-admin',1)">
+                            Upload file
+                        </button>
+                    </form>
+
+                </div>
             </div>
         @endforeach
+
     </div>
 @endsection

@@ -7,27 +7,42 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:20%">
-        <form method="POST" action="mod-piva">
-            @csrf
+    <div class="container py-4" style="max-width: 400px;">
 
-            <div class="col-md-12">
-                <input type="text" class="form-control" id="piva" name="piva" minlength="11" maxlength="11"
-                    value="{{ auth()->user()->admin->piva }}">
-                <script type="text/javascript">
-                    var piva_ = new LiveValidation('chiave', {
-                        onlyOnSubmit: true
-                    });
-                    piva_.add(Validate.Presence);
-                    piva_.add(Validate.InteriPositivi);
-                </script>
+        <div class="card shadow-sm">
+
+            <div class="card-header">
+                <h5 class="mb-0">Modifica Partita IVA</h5>
             </div>
 
-            <br>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary">Modifica</button>
+            <div class="card-body">
+
+                <form method="POST" action="mod-piva">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label class="form-label">Partita IVA</label>
+
+                        <input type="text" class="form-control" id="piva" name="piva" minlength="11"
+                            maxlength="11" value="{{ auth()->user()->admin->piva }}">
+
+                        <script>
+                            var piva_ = new LiveValidation('piva', {
+                                onlyOnSubmit: true
+                            });
+                            piva_.add(Validate.Presence);
+                            piva_.add(Validate.InteriPositivi);
+                        </script>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Salva
+                    </button>
+
+                </form>
+
             </div>
-        </form>
+        </div>
 
     </div>
 @endsection
