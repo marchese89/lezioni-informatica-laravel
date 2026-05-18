@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Http\Requests\RegisterUserRequest;
 
 class RegistrazioneController extends Controller
 {
-    public function carica_utente(Request $request)
+    public function carica_utente(RegisterUserRequest $request)
     {
         // Validazione
         $data = $request->validate([
