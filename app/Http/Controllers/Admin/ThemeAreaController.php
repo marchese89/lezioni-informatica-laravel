@@ -15,6 +15,15 @@ class ThemeAreaController extends Controller
 
         return view('admin.aree-tem', compact('aree_t'));
     }
+
+    public function publicIndex()
+    {
+        $themeAreas = ThemeArea::whereHas('matter')
+            ->orderBy('name')
+            ->get();
+        return view('public.aree-tematiche', compact('themeAreas'));
+    }
+
     // CREATE
     public function store(Request $request)
     {

@@ -87,7 +87,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // RICHIESTE DIRETTE
     // =========================
-    Route::view('richieste-dirette', 'studente.richieste-dirette');
+    Route::view('richieste-dirette', 'studente.richieste-dirette')->name('richieste-dirette');
     Route::view('richieste-dirette-acquistate', 'studente.richieste-dirette-acquistate');
     Route::get('visualizza-richiesta-studente/{id}', function ($id) {
         return view('studente.visualizza-richiesta-lezione', compact('id'));

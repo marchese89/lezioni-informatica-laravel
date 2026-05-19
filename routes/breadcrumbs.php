@@ -74,9 +74,9 @@ Breadcrumbs::for('aree-tem', function (BreadcrumbTrail $trail) {
     $trail->push('Aree tematiche', route('aree-tem'));
 });
 
-Breadcrumbs::for('materie', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.materie', function (BreadcrumbTrail $trail) {
     $trail->parent('insegnamento');
-    $trail->push('Materie', route('materie'));
+    $trail->push('Materie', route('admin.materie'));
 });
 Breadcrumbs::for('elenco-corsi', function (BreadcrumbTrail $trail) {
     $trail->parent('insegnamento');
@@ -155,4 +155,8 @@ Breadcrumbs::for('lezione', function (BreadcrumbTrail $trail, $id_corso, $id_lez
 Breadcrumbs::for('esercizio', function (BreadcrumbTrail $trail, $id_corso, $id_esercizio) {
     $trail->parent('course', $id_corso);
     $trail->push('Esercizio', route('esercizio', ['id_corso' => $id_corso, 'id_esercizio' => $id_esercizio]));
+});
+
+Breadcrumbs::for('materie', function (BreadcrumbTrail $trail, $id_at) {
+    $trail->push('Materie', route('materie', $id_at));
 });

@@ -1,108 +1,125 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-    <script>
-        function togglePassword() {
-            const x = document.getElementById("password");
-            x.type = (x.type === "password") ? "text" : "password";
-        }
+    <div class="container py-5">
 
-        function modifica_pass() {
-            const x = document.getElementById("password");
-            if (x.type === "text") {
-                x.type = "password";
-            }
-        }
-    </script>
+        <div class="row justify-content-center">
 
-    <div class="container py-5 h-fill">
+            <div class="col-lg-4 col-md-6">
 
-        {{-- ALERT --}}
-        <div class="mb-3">
-            @if (session()->has('error'))
-                <div class="alert alert-danger">
-                    {{ session()->get('error') }}
-                </div>
-            @endif
+                <div class="card shadow-sm border-0 rounded-4">
 
-            @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}
-                </div>
-            @endif
+                    <div class="card-body p-4">
 
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    {{ $errors->first() }}
-                </div>
-            @endif
-        </div>
-
-        {{-- LOGIN CARD --}}
-        <div class="card shadow-sm mx-auto" style="max-width: 420px;">
-
-            <div class="card-body p-4">
-
-                <h3 class="text-center mb-4">Login</h3>
-
-                <form method="POST" action="login" class="row g-3">
-                    @csrf
-
-                    <input type="hidden" name="return" value="{{ request('back') ? '1' : '0' }}">
-
-                    {{-- EMAIL --}}
-                    <div class="col-12">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" maxlength="255">
-
-                        <script>
-                            var email1 = new LiveValidation('email', {
-                                onlyOnSubmit: true
-                            });
-                            email1.add(Validate.Presence);
-                            email1.add(Validate.Email);
-                        </script>
-                    </div>
-
-                    {{-- PASSWORD --}}
-                    <div class="col-12">
-                        <label class="form-label">Password</label>
-
-                        <input type="password" class="form-control" id="password" name="password" maxlength="255">
-
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" onclick="togglePassword()" id="showPass">
-
-                            <label class="form-check-label" for="showPass">
-                                Mostra password
-                            </label>
+                        <div class="text-center mb-4">
+                            <h2 class="fw-bold mb-1">Login</h2>
+                            <p class="text-muted mb-0">
+                                Accedi al tuo account
+                            </p>
                         </div>
 
-                        <script>
-                            var pass1_ = new LiveValidation('password', {
-                                onlyOnSubmit: true
-                            });
-                            pass1_.add(Validate.Presence);
-                            pass1_.add(Validate.Pass);
-                        </script>
+                        {{-- ALERT GLOBALI --}}
+                        @if (session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ url('/login') }}">
+
+                            @csrf
+
+                            <input type="hidden" name="return" value="{{ request('back') ? '1' : '0' }}">
+
+                            {{-- EMAIL --}}
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Email
+                                </label>
+
+                                <input type="email" name="email" value="{{ old('email') }}"
+                                    class="form-control @error('email') is-invalid @enderror">
+
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+                            {{-- PASSWORD --}}
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Password
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input type="password" name="password" id="password"
+                                        class="form-control @error('password') is-invalid @enderror">
+
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        Mostra
+                                    </button>
+
+                                </div>
+
+                                @error('password')
+                                    <div class="invalid-feedback d-block">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                            </div>
+
+                            {{-- RECUPERO PASSWORD --}}
+                            <div class="text-end mb-4">
+
+                                <a href="{{ url('/recupera-password') }}" class="text-decoration-none small">
+                                    Recupera password
+                                </a>
+
+                            </div>
+
+                            {{-- SUBMIT --}}
+                            <button type="submit" class="btn btn-primary w-100">
+                                Accedi
+                            </button>
+
+                        </form>
+
                     </div>
 
-                    {{-- RECUPERO --}}
-                    <div class="col-12 text-center">
-                        <a href="recupera-password">Recupera password</a>
-                    </div>
-
-                    {{-- SUBMIT --}}
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary w-100">
-                            Accedi
-                        </button>
-                    </div>
-
-                </form>
+                </div>
 
             </div>
+
         </div>
 
     </div>
+
+    <script>
+        document.getElementById('togglePassword')
+            .addEventListener('click', function() {
+
+                const password = document.getElementById('password');
+
+                if (password.type === 'password') {
+                    password.type = 'text';
+                    this.innerText = 'Nascondi';
+                } else {
+                    password.type = 'password';
+                    this.innerText = 'Mostra';
+                }
+            });
+    </script>
 @endsection

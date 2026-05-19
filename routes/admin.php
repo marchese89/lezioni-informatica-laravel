@@ -30,7 +30,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('aree-tem', [ThemeAreaController::class, 'index'])
         ->name('aree-tem');
     Route::get('materie', [MatterController::class, 'index'])
-        ->name('materie');
+        ->name('admin.materie');
     Route::get('elenco-corsi', [CourseController::class, 'list'])
         ->name('elenco-corsi');
 

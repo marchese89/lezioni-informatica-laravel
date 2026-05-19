@@ -16,36 +16,36 @@ class RegistrazioneController extends Controller
     {
         // Validazione
         $data = $request->validate([
-            'inputNome' => 'required|string|max:255',
-            'inputCognome' => 'required|string|max:255',
-            'inputEmail' => 'required|email|unique:users,email',
-            'inputPassword' => 'required|string|min:6',
-            'inputIndirizzo' => 'required|string|max:255',
-            'inputNumeroCivico' => 'required|string|max:10',
-            'inputCitta' => 'required|string|max:255',
-            'inputProvincia' => 'required|string|max:255',
-            'inputCAP' => 'required|string|max:10',
-            'inputCF' => 'required|string|max:16',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'address' => 'required|string|max:255',
+            'house_number' => 'required|string|max:10',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:10',
+            'tax_code' => 'required|string|max:16',
         ]);
 
         DB::transaction(function () use ($data) {
 
             $user = User::create([
-                'name' => $data['inputNome'],
-                'surname' => $data['inputCognome'],
-                'email' => $data['inputEmail'],
-                'password' => Hash::make($data['inputPassword']),
+                'name' => $data['first_name'],
+                'surname' => $data['last_name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
                 'activation_code' => Str::random(6),
                 'remember_token' => Str::random(10),
             ]);
 
             $user->student()->create([
-                'street' => $data['inputIndirizzo'],
-                'house_number' => $data['inputNumeroCivico'],
-                'city' => $data['inputCitta'],
-                'province' => $data['inputProvincia'],
-                'postal_code' => $data['inputCAP'],
-                'cf' => $data['inputCF'],
+                'street' => $data['address'],
+                'house_number' => $data['house_number'],
+                'city' => $data['city'],
+                'province' => $data['province'],
+                'postal_code' => $data['postal_code'],
+                'tax_code' => $data['tax_code'],
                 'remember_token' => Str::random(10),
             ]);
         });

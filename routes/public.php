@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Public\LessonOnRequestController;
+use App\Http\Controllers\Admin\ThemeAreaController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -16,10 +17,11 @@ Route::view('registrazione_no', 'sicurezza.registrazione_no')->name('registrazio
 Route::view('privacy', 'public.privacy-policy');
 Route::view('coockie', 'public.coockie-policy');
 
-Route::view('aree-tematiche', 'public.aree-tematiche');
-Route::view('materie/{id_at}', 'public.materie');
-Route::view('corsi/{id_materia}', 'public.corsi');
-Route::view('corso/{id}', 'public.corso');
+Route::get('aree-tematiche', [ThemeAreaController::class, 'publicIndex'])->name('aree-tematiche');
+
+Route::view('materie/{id_at}', 'public.materie')->name('materie');
+Route::view('corsi/{id_materia}', 'public.corsi')->name('corsi');
+Route::view('corso/{id}', 'public.corso')->name('corso');
 
 Route::view('presentazione-lezione/{id_lezione}/{id_corso}', 'public.presentazione-lezione');
 Route::view('visualizza-lezione/{id_lezione}/{id_corso}', 'public.contenuto-lezione');

@@ -1,13 +1,6 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/aree-tematiche">Aree Tematiche</a>
-        </li>
-
-    </ul>
-
     <div id="layoutSidenav_content">
         <main>
             <div class="container" style="width: 80%;text-align:center;height: 800px;">

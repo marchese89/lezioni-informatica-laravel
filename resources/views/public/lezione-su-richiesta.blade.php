@@ -1,83 +1,189 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-    <style>
-        p {
-            font-size: 1.4em;
-        }
-    </style>
-    <div class="container" style="text-align: center;">
-        <br>
-        <h3>Richista Svolgimento lezione su Commissione</h3>
+    <div class="container py-5">
 
-        <p>Inserisci un file "traccia" per richiedere lo svolgimento di una lezione su commissione,</p>
-        <p>lo svolgimento o la correzione di un esercizio</p>
-        <p>Verrà prodotta una risposta che sarà visibile sul tuo profilo studente</p>
-        <p>A quel punto potrai vedere il prezzo e decidere se acquistarla</p>
-        <p>Sono inclusi nel prezzo eventuali chiarimenti via chat (disponibili dopo l'acquisto)</p>
-        <br>
-        @if (!Auth::check())
-            <font style="color: red">Devi fare il login come studente per accedere a questa funzionalità</font>
-            <br>
-            <br>
-            <button class="btn btn-primary" onclick=location.href="login-1">Login</button>
-        @else
-            @if (!Session::exists('uploaded_lez_rich'))
-                <div class="container" style="width: 30%">
-                    <form method="POST" action="add-file-su-richiesta" enctype="multipart/form-data" id="upload">
-                        @csrf
-                        <input type="file" class="form-control" id="file" name="file" />
-                        <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25"
-                            aria-valuemin="0" aria-valuemax="100" id="progressbar" style="display: none">
-                            <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                        </div>
-                        <br>
-                        <br>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary"
-                                onclick="upload('upload','file','add-file-su-richiesta',1)">Upload</button>
-                        </div>
-                    </form>
-                </div>
-            @else
-                <div class="container" style="text-align: center">
-                    <h4>File Caricato</h4>
-                    <iframe style="height: 400px;width: 400px"
-                        src="/protected_file/{{ session('uploaded_lez_rich') }}#view=FitH">
-                    </iframe>
-                    <br>
-                    <br>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary" onclick=location.href="elimina-lez-rich">Elimina
-                            File</button>
-                    </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
 
-                    <br>
-                    <div class="container" style="width: 50%">
-                        <form method="POST" action="carica-lez-rich">
-                            @csrf
-                            <label for=""></label>
-                            <input type="text" class="form-control" id="titolo" name="titolo" maxlength="255">
-                            <script type="text/javascript">
-                                var titolo_ = new LiveValidation('titolo', {
-                                    onlyOnSubmit: true
-                                });
-                                titolo_.add(Validate.Presence);
-                                titolo_.add(Validate.SoloTesto);
-                            </script>
-                            <br>
-                            <br>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-primary">Invia Richiesta</button>
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                    <div class="card-body p-4 p-lg-5">
+
+                        <div class="text-center mb-5">
+                            <h1 class="fw-bold mb-3">
+                                Richiesta Lezione su Commissione
+                            </h1>
+
+                            <p class="text-muted fs-5 mb-2">
+                                Carica una traccia, un esercizio o del materiale didattico.
+                            </p>
+
+                            <p class="text-muted fs-5 mb-2">
+                                Riceverai una risposta personalizzata direttamente nel tuo profilo studente.
+                            </p>
+
+                            <p class="text-muted fs-5 mb-2">
+                                Dopo la valutazione potrai visualizzare il prezzo e decidere se acquistare.
+                            </p>
+
+                            <p class="text-muted fs-5 mb-0">
+                                Eventuali chiarimenti via chat sono inclusi dopo l'acquisto.
+                            </p>
+                        </div>
+
+                        @if (!Auth::check())
+                            <div class="alert alert-warning text-center rounded-4 border-0 shadow-sm py-4">
+
+                                <h5 class="fw-semibold mb-3">
+                                    Accesso richiesto
+                                </h5>
+
+                                <p class="mb-4">
+                                    Devi effettuare il login come studente per utilizzare questa funzionalità.
+                                </p>
+
+                                <button class="btn btn-primary px-4 rounded-3" onclick="location.href='login?back=1'">
+                                    Login
+                                </button>
+
                             </div>
-                        </form>
-                        <br>
-                        <br>
-                        <br>
-                    </div>
+                        @else
+                            @if (!Session::exists('uploaded_lez_rich'))
+                                <div class="mx-auto" style="max-width: 600px;">
 
+                                    <div class="card bg-light border-0 rounded-4">
+                                        <div class="card-body p-4">
+
+                                            <form method="POST" action="add-file-su-richiesta"
+                                                enctype="multipart/form-data" id="upload">
+
+                                                @csrf
+
+                                                <div class="mb-4">
+                                                    <label class="form-label fw-semibold">
+                                                        Seleziona il file
+                                                    </label>
+
+                                                    <input type="file" class="form-control form-control-lg"
+                                                        id="file" name="file" />
+                                                </div>
+
+                                                <div class="progress mb-4" role="progressbar" aria-valuenow="25"
+                                                    aria-valuemin="0" aria-valuemax="100" id="progressbar"
+                                                    style="display: none; height: 24px;">
+
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                        style="width: 25%" id="percent">
+                                                        25%
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-grid">
+                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3"
+                                                        onclick="upload('upload','file','add-file-su-richiesta',1)">
+
+                                                        Carica File
+
+                                                    </button>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            @else
+                                <div class="text-center">
+
+                                    <div class="mb-4">
+                                        <span class="badge bg-success px-3 py-2 rounded-pill fs-6">
+                                            File caricato correttamente
+                                        </span>
+                                    </div>
+
+                                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+                                        <div class="card-body p-3">
+
+                                            <iframe class="w-100 rounded-3 border" style="height: 600px;"
+                                                src="/protected_file/{{ session('uploaded_lez_rich') }}#view=FitH">
+                                            </iframe>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mb-5">
+                                        <button type="button" class="btn btn-outline-danger rounded-3 px-4"
+                                            onclick="location.href='elimina-lez-rich'">
+
+                                            Elimina File
+
+                                        </button>
+                                    </div>
+
+                                    <div class="mx-auto" style="max-width: 700px;">
+
+                                        <div class="card bg-light border-0 rounded-4">
+                                            <div class="card-body p-4 p-lg-5">
+
+                                                <h4 class="fw-semibold mb-4">
+                                                    Invia la richiesta
+                                                </h4>
+
+                                                <form method="POST" action="carica-lez-rich">
+
+                                                    @csrf
+
+                                                    <div class="mb-4 text-start">
+
+                                                        <label for="titolo" class="form-label fw-semibold">
+
+                                                            Titolo / Descrizione
+
+                                                        </label>
+
+                                                        <input type="text" class="form-control form-control-lg"
+                                                            id="titolo" name="titolo" maxlength="255"
+                                                            placeholder="Inserisci una breve descrizione della richiesta">
+
+                                                    </div>
+
+                                                    <script type="text/javascript">
+                                                        var titolo_ = new LiveValidation('titolo', {
+                                                            onlyOnSubmit: true
+                                                        });
+
+                                                        titolo_.add(Validate.Presence);
+                                                        titolo_.add(Validate.SoloTesto);
+                                                    </script>
+
+                                                    <div class="d-grid">
+                                                        <button type="submit" class="btn btn-primary btn-lg rounded-3">
+
+                                                            Invia Richiesta
+
+                                                        </button>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            @endif
+                        @endif
+
+                    </div>
                 </div>
-            @endif
-        @endif
+
+            </div>
+        </div>
+
     </div>
 @endsection
