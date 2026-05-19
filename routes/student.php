@@ -29,7 +29,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // CORSI
     // =========================
-    Route::view('corsi', [CourseController::class, 'mieiCorsi'])->name('corsi');
+    Route::view('corsi', [CourseController::class, 'mieiCorsi'])->name('studente.corsi');
     // 'studente.elenco-corsi'  [CourseController::class, 'mieiCorsi']
     Route::view('course/{id}', 'studente.corso')->name('course');
 

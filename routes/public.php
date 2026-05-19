@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Public\LessonOnRequestController;
 use App\Http\Controllers\Admin\ThemeAreaController;
+use App\Http\Controllers\Admin\MatterController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -19,8 +21,10 @@ Route::view('coockie', 'public.coockie-policy');
 
 Route::get('aree-tematiche', [ThemeAreaController::class, 'publicIndex'])->name('aree-tematiche');
 
-Route::view('materie/{id_at}', 'public.materie')->name('materie');
-Route::view('corsi/{id_materia}', 'public.corsi')->name('corsi');
+Route::get('materie/{id_at}', [MatterController::class, 'publicIndex'])->name('materie');
+
+Route::get('corsi/{id_materia}', [CourseController::class, 'publicIndex'])->name('corsi');
+
 Route::view('corso/{id}', 'public.corso')->name('corso');
 
 Route::view('presentazione-lezione/{id_lezione}/{id_corso}', 'public.presentazione-lezione');

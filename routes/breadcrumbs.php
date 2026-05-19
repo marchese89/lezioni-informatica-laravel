@@ -137,9 +137,9 @@ Breadcrumbs::for('mod-cred-stud', function (BreadcrumbTrail $trail) {
     $trail->push('Modifica credenziali', route('mod-cred-stud'));
 });
 
-Breadcrumbs::for('corsi', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('studente.corsi', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard-studente');
-    $trail->push('Corsi', route('corsi'));
+    $trail->push('Corsi', route('studente.corsi'));
 });
 
 Breadcrumbs::for('course', function (BreadcrumbTrail $trail, $id) {
@@ -157,6 +157,21 @@ Breadcrumbs::for('esercizio', function (BreadcrumbTrail $trail, $id_corso, $id_e
     $trail->push('Esercizio', route('esercizio', ['id_corso' => $id_corso, 'id_esercizio' => $id_esercizio]));
 });
 
+Breadcrumbs::for('aree-tematiche', function (BreadcrumbTrail $trail) {
+    $trail->push('Aree tematiche', route('aree-tematiche'));
+});
+
 Breadcrumbs::for('materie', function (BreadcrumbTrail $trail, $id_at) {
+    $trail->parent('aree-tematiche');
     $trail->push('Materie', route('materie', $id_at));
+});
+
+Breadcrumbs::for('corsi', function (BreadcrumbTrail $trail, $id_materia) {
+    $trail->parent('materie', $id_materia);
+    $trail->push('Corsi', route('corsi', $id_materia));
+});
+
+Breadcrumbs::for('corso', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('corsi', $id);
+    $trail->push('Corso', route('corso', $id));
 });

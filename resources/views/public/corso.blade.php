@@ -1,33 +1,25 @@
-@extends('layouts.layout-bootstrap')
+@extends('layouts.theme-areas-layout')
+@php
+    use App\Models\ThemeArea;
+    use App\Models\Matter;
+    use App\Models\Course;
+    use App\Models\Lesson;
+    use App\Models\Exercise;
+    use App\Services\AcquistiService;
 
-@section('content')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/aree-tematiche">Aree Tematiche</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/materie/{{ request('id_materia') }}">Materie</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/corsi/{{ request('id') }}">Corsi</a>
-        </li>
+    $corso = Course::where('id', '=', request('id'))->first();
 
-    </ul>
+@endphp
+@section('page-title')
+    <div class="container py-4">
+        <h2 class="fw-bold mb-0">Corso di {{ $corso->name }}</h2>
+    </div>
+@endsection
+
+@section('inner')
 
     <div class="container" style="text-align: center;width:35%">
-        @php
-            use App\Models\ThemeArea;
-            use App\Models\Matter;
-            use App\Models\Course;
-            use App\Models\Lesson;
-            use App\Models\Exercise;
-            use App\Services\AcquistiService;
 
-            $corso = Course::where('id', '=', request('id'))->first();
-
-        @endphp
-        <h2>Corso di</h2>
-        <h2>{{ $corso->name }}</h2>
 
         @if (!Auth::check())
             <strong style="color: red">Devi essere autenticato come studente per poter fare aquisti!</strong>
@@ -52,7 +44,9 @@
             @endphp
             <tbody>
                 @foreach ($lezioni as $item)
-                    @if (auth()->user() != null && !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 0))
+                    @if (
+                        (auth()->user()->student && !AcquistiService::prodotto_acquistato(auth()->user()->student?->id, $item->id, 0)) ||
+                            auth()->user()->role === 'admin')
                         <tr>
 
                             <th scope="row">{{ $item->id }}</th>
@@ -138,7 +132,11 @@
             @endphp
             <tbody>
                 @foreach ($esercizi as $item)
-                    @if (auth()->user() != null && !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 2))
+                    @if (
+                        (auth()->user() != null &&
+                            auth()->user()->student &&
+                            !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 2)) ||
+                            auth()->user()->role === 'admin')
                         <tr>
                             <th scope="row">{{ $item->id }}</th>
                             <td>

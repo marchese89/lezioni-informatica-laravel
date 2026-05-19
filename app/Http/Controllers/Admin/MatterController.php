@@ -16,6 +16,12 @@ class MatterController extends Controller
         return view('admin.materie', compact('materie', 'aree_t'));
     }
 
+    public function publicIndex(int $id_at)
+    {
+        $materie = Matter::where('theme_area_id', $id_at)->get();
+        return view('public.materie', compact('materie'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

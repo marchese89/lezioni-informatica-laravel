@@ -39,7 +39,7 @@ class ThemeAreaController extends Controller
     }
 
     // UPDATE
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255'
@@ -55,7 +55,7 @@ class ThemeAreaController extends Controller
     }
 
     // DELETE
-    public function destroy($id)
+    public function destroy(int $id)
     {
         ThemeArea::findOrFail($id)->delete();
 

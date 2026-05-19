@@ -21,6 +21,13 @@ class CourseController extends Controller
         return view('admin.nuovo-corso', compact('materie', 'corsi'));
     }
 
+    public function publicIndex(int $id_materia)
+    {
+        $corsi = Course::where('matter_id', $id_materia)->get();
+
+        return view('public.corsi', compact('corsi'));
+    }
+
     public function list()
     {
         $corsi = Course::with('matter.theme_area')->get();
